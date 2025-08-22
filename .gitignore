@@ -1,0 +1,32 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS-specific and editor files
+.DS_Store
+.vscode/
+.idea/
+.env
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# App-specific ignore rules
+apps/client/.next/
+apps/client/out/
+apps/server/dist/
+apps/server/node_modules/
+apps/server/package-lock.json
