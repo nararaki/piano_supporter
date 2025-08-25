@@ -5,15 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --watch src --exec node --loader ts-node/esm src/interface/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "build": "esbuild  --format=esm --bundle src/interface/index.ts --platform=node --outfile=dist/bundle.js  --packages=external",
+    "check": "npx tsc --noEmit",
+    "start": "node dist/bundle.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "cors": "^2.8.5"
+    "@hono/node-server": "^1.19.0",
+    "cors": "^2.8.5",
+    "esbuild": "^0.25.9",
+    "hono": "^4.9.4"
   },
   "devDependencies": {
-    "@types/express": "^4.17.13",
     "@types/cors": "^2.8.12",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.1",
