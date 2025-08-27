@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  server:
+    container_name: node-server
+    hostname: node-server
+    build: 
+      context: ./server
+      dockerfile: ./dockerfile
+    depends_on:
+      - db
+      - web
+    #volumes:
+      #- ./server/dist:/server     #ホスト側のserver/distフォルダをコンテナ側の/appにマウント
+    ports:
+      - "8000:8000"    #0:0:0:0:8000と同じ
+    networks:
+      - db-server
+      - web-server
+  db:
+    container_name: mysql-db
+    image: mysql:8.0
+    hostname: mysql-db
+    env_file:
+      - ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    ports:
+      - "3309:3309"
+    networks:
+      - db-server
+  web:
+    container_name: next-web
+    image: next:latest
+    hostname: next-web
+    build: 
+      context: ./client
+      dockerfile: ./dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - web-server  
+networks:
+  db-server:
+    driver: bridge 
+  web-server:
+    driver: bridge
+    
