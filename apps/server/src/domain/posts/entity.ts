@@ -1,23 +1,9 @@
-export type PostsData = {
+export type Post = {
     id:string;
-    videoUrl:string;
-    composerName:string;
-    composerId:string;
-    title:string;
     description:string;
-    commentIds:string[];
+    videoUrl:string;
+    musicId:number;
+    accountId:number;
     createdAt: Date;
-}
-
-export class PostsEntity {
-    constructor(
-        public id:string,
-        public videoUrl:string,
-        public composerName:string,
-        public composerId:string,
-        public title:string,
-        public description:string,
-        public commentIds:string[],
-        public createdAt: Date,
-    ){}
+    updatedAt: Date;   
 }

@@ -7,16 +7,22 @@
     "dev": "nodemon --watch src --exec node --loader ts-node/esm src/interface/index.ts",
     "build": "esbuild  --format=esm --bundle src/interface/index.ts --platform=node --outfile=dist/bundle.js  --packages=external",
     "check": "npx tsc --noEmit",
-    "start": "node dist/bundle.js"
+    "start": "node dist/bundle.js",
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "drizzle-kit": "^0.31.4",
+    "drizzle-orm": "^0.44.5",
     "esbuild": "^0.25.9",
-    "hono": "^4.9.4"
+    "hono": "^4.9.4",
+    "mysql2": "^3.14.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
+    "@types/node": "^24.3.0",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.4.5"

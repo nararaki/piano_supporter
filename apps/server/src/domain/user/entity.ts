@@ -1,13 +1,13 @@
 export type User = {
-    id:string,
-    userName:string,
-    postIds:string[],
+    id:string;
+    userName:string;
+    email:string;
 }
 
 export class UserEntity {
     constructor(
         public id:string,
         public userName:string,
-        public postIds:string[],
+        public email:string,
     ){}
 }

@@ -1,5 +1,7 @@
-import { CommentData } from "../comment/entity.ts";
+import { Comment } from "./entity";
 export interface CommentRepository{
-    findById(id:string) : Promise<CommentData | null>;
-    findReplyById(id:string) : Promise<CommentData[] | null>;
+    findById(id:number) : Promise<Comment | null>;
+    findRepliesByParentId(id:number) : Promise<Comment[] | []>;
+    findByPostId(postId:number) : Promise<Comment[] | []>;
+    saveComment(comment:Comment) : Promise<void>;
 }

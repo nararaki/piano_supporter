@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
-    "module":"es2015",
+    "module":"es2022",
     "moduleResolution": "bundler",
-    "target": "es2015",
-    "rootDir": "./src",
+    "target": "es2022",
     "strict": true,
     "esModuleInterop": true,
     "sourceMap": true,
     "noEmit": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["./**/*.ts"],
+  "include": ["./*.ts"],
   "exclude": ["node_modules"]
 }

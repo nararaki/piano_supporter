@@ -7,12 +7,14 @@ services:
       context: ./server
       dockerfile: ./dockerfile
     depends_on:
-      - db
-      - web
-    #volumes:
-      #- ./server/dist:/server     #ホスト側のserver/distフォルダをコンテナ側の/appにマウント
+      db:
+        condition: service_healthy
+    env_file: 
+      - ./.env
     ports:
-      - "8000:8000"    #0:0:0:0:8000と同じ
+      - "8000:8000"    #0:0:0:0:8000と同じ.ホストの持つ全てのイーサネットのアドレスで8000ポートを開放
+    command: >
+     sh -c "npx drizzle-kit migrate && node bundle.js" 
     networks:
       - db-server
       - web-server
@@ -29,6 +31,11 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
     ports:
       - "3309:3309"
+    healthcheck: 
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     networks:
       - db-server
   web:
@@ -38,6 +45,8 @@ services:
     build: 
       context: ./client
       dockerfile: ./dockerfile
+    depends_on:
+      - server
     ports:
       - "3000:3000"
     networks:
