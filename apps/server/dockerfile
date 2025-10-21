@@ -3,10 +3,14 @@ WORKDIR /server
 COPY . .
 RUN npm install
 RUN npm run build
+RUN npm install --production
 FROM node:20-alpine AS runner
 WORKDIR /server
-COPY --from=builder /server/dist/bundle.js ./
+USER node
+COPY --from=builder /server/dist ./
 COPY --from=builder /server/package.json ./
+COPY --from=builder /server/package-lock.json ./
+COPY --from=builder /server/drizzle.config.ts ./
 COPY --from=builder /server/node_modules ./node_modules
+COPY --from=builder /server/drizzle ./drizzle
 EXPOSE 8000
-CMD [ "node", "bundle.js" ]
