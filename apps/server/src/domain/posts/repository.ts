@@ -1,4 +1,4 @@
-import { Post } from "./entity";
+import { Post } from "./entity.ts";
 
 export interface PostsRepository {
     findById(id:number) : Promise<Post | null>;
