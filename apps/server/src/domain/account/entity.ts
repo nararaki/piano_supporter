@@ -1,6 +1,6 @@
 export type AccountRole = 'teacher' | 'student' | 'admin';
 
-export type Account = {
+export interface Account {
     id: string;
     clerkUserId: string;
     organizationId: string;

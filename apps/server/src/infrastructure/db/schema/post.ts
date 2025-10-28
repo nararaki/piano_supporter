@@ -11,7 +11,7 @@ export const posts = mysqlTable('posts', {
   title: varchar('title', { length: 255 }).notNull(),
   description: text('description').notNull(), 
   userId: varchar('user_id', { length: 36 }).notNull(), 
-  videoId: int('video_id').notNull(),
+  videoUrl: int('video_id').notNull(),
   composerId: int('composer_id').notNull(), 
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });

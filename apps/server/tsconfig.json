@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module":"es2022",
-    "moduleResolution": "bundler",
+    "module":"nodenext",
+    "moduleResolution": "nodenext",
     "target": "es2022",
     "strict": true,
     "esModuleInterop": true,
@@ -9,6 +9,6 @@
     "noEmit": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["./*.ts"],
+  "include": ["./src/**/*"],
   "exclude": ["node_modules"]
 }
