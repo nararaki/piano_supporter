@@ -1,5 +1,7 @@
-import { Membership } from "./entity";
+import { Membership } from "./entity.ts";
 export interface MembershipRepository {
     findByAccountIdAndOrganizationId(accountId:string, organizationId:string) : Promise<Membership | null>;
-    saveMembership(membership:Membership) : Promise<void>;
+    findByAccountId(accountId:string):Promise<Membership>;
+    findByOrganizationId(organizationId:string):Promise<Membership>;
+    updateMembership(membership:Membership) : Promise<void>;
 }

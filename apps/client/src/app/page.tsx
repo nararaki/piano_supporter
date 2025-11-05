@@ -1,15 +1,29 @@
-import LoginForm from "@/components/login-form"
+import { ClientComponent } from '@/app/_components/client-component'
+import { auth, currentUser } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
+import { HomePage } from '@/app/_components/homepage'
 
-export default function LoginPage() {
+const Home = async () => {
+  const { userId } = await auth()
+
+  if (!userId) {
+    redirect('/sign-in')
+  }
+
+  const user = await currentUser()
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="w-full max-w-md space-y-8 p-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-foreground">ログイン</h1>
-          <p className="mt-2 text-muted-foreground">アカウントにサインインしてください</p>
-        </div>
-        <LoginForm />
+    <div className="w-full h-full flex flex-col justify-center items-center mt-4 gap-2">
+      <p>
+        Hello <span className="font-semibold">{user?.fullName}</span>, this is a
+        server component
+      </p>
+      <div>
+        <ClientComponent />
+        <HomePage />
       </div>
     </div>
   )
 }
+
+export default Home

@@ -10,17 +10,6 @@ import {
 } from '@clerk/nextjs'
 import type { ReactNode } from 'react'
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-})
-
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
-})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -32,7 +21,7 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
     <ClerkProvider>
       <html lang="ja">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className="antialiased"
         >
           <header className="fixed top-0 left-0 w-full z-50 h-16 bg-neutral-100 flex items-center">
             <SignedOut>

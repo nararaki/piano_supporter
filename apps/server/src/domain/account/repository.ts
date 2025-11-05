@@ -1,4 +1,4 @@
-import { Account } from "./entity";
+import { Account } from "./entity.ts";
 export interface AccountRepository {
     findById(id:number) : Promise<Account | null>;
     findByClerkId(clerkId:string) : Promise<Account | null>;

@@ -1,4 +1,4 @@
-import { AccountRole } from "../account/entity";
+import { AccountRole } from "../account/entity.ts";
 
 export enum Permission {
     canDoComment = 'canDoComment',

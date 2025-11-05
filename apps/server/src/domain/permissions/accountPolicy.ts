@@ -1,5 +1,5 @@
-import { AccountRole } from "../account/entity";
-import { permissionsByRole, Permission } from "./permission";
+import { AccountRole } from "../account/entity.ts";
+import { permissionsByRole, Permission } from "./permission.ts";
 export class AccountPolicy {
     private permissions: Permission[];
  constructor(

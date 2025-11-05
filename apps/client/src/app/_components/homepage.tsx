@@ -11,7 +11,7 @@ import { Heart, MessageCircle, Share, Plus, Home, User, Play, MoreHorizontal } f
 import CreatePostModal from "@/components/create-post-modal"
 import NavigationMenu from "@/components/navigation-menu"
 
-export default function HomePage() {
+export const HomePage = () => {
   const [userEmail, setUserEmail] = useState("")
   const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set())
   const [activeTab, setActiveTab] = useState("home")
