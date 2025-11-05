@@ -14,4 +14,3 @@ valueObject:
     作曲者、曲(has 作曲者)、動画url、各entityのid、
 サービス:
     コメントを受け持つ生徒だけに投稿できる
-    

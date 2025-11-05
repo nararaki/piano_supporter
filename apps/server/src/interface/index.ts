@@ -9,7 +9,7 @@ app.get('/', (c) => {
   return c.text('Hello Hono!');
 });
 
-app.post('uploadVideo', async (c)=>{
+app.post('/post', async (c)=>{
   const formData = await c.req.formData();
   const file = formData.get('video') as File;
   const result = await uploadVideoService.exec(file);

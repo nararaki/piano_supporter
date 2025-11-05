@@ -1,5 +1,5 @@
-import {err,Result,ok} from "../../lib/error"; 
-import { Account } from "../account/entity";
+import {err,Result,ok} from "../../lib/error.ts"; 
+import { Account } from "../account/entity.ts";
 
 export class AccountValidater {
     constructor(
