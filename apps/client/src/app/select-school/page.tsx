@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SchoolSearch } from "./_components/school-search"
 import { SchoolIdInput } from "./_components/school-id-input"
-import type { School } from "@/types/school"
+import type { School } from "../../../../packages/types/src"
 
 export default function SelectSchoolPage() {
   const router = useRouter()
