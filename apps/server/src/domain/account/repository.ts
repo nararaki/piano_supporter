@@ -1,6 +1,6 @@
+import { Result } from "../../../../packages/lib/src/error.ts";
 import { Account } from "./entity.ts";
 export interface AccountRepository {
-    findById(id:number) : Promise<Account | null>;
-    findByClerkId(clerkId:string) : Promise<Account | null>;
-    saveAccount(account:Account) : Promise<void>;
+    findById(id:string) : Promise<Result<Account>>;
+    saveAccount(account:Account) : Promise<Result<Account>>;
 }

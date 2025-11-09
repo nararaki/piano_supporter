@@ -1,6 +1,6 @@
 import { IFileUploader } from "../domain/media/IFileUploader.ts";
 import { fileToBuffer } from "../lib/fileConverter.ts";
-import { err,ok } from "../lib/error.ts";
+import { err,ok } from "../../../packages/lib/src/error.ts";
 
 export class UploadVideoService {
     constructor(
@@ -20,4 +20,3 @@ export class UploadVideoService {
         }
     }
 }
-
