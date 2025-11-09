@@ -1,13 +1,23 @@
 export type AccountRole = 'teacher' | 'student' | 'admin';
 
 export interface Account {
-    id: string;
-    clerkUserId: string;
-    organizationId: string;
+    id: string;  //clerkIdを使う
     firstName: string;
     lastName: string;
     email: string;
     profileImage: string | null;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+}
+
+export const createAccountEntity = (userId:string,lastName:string,firstName:string,email:string):Account=>{
+    return {
+        id:userId,
+        lastName:lastName,
+        firstName:firstName,
+        email:email,
+        profileImage:null,
+        createdAt:null,
+        updatedAt:null,
+    }
 }

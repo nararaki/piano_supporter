@@ -1,4 +1,4 @@
-import {err,Result,ok} from "../../lib/error.ts"; 
+import {err,Result,ok} from "../../../../packages/lib/src/error.ts"; 
 import { Account } from "../account/entity.ts";
 
 export class AccountValidater {
@@ -6,17 +6,10 @@ export class AccountValidater {
         public account:Account,
     ){}
     exec():Result<boolean>{
-        if(this.account.id == null || this.account.clerkUserId == null){
+        if(this.account.id == null || this.account.id == null){
             return err({
                 type:"AccountValidaterError",
                 message:"ユーザー認証をしてください",
-            });
-        }
-
-        if(this.account.organizationId == null){
-            return err({
-                type:"OrgValidaterError",
-                message:"教室に所属していません",
             });
         }
 

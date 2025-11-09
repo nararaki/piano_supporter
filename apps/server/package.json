@@ -8,7 +8,7 @@
     "experimentalEsm": true
   },
   "scripts": {
-    "dev": "nodemon --watch src --exec node --loader ts-node/esm src/interface/index.ts",
+    "dev": "tsx watch src/interface/index.ts",
     "build": "esbuild  --format=esm --bundle src/interface/index.ts --platform=node --outfile=dist/bundle.js  --packages=external",
     "check": "npx tsc --noEmit",
     "start": "node dist/bundle.js",
@@ -23,7 +23,8 @@
     "drizzle-orm": "^0.44.5",
     "esbuild": "^0.25.9",
     "mysql2": "^3.14.3",
-    "streamifier": "^0.1.1"
+    "streamifier": "^0.1.1",
+    "tsx": "^4.20.6"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
