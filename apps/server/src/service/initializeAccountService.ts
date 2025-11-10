@@ -10,7 +10,8 @@ export class InitializeAccountService {
 
     async exec(userId:string,lastName:string,firstName:string,email:string){
         const newAccuont = createAccountEntity(userId,lastName,firstName,email);
-        const result = await this.accountRepository.saveAccount(newAccuont);
+        const result = await this.accountRepository.createAccount(newAccuont);
+        console.log(result);
         if(!result.ok){
             return err({
                 type:'CANNOT_CREATE_ACCOUNT',

@@ -1,22 +1,29 @@
 import { err, ok, Result } from "../../../../../packages/lib/src/error.ts";
-import { Account } from "../../../domain/account/entity.ts";
+import { Account, AccountCreateData } from "../../../../../packages/types/src/index.ts";
 import { AccountRepository } from "../../../domain/account/repository.ts";
 import { db } from "../initial.ts";
 import { accounts } from "../schema/account.ts";
 import { eq } from "drizzle-orm";
 
 export class AccountRespositoryClient implements AccountRepository{
-    async saveAccount(account: Account): Promise<Result<Account>> {
+    async createAccount(account: AccountCreateData): Promise<Result<AccountCreateData>> {
         try{
+            console.log("dbにinsert開始します...")
             await db
                 .insert(accounts)
                 .values({
                     ...account,
-                    createdAt:account.createdAt ?? undefined,
-                    updatedAt:account.updatedAt ?? undefined,
-                });
+                })
+                .onDuplicateKeyUpdate({
+                // 重複が発生した場合、これらのフィールドを新しい値で更新する
+                set: {
+                    lastName: account.lastName,
+                    firstName: account.firstName,
+                    email: account.email,
+                }});
             return ok(account);
         }catch(e){
+            console.log("データベースエラー",e);
             return err({
                 type: 'UNEXPECTED',
                 message: "データベースへのinsert中にエラーが発生しました"

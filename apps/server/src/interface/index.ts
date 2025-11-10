@@ -3,8 +3,19 @@ import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { uploadVideoService } from '../service/container/index.ts';
 import { initializeAccountService } from '../service/container/index.ts';
+import { cors } from 'hono/cors';
+import { initializeSchoolService } from '../service/container/index.ts';
 
 const app = new Hono();
+
+app.use(
+  '/*',
+  cors({
+    origin: ['http://localhost:3000', 'https://your-production-domain.com'], 
+    allowMethods: ['POST', 'GET', 'OPTIONS'],
+    allowHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
 app.get('/', (c) => {
   return c.text('Hello Hono!');
@@ -16,7 +27,7 @@ const post = app.post('/post', async (c)=>{
   const result = await uploadVideoService.exec(file);
 })
 
-const account = app.post('account-init',async(c)=>{
+const account = app.post('/account-init',async(c)=>{
   const body = await c.req.json();
   const {userId,lastName,firstName,email} = body;
   const result = await initializeAccountService.exec(userId,lastName,firstName,email);
@@ -24,6 +35,12 @@ const account = app.post('account-init',async(c)=>{
     return c.json({ message: 'アカウントの初期化に失敗しました' }, 500);
   }
   return c.json({message: "アカウント初期化できました"},200);
+})
+
+const createdSchool = app.post('/school-init',async(c)=>{
+  const body = await c.req.json();
+  const {name,location,email} = body;
+  const result = await initializeSchoolService.exec(body);
 })
 
 serve({
