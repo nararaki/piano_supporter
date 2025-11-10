@@ -8,6 +8,5 @@ export const baseTimestampColumns = {
     
   updatedAt: datetime('updated_at', { mode: 'date' })
     .default(sql`CURRENT_TIMESTAMP`) 
-    .$onUpdate(() => new Date())
-    .notNull(),
+    .$onUpdate(() => new Date()),
 };

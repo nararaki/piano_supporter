@@ -24,7 +24,8 @@
     "esbuild": "^0.25.9",
     "mysql2": "^3.14.3",
     "streamifier": "^0.1.1",
-    "tsx": "^4.20.6"
+    "tsx": "^4.20.6",
+    "uuidv7": "^1.0.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
