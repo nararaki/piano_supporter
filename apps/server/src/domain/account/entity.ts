@@ -1,7 +1,6 @@
-import { AccountCreateData } from "../../../../packages/types/src/index.ts";
-export type AccountRole = 'teacher' | 'student' | 'admin';
+import { createServerAccount } from "../../../../packages/domain/src/index.ts";
 
-export const createAccountEntity = (userId:string,lastName:string,firstName:string,email:string):AccountCreateData=>{
+export const createAccountEntity = (userId:string,lastName:string,firstName:string,email:string):createServerAccount=>{
     return {
         id:userId,
         lastName:lastName,

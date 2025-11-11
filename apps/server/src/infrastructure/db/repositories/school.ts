@@ -1,15 +1,15 @@
 import { School } from "@root/src/domain/school/entity.ts";
 import { schoolRepository } from "@root/src/domain/school/repository.ts";
-import { err, Result,ok } from "../../../../../packages/lib/index.ts";
-import { SchoolCreateData } from "../../../../../packages/types/src/index.ts";
+import { err, Result,ok } from "../../../../../packages/lib/src/error.ts";
+import { createSchoolDatabase, createServerSchool } from "../../../../../packages/domain/src/index.ts";
 import { db } from "../initial.ts";
 import { schoolScheme } from "../schema/school.ts";
-import { format } from "path";
 import { eq } from "drizzle-orm";
 
 class SchoolRepositoryClient implements schoolRepository{
-    async createAccount(school: SchoolCreateData): Promise<Result<School>> {
+    async createAccount(school: createSchoolDatabase): Promise<Result<createServerSchool>> {
         try{
+            console.log("dbへのinsert開始します...")
             const result = await db
                 .insert(schoolScheme)
                 .values(school)
@@ -19,6 +19,7 @@ class SchoolRepositoryClient implements schoolRepository{
                 ...school,
             });
         }catch(e){
+            console.log("sippai",e);
             return err({
                 type: 'CANNOT_CREATE_SCHOOL',
                 message: "データベースエラー教室の作成に失敗しました"

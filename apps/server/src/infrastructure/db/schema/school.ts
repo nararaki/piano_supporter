@@ -12,6 +12,6 @@ export const schoolScheme = mysqlTable('school', {
   name: varchar('name',{length: 30}).notNull(),
   location:varchar('location',{length: 60}).notNull(),
   email: varchar('email',{length:40}).notNull(),
-  shareCode: varchar('shareCode',{length:40}),
+  shareCode: varchar('shareCode',{length:40}).notNull(),
   ...baseTimestampColumns
 });

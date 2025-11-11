@@ -15,7 +15,7 @@ const Home = async () => {
   return (
     <div className="w-full h-full flex flex-col justify-center items-center mt-4 gap-2">
       <p>
-        Hello <span className="font-semibold">{user?.fullName}</span>, this is a
+        Hello <span className="font-semibold">{user?.firstName}{user?.lastName}</span>, this is a
         server component
       </p>
       <div>

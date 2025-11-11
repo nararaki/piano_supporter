@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, CheckCircle2 } from "lucide-react"
-import type { School } from "../../../../../packages/types/src"
+import type { School } from "../../../../../packages/domain/src"
 
 interface SchoolIdInputProps {
   onSchoolSelect: (school: School) => void

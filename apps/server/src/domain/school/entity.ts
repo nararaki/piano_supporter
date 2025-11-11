@@ -1,5 +1,5 @@
 import { uuidv7 } from "uuidv7";
-import { SchoolCreateData } from "../../../../packages/types/src/index.ts";
+import { SchoolCreateData } from "../../../../packages/domain/src/index.ts";
 export interface School {
     id: number;
     name: string;

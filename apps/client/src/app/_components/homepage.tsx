@@ -20,10 +20,8 @@ export const HomePage = () => {
       id: 1,
       user: "田中太郎",
       username: "@tanaka_taro",
-      avatar: "/japanese-man-avatar.png",
       content:
         "今日は素晴らしい一日でした！新しいプロジェクトを開始して、チームメンバーと素晴らしいアイデアを共有できました。技術の進歩は本当に驚くべきものですね。",
-      video: "/modern-office.png",
       likes: 24,
       comments: 8,
       shares: 3,
@@ -34,7 +32,6 @@ export const HomePage = () => {
           id: 101,
           user: "佐藤花子",
           username: "@sato_hanako",
-          avatar: "/japanese-woman-avatar.png",
           content: "素晴らしいプロジェクトですね！詳細を教えてください。",
           time: "1時間前",
           likes: 5,
@@ -43,7 +40,6 @@ export const HomePage = () => {
           id: 102,
           user: "山田次郎",
           username: "@yamada_jiro",
-          avatar: "/japanese-man-casual-avatar.png",
           content: "私も参加したいです！",
           time: "30分前",
           likes: 3,
@@ -54,9 +50,7 @@ export const HomePage = () => {
       id: 2,
       user: "佐藤花子",
       username: "@sato_hanako",
-      avatar: "/japanese-woman-avatar.png",
       content: "美味しいランチを作りました！手作りの料理は心も温まりますね。レシピをシェアしたいと思います。",
-      video: "/placeholder-i3ws5.png",
       likes: 45,
       comments: 12,
       shares: 7,
@@ -67,9 +61,7 @@ export const HomePage = () => {
       id: 3,
       user: "山田次郎",
       username: "@yamada_jiro",
-      avatar: "/japanese-man-casual-avatar.png",
       content: "週末のハイキングで撮影した動画です。自然の美しさに感動しました！",
-      video: "/mountain-hiking-trail.png",
       likes: 67,
       comments: 15,
       shares: 12,
@@ -83,9 +75,7 @@ export const HomePage = () => {
       id: 100,
       user: userEmail || "あなた",
       username: "@you",
-      avatar: "/diverse-user-avatars.png",
       content: "私の最初の投稿です！よろしくお願いします。",
-      video: "/placeholder-i3ws5.png",
       likes: 12,
       comments: 4,
       shares: 2,
@@ -140,10 +130,6 @@ export const HomePage = () => {
       <div className="ml-8 mt-4 space-y-3 border-l-2 border-muted pl-4">
         {thread.map((comment) => (
           <div key={comment.id} className="flex items-start gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={comment.avatar || "/placeholder.svg"} />
-              <AvatarFallback>{comment.user[0]}</AvatarFallback>
-            </Avatar>
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <p className="font-medium text-sm">{comment.user}</p>
@@ -175,10 +161,6 @@ export const HomePage = () => {
           <CardHeader className="pb-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage src={post.avatar || "/placeholder.svg"} />
-                  <AvatarFallback>{post.user[0]}</AvatarFallback>
-                </Avatar>
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="font-semibold text-foreground">{post.user}</p>
@@ -210,11 +192,6 @@ export const HomePage = () => {
             {/* Video Thumbnail */}
             <div className="relative rounded-xl overflow-hidden bg-muted group cursor-pointer">
               //videoタグに変更予定。cloudinaryの動画URLを使用
-              <img
-                src={post.video || "/placeholder.svg"}
-                alt="投稿動画"
-                className="w-full h-64 object-cover transition-transform group-hover:scale-105"
-              />
               <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:bg-black/30 transition-colors">
                 <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 group-hover:bg-white transition-colors">
                   <Play className="h-6 w-6 text-black ml-1" />
@@ -318,12 +295,6 @@ export const HomePage = () => {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
-                  <Avatar>
-                    <AvatarImage src="/diverse-user-avatars.png" />
-                    <AvatarFallback>
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
                   <div className="flex-1">
                     <CreatePostModal
                       trigger={

@@ -124,7 +124,6 @@ export default function CreatePostModal({ trigger, onPostCreated }: CreatePostMo
         id: Date.now(),
         user: "あなた",
         username: "@you",
-        avatar: "/diverse-user-avatars.png",
         content: content.trim(),
         video: previewUrl || "/placeholder.svg?height=300&width=400",
         likes: 0,
@@ -165,12 +164,6 @@ export default function CreatePostModal({ trigger, onPostCreated }: CreatePostMo
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-start gap-3">
-            <Avatar className="h-12 w-12">
-              <AvatarImage src="/diverse-user-avatars.png" />
-              <AvatarFallback>
-                <User className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
             <div className="flex-1 space-y-4">
               <Textarea
                 placeholder="今何をしていますか？"
