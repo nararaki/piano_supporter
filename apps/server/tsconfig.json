@@ -16,7 +16,7 @@
   "include": [
     "./src/**/*",
     "../packages/lib/**/*.ts",
-    "../packages/types/**/*.ts"
+    "../packages/domain/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

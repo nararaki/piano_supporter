@@ -1,12 +1,12 @@
 import { err, ok, Result } from "../../../../../packages/lib/src/error.ts";
-import { Account, AccountCreateData } from "../../../../../packages/types/src/index.ts";
+import { Account, createServerAccount } from "../../../../../packages/domain/src/index.ts";
 import { AccountRepository } from "../../../domain/account/repository.ts";
 import { db } from "../initial.ts";
 import { accounts } from "../schema/account.ts";
 import { eq } from "drizzle-orm";
 
 export class AccountRespositoryClient implements AccountRepository{
-    async createAccount(account: AccountCreateData): Promise<Result<AccountCreateData>> {
+    async createAccount(account: createServerAccount): Promise<Result<createServerAccount>> {
         try{
             console.log("dbにinsert開始します...")
             await db

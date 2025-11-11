@@ -5,7 +5,7 @@ import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import type { School } from "@/types/school"
+import type { School } from "../../../../../packages/domain/src/index"
 
 interface SchoolSearchProps {
   onSchoolSelect: (school: School) => void
@@ -28,11 +28,19 @@ export function SchoolSearch({ onSchoolSelect }: SchoolSearchProps) {
           id: "school-001",
           name: "東京ピアノアカデミー",
           location: "東京都渋谷区",
+          email: "tokyo@example.com",
+          shareCode: {schoolCode:"TOKYO001"},
+          createdAt: new Date("2020-01-01"),
+          updatedAt: null,
         },
         {
           id: "school-002",
           name: "音楽の森ピアノ教室",
           location: "東京都新宿区",
+          email: "mori@example.com",
+          shareCode: {schoolCode:"TOKYO002"},
+          createdAt: new Date("2019-03-15"),
+          updatedAt:null,
         },
       ])
       setIsSearching(false)
