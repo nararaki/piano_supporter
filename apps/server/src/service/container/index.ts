@@ -2,7 +2,7 @@ import { newCloudinaryApiClient } from "../../infrastructure/cloudinary/uploadMe
 import { UploadVideoService } from "../uploadVideoService.ts";
 import { InitializeAccountService } from "../initializeAccountService.ts";
 import { newAccountRespositoryClient } from "../../infrastructure/db/repositories/account.ts";
-import { newSchoolRepositoryClient } from "@root/src/infrastructure/db/repositories/school.ts";
+import { newSchoolRepositoryClient } from "../../infrastructure/db/repositories/school.ts";
 import { InitializeSchoolService } from "../initializeSchoolService.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;

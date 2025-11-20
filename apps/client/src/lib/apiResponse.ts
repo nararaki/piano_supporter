@@ -1,4 +1,4 @@
-import { ok, err, Result } from "../../../packages/lib/src/error";
+import { ok, err, Result } from "@piano_supporter/common/lib/error";
 
 /**
  * Fetch APIのResponseをResult<T>型に変換する汎用ハンドラ
@@ -20,12 +20,13 @@ export const apiResponseHandler = async <T>(res: Response): Promise<Result<T>> =
     }
 
     switch (res.status) {
-        case 400: 
+        case 400: {
             const errorBody = await res.json().catch(() => ({ message: "不正なリクエストです。" }));
             return err({
                 type: 'BAD_REQUEST', 
                 message: errorBody.message || "リクエストが不正です。",
             });
+        }
 
         case 401:
             return err({

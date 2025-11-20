@@ -1,4 +1,4 @@
-import { AccountRole } from "../account/entity.ts";
+import { AccountRole } from "../../../../packages/domain/src/index.ts";
 import { permissionsByRole, Permission } from "./permission.ts";
 export class AccountPolicy {
     private permissions: Permission[];

@@ -5,7 +5,7 @@ import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import type { School } from "../../../../../packages/domain/src/index"
+import type { School } from "@piano_supporter/common/domains/index"
 
 interface SchoolSearchProps {
   onSchoolSelect: (school: School) => void
@@ -29,7 +29,7 @@ export function SchoolSearch({ onSchoolSelect }: SchoolSearchProps) {
           name: "東京ピアノアカデミー",
           location: "東京都渋谷区",
           email: "tokyo@example.com",
-          shareCode: {schoolCode:"TOKYO001"},
+          shareCode: "TOKYO001",
           createdAt: new Date("2020-01-01"),
           updatedAt: null,
         },
@@ -38,7 +38,7 @@ export function SchoolSearch({ onSchoolSelect }: SchoolSearchProps) {
           name: "音楽の森ピアノ教室",
           location: "東京都新宿区",
           email: "mori@example.com",
-          shareCode: {schoolCode:"TOKYO002"},
+          shareCode:"TOKYO002",
           createdAt: new Date("2019-03-15"),
           updatedAt:null,
         },

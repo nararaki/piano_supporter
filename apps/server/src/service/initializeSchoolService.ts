@@ -1,6 +1,6 @@
-import {err, ok} from "../../../packages/lib/src/error.ts"
-import { SchoolCreateData } from "../../../packages/domain/src/index.ts";
-import { createSchoolEntity, School } from "../domain/school/entity.ts";
+import {ok} from "@piano_supporter/common/lib/error.ts";
+import { SchoolCreateData } from "@piano_supporter/common/domains/index.ts";
+import { createSchoolEntity} from "../domain/school/entity.ts";
 import { schoolRepository } from "../domain/school/repository.ts";
 
 export class InitializeSchoolService {

@@ -1,7 +1,7 @@
-import { School } from "@root/src/domain/school/entity.ts";
-import { schoolRepository } from "@root/src/domain/school/repository.ts";
-import { err, Result,ok } from "../../../../../packages/lib/src/error.ts";
-import { createSchoolDatabase, createServerSchool } from "../../../../../packages/domain/src/index.ts";
+import { School } from "@piano_supporter/common/domains/index.ts";
+import { schoolRepository } from "../../../domain/school/repository.ts";
+import { err, Result,ok } from "@piano_supporter/common/lib/error.ts";
+import { createSchoolDatabase, createServerSchool } from "@piano_supporter/common/domains/index.ts";
 import { db } from "../initial.ts";
 import { schoolScheme } from "../schema/school.ts";
 import { eq } from "drizzle-orm";

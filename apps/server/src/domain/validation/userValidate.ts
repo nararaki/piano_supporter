@@ -1,5 +1,5 @@
 import {err,Result,ok} from "../../../../packages/lib/src/error.ts"; 
-import { Account } from "../account/entity.ts";
+import { Account } from "../../../../packages/domain/src/index.ts";
 
 export class AccountValidater {
     constructor(
@@ -12,7 +12,6 @@ export class AccountValidater {
                 message:"ユーザー認証をしてください",
             });
         }
-
         return ok(true);
     }
 }

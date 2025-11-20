@@ -1,5 +1,5 @@
-import { err, ok, Result } from "../../../../../packages/lib/src/error.ts";
-import { Account, createServerAccount } from "../../../../../packages/domain/src/index.ts";
+import { err, ok, Result } from "@piano_supporter/common/lib/error.ts";
+import { Account, createServerAccount } from "@piano_supporter/common/domains/index.ts";
 import { AccountRepository } from "../../../domain/account/repository.ts";
 import { db } from "../initial.ts";
 import { accounts } from "../schema/account.ts";

@@ -1,4 +1,4 @@
-import { err, Result,ok } from "../../../../packages/lib/src/error.ts";
+import { err, Result,ok } from "@piano_supporter/common/lib/error.ts";
 import { IFileUploader } from "../../domain/media/IFileUploader.ts";
 import { v2 as cloudinary, UploadApiOptions } from "cloudinary";
 import streamifier from "streamifier";

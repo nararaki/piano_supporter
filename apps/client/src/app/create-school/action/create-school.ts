@@ -1,13 +1,12 @@
-import { apiResponseHandler } from "@/lib/apiResponse";
-import { createServerSchool, SchoolCreateData } from "../../../../../packages/domain/src";
+import type { SchoolCreateData } from "@piano_supporter/common/domains/index";
 import { client } from "@/lib/apiClient";
-import { resumePluginState } from "next/dist/build/build-context";
-import { err } from "../../../../../packages/lib";
+import { ok } from "@piano_supporter/common/lib/error";
+import type { createServerSchool } from "@piano_supporter/common/domains/index.ts";
 
 export const createSchool = async(data:SchoolCreateData)=>{
     const rawResult = await client['school-init'].$post({
         json: data
     });
-    const response = await rawResult.json();
-    return response;
+    const response = await rawResult.json() as createServerSchool;
+    return ok(response);
 }

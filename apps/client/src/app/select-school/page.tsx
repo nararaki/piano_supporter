@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { SchoolSearch } from "./_components/school-search"
 import { SchoolIdInput } from "./_components/school-id-input"
-import type { School } from "../../../../packages/domain/src"
+import type { School } from "@piano_supporter/common/domains/index.ts"
 import { useUser, useAuth } from "@clerk/nextjs"
 import { showError, showSuccess } from "@/components/ui/toast"
 import { createAccount } from "./action/createAccount"
@@ -29,7 +29,8 @@ export default function SelectSchoolPage() {
       }
     }
     handleAccountCreation()
-  }, [user])
+  }, [user,isSignedIn,     
+  router,])
 
   const handleSchoolSelect = (school: School) => {
     try {

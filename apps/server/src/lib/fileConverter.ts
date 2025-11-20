@@ -1,4 +1,4 @@
-import { err } from "../../../packages/lib/src/error.ts";
+import { err } from "@piano_supporter/common/lib/error.ts";
 
 export const fileToBuffer = async (file: File): Promise<Buffer> => {
     return new Promise<Buffer>((resolve, reject) => {

@@ -12,7 +12,7 @@ export default function CreateSchoolPage() {
   const handleSchoolCreate =  () => {
     // スクール作成後はschoolのdashboardページへ戻る
     // TODO: 作成したスクールを自動選択する処理を追加
-    router.push("/select-school")
+    router.push("/")
   }
 
   return (

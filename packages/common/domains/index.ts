@@ -1,11 +1,10 @@
-import { accountCreateData,schoolCreateData } from "../../../server/src/interface/schema";
 // ---------------------------------
 // School関連
 // ---------------------------------
 
 
 export interface School {
-  id: number;
+  id: string;
   name: string;
   email: string;
   location: string;
@@ -17,6 +16,7 @@ export interface School {
 
 export type createServerSchool = Omit<School, 'createdAt' | 'updatedAt'>;
 export type createSchoolDatabase = Omit<School,'createdAt' | 'updatedAt' | 'id'>
+export type SchoolCreateData = Omit<School,'id' | 'createdAt' | 'updatedAt' | 'shareCode'>
 
 // ---------------------------------
 // Account関連
@@ -35,6 +35,3 @@ export interface Account {
 }
 
 export type createServerAccount = Omit<Account,'createdAt'|'updatedAt'>;
-//interface層からの型共有,clientのリクエストの型
-export type AccountCreateData = accountCreateData;
-export type SchoolCreateData = schoolCreateData;

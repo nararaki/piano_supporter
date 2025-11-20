@@ -8,15 +8,12 @@
     "sourceMap": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
+    "skipLibCheck":true,
     "baseUrl": ".", 
-    "paths": {
-      "@root/*": ["./*"],
-    }
   },
   "include": [
-    "./src/**/*",
-    "../packages/lib/**/*.ts",
-    "../packages/domain/**/*.ts"
+    "**/*.ts",
+    "**/*.tsx"
   ],
   "exclude": ["node_modules"]
 }

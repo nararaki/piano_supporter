@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { showError, showSuccess } from "@/components/ui/toast"
-import type { createServerSchool, SchoolCreateData } from "../../../../../packages/domain/src"
+import type { createServerSchool } from "@piano_supporter/common/domains/index.ts"
+import type { SchoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts"
 import { createSchool } from "../action/create-school"
 
 interface SchoolCreateFormProps {

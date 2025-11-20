@@ -1,6 +1,6 @@
 import { AccountRepository } from "../domain/account/repository.ts";
 import { createAccountEntity } from "../domain/account/entity.ts";
-import { err,ok } from "../../../packages/lib/src/error.ts";
+import { err,ok } from "@piano_supporter/common/lib/error.ts";
 
 
 export class InitializeAccountService {

@@ -1,4 +1,4 @@
-import { Membership } from "./entity.ts";
+import type { Membership } from "./entity.ts";
 export interface MembershipRepository {
     findByAccountIdAndOrganizationId(accountId:string, organizationId:string) : Promise<Membership | null>;
     findByAccountId(accountId:string):Promise<Membership>;
