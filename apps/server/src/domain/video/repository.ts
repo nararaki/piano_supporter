@@ -1,5 +1,5 @@
-import { VideoEntity } from "./entity.ts";
+import type { VideoEntity } from "./entity.ts";
 
 export interface VideoRepository {
-    findById(id:number) : Promise<VideoEntity>;
+	findById(id: number): Promise<VideoEntity>;
 }

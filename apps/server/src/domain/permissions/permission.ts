@@ -1,28 +1,24 @@
-import { AccountRole } from "../account/entity.ts";
+import type { AccountRole } from "../account/entity.ts";
 
 export enum Permission {
-    canDoComment = 'canDoComment',
-    canDeleteUser = 'canDeleteUser',
-    canInviteUser = 'canInviteUser',
-    canDoPost = 'canDoPost',
+	canDoComment = "canDoComment",
+	canDeleteUser = "canDeleteUser",
+	canInviteUser = "canInviteUser",
+	canDoPost = "canDoPost",
 }
 
-export const teacherPermission: Permission[] = [
-    Permission.canDoComment,
-]
+export const teacherPermission: Permission[] = [Permission.canDoComment];
 
 export const adminPermissions: Permission[] = [
-    ...teacherPermission,
-    Permission.canDeleteUser,
-    Permission.canInviteUser,
-]
+	...teacherPermission,
+	Permission.canDeleteUser,
+	Permission.canInviteUser,
+];
 
-export const studentPermissions: Permission[] = [
-    Permission.canDoPost,
-]
+export const studentPermissions: Permission[] = [Permission.canDoPost];
 
-export const permissionsByRole : Record<AccountRole, Permission[]> ={
-    'admin': adminPermissions,
-    'teacher': teacherPermission,
-    'student': studentPermissions,
-}
+export const permissionsByRole: Record<AccountRole, Permission[]> = {
+	admin: adminPermissions,
+	teacher: teacherPermission,
+	student: studentPermissions,
+};
