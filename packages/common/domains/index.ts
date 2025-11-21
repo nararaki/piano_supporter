@@ -15,7 +15,7 @@ export interface School {
 export type createServerSchool = Omit<School, "createdAt" | "updatedAt">;
 export type createSchoolDatabase = Omit<
 	School,
-	"createdAt" | "updatedAt" | "id"
+	"createdAt" | "updatedAt"
 >;
 export type SchoolCreateData = Omit<
 	School,

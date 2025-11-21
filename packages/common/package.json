@@ -2,6 +2,10 @@
 	"name": "@piano_supporter/common",
 	"version": "1.0.0",
 	"private": true,
+	"exports": {       
+        "./*": "./*"
+    },
+	"type": "module",
 	"scripts": {
 		"typecheck": "tsc --noEmit",
 		"build": "tsc"

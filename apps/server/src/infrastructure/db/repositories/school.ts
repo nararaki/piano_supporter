@@ -19,8 +19,8 @@ class SchoolRepositoryClient implements schoolRepository {
 				.insert(schoolScheme)
 				.values(school)
 				.$returningId();
+			console.log("dbへのinsert成功しました", result);
 			return ok({
-				id: result[0].id,
 				...school,
 			});
 		} catch (e) {
@@ -32,7 +32,7 @@ class SchoolRepositoryClient implements schoolRepository {
 		}
 	}
 
-	async findById(id: number): Promise<Result<School>> {
+	async findById(id: string): Promise<Result<School>> {
 		try {
 			const [data] = await db
 				.select()

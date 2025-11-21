@@ -8,6 +8,6 @@ export interface schoolRepository {
 	createAccount(
 		school: createSchoolDatabase,
 	): Promise<Result<createServerSchool>>;
-	findById(id: number): Promise<Result<School>>;
+	findById(id: string): Promise<Result<School>>;
 	findByShareCode(id: string): Promise<Result<School>>;
 }

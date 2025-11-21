@@ -1,14 +1,11 @@
 import {
-	int,
 	mysqlTable,
-	text,
-	timestamp,
 	varchar,
 } from "drizzle-orm/mysql-core";
 import { baseTimestampColumns } from "./time.ts";
 
 export const schoolScheme = mysqlTable("school", {
-	id: int("id").autoincrement().primaryKey().notNull(),
+	id: varchar("id",{length:36}).primaryKey().notNull(),
 	name: varchar("name", { length: 30 }).notNull(),
 	location: varchar("location", { length: 60 }).notNull(),
 	email: varchar("email", { length: 40 }).notNull(),
