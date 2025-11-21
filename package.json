@@ -1,0 +1,40 @@
+{
+	"name": "piano_supporter",
+	"version": "1.0.0",
+	"scripts": {
+		"dev:server": "npm run dev --workspace=@piano_supporter/server",
+		"dev:client": "npm run dev --workspace=@piano_supporter/client",
+		"build": "esbuild  --format=esm --bundle src/interface/index.ts --platform=node --outfile=dist/bundle.js  --packages=external",
+		"check": "biome check --write .",
+		"start": "node dist/bundle.js",
+		"db:generate": "drizzle-kit generate"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nararaki/piano_supporter.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"@hono/node-server": "^1.19.6",
+		"dotenv": "^17.2.3",
+		"drizzle-orm": "^0.44.7",
+		"hono": "^4.10.6",
+		"uuidv7": "^1.0.2",
+		"zod": "^4.1.12"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.5",
+		"@types/node": "^24.10.1",
+		"drizzle-kit": "^0.31.7",
+		"tsx": "^4.20.6",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.9"
+	},
+	"workspaces": [
+		"apps/client",
+		"apps/server",
+		"packages/*"
+	]
+}

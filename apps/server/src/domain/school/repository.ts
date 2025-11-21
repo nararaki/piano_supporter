@@ -1,8 +1,13 @@
-import { Result } from "../../../../packages/lib/index.ts"
-import { SchoolCreateData } from "../../../../packages/domain/src/index.ts";
-import {School} from "./entity.ts"
-export interface schoolRepository{
-    createAccount(school:SchoolCreateData):Promise<Result<School>>;
-    findById(id:number):Promise<Result<School>>;
-    findByShareCode(id:string): Promise<Result<School>>;
+import type {
+	createSchoolDatabase,
+	createServerSchool,
+	School,
+} from "@piano_supporter/common/domains/index.ts";
+import type { Result } from "@piano_supporter/common/lib/error.ts";
+export interface schoolRepository {
+	createAccount(
+		school: createSchoolDatabase,
+	): Promise<Result<createServerSchool>>;
+	findById(id: string): Promise<Result<School>>;
+	findByShareCode(id: string): Promise<Result<School>>;
 }

@@ -1,22 +1,16 @@
 {
-  "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "target": "es2022",
-    "strict": true,
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
-    "baseUrl": ".", 
-    "paths": {
-      "@root/*": ["./*"],
-    }
-  },
-  "include": [
-    "./src/**/*",
-    "../packages/lib/**/*.ts",
-    "../packages/domain/**/*.ts"
-  ],
-  "exclude": ["node_modules"]
+	"compilerOptions": {
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"target": "es2022",
+		"strict": true,
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"skipLibCheck": true,
+		"baseUrl": "."
+	},
+	"include": ["**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules"]
 }
