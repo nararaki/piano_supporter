@@ -1,13 +1,13 @@
-import type { SchoolCreateData } from "@piano_supporter/common/domains/index.ts";
+import type { SchoolCreateData } from "@piano_supporter/common/domains/school.ts";
 import { ok } from "@piano_supporter/common/lib/error.ts";
-import { createSchoolEntity } from "../domain/school/entity.ts";
-import type { schoolRepository } from "../domain/school/repository.ts";
+import { createSchoolEntity } from "@piano_supporter/common/domains/school.ts";
+import type { schoolRepository } from "../repository/school/repository.ts";
 import { uuidv7 } from "uuidv7";
 export class InitializeSchoolService {
 	constructor(private schoolApiRepositry: schoolRepository) {}
 
 	async exec(data: SchoolCreateData) {
-		const schoolData = createSchoolEntity(data);
+		const schoolData = createSchoolEntity(data, uuidv7());
 		const newSchoolData = {
 			...schoolData,
 			id: uuidv7(),

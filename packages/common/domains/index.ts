@@ -1,41 +1,37 @@
-// ---------------------------------
-// School関連
-// ---------------------------------
-
-export interface School {
-	id: string;
-	name: string;
-	email: string;
-	location: string;
-	shareCode: string;
-	createdAt: Date;
-	updatedAt: Date | null;
-}
-
-export type createServerSchool = Omit<School, "createdAt" | "updatedAt">;
-export type createSchoolDatabase = Omit<
-	School,
-	"createdAt" | "updatedAt"
->;
-export type SchoolCreateData = Omit<
-	School,
-	"id" | "createdAt" | "updatedAt" | "shareCode"
->;
-
-// ---------------------------------
 // Account関連
-// ---------------------------------
+export * from "./account";
+export type {
+	Account,
+	AccountRole,
+	createServerAccount,
+} from "./account";
+export { createAccountEntity } from "./account";
 
-export type AccountRole = "teacher" | "student" | "admin";
+// School関連
+export * from "./school";
+export type {
+	School,
+	createServerSchool,
+	createSchoolDatabase,
+	SchoolCreateData,
+} from "./school";
+export { createSchoolEntity } from "./school";
 
-export interface Account {
-	id: string; //clerkIdを使う
-	firstName: string;
-	lastName: string;
-	email: string;
-	profileImage: string | null;
-	createdAt: Date;
-	updatedAt: Date | null;
-}
+// UserContext関連
+export * from "./userContext";
+export type { UserContext } from "./userContext";
 
-export type createServerAccount = Omit<Account, "createdAt" | "updatedAt">;
+// Membership関連
+export * from "./membership";
+
+// Post関連
+export * from "./post";
+
+// User関連
+export * from "./user";
+
+// Video関連
+export * from "./video";
+
+// Modification関連
+export * from "./modification";

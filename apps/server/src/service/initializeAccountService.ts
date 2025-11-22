@@ -1,6 +1,6 @@
-import { err, ok } from "@piano_supporter/common/lib/error.ts";
-import { createAccountEntity } from "../domain/account/entity.ts";
-import type { AccountRepository } from "../domain/account/repository.ts";
+import { err, ok, Result } from "@piano_supporter/common/lib/error.ts";
+import { createAccountEntity, createServerAccount } from "@piano_supporter/common/domains/account.ts";
+import type { AccountRepository } from "../repository/account/repository.ts";
 
 export class InitializeAccountService {
 	constructor(private accountRepository: AccountRepository) {}
@@ -10,7 +10,7 @@ export class InitializeAccountService {
 		lastName: string,
 		firstName: string,
 		email: string,
-	) {
+	): Promise<Result<createServerAccount>> {
 		const newAccuont = createAccountEntity(userId, lastName, firstName, email);
 		const result = await this.accountRepository.createAccount(newAccuont);
 		console.log(result);

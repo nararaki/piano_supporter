@@ -1,6 +1,6 @@
 "use client";
 
-import type { School } from "@piano_supporter/common/domains/index.ts";
+import type { School } from "@piano_supporter/common/domains/school.ts";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -13,14 +13,14 @@ interface SchoolIdInputProps {
 }
 
 export function SchoolIdInput({ onSchoolSelect }: SchoolIdInputProps) {
-	const [schoolId, setSchoolId] = useState("");
+	const [shareCode, setShareCode] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [foundSchool, setFoundSchool] = useState<School | null>(null);
 
 	const handleFetchSchool = async () => {
-		if (!schoolId.trim()) {
-			setError("スクールIDを入力してください");
+		if (!shareCode.trim()) {
+			setError("共有コードを入力してください");
 			return;
 		}
 
@@ -30,7 +30,9 @@ export function SchoolIdInput({ onSchoolSelect }: SchoolIdInputProps) {
 
 		try {
 			// APIエンドポイントを呼び出し
-			const response = await fetch(`/api/schools/${schoolId}`);
+			const response = await fetch(
+				`http://localhost:8000/enroll-school/share-code/${shareCode}`,
+			);
 
 			if (!response.ok) {
 				if (response.status === 404) {
@@ -59,10 +61,10 @@ export function SchoolIdInput({ onSchoolSelect }: SchoolIdInputProps) {
 			<div className="flex gap-2">
 				<Input
 					type="text"
-					placeholder="スクールIDを入力"
-					value={schoolId}
+					placeholder="共有コードを入力"
+					value={shareCode}
 					onChange={(e) => {
-						setSchoolId(e.target.value);
+						setShareCode(e.target.value);
 						setError(null);
 						setFoundSchool(null);
 					}}

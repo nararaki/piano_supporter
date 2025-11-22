@@ -1,33 +1,25 @@
 import type {
 	Account,
 	createServerAccount,
-} from "@piano_supporter/common/domains/index.ts";
+} from "@piano_supporter/common/domains/account.ts";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { eq } from "drizzle-orm";
-import type { AccountRepository } from "../../../domain/account/repository.ts";
+import type { AccountRepository } from "../../../repository/account/repository.ts";
 import { db } from "../initial.ts";
-import { accounts } from "../schema/account.ts";
+import { account } from "../schema/account.ts";
 
 export class AccountRespositoryClient implements AccountRepository {
 	async createAccount(
-		account: createServerAccount,
+		accountData: createServerAccount,
 	): Promise<Result<createServerAccount>> {
 		try {
 			console.log("dbにinsert開始します...");
 			await db
-				.insert(accounts)
+				.insert(account)
 				.values({
-					...account,
-				})
-				.onDuplicateKeyUpdate({
-					// 重複が発生した場合、これらのフィールドを新しい値で更新する
-					set: {
-						lastName: account.lastName,
-						firstName: account.firstName,
-						email: account.email,
-					},
+					...accountData,
 				});
-			return ok(account);
+			return ok(accountData);
 		} catch (e) {
 			console.log("データベースエラー", e);
 			return err({
@@ -41,12 +33,12 @@ export class AccountRespositoryClient implements AccountRepository {
 		try {
 			const [result] = await db
 				.select()
-				.from(accounts)
-				.where(eq(accounts.id, id))
+				.from(account)
+				.where(eq(account.id, id))
 				.limit(1)
 				.execute();
-			const account = result as Account;
-			return ok(account);
+			const accountData = result as Account;
+			return ok(accountData);
 		} catch (e) {
 			return err({
 				type: "UNEXPECTED",

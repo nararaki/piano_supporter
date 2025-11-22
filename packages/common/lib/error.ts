@@ -11,7 +11,9 @@ export type AppError =
 	| { type: "SERVER_ERROR"; message: string } // 500
 	| { type: "CANNOT_CREATE_ACCOUNT"; message: string }
 	| { type: "CANNOT_CREATE_SCHOOL"; message: string }
-	| { type: "CANNOT_FIND_SCHOOL"; message: string };
+	| { type: "CANNOT_FIND_SCHOOL"; message: string }
+	| { type: "CANNOT_ENROLL_ACCOUNT_TO_SCHOOL"; message: string }
+	| { type: "CANNOT_FIND_ACCOUNT"; message: string }
 
 export function ok<T>(value: T): Result<T> {
 	return { ok: true, value };

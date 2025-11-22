@@ -4,6 +4,8 @@ import { newSchoolRepositoryClient } from "../../infrastructure/db/repositories/
 import { InitializeAccountService } from "../initializeAccountService.ts";
 import { InitializeSchoolService } from "../initializeSchoolService.ts";
 import { UploadVideoService } from "../uploadVideoService.ts";
+import { EnrollAccountToSchoolService } from "../enrollAccountToSchoolService.ts";
+import { UserContextService } from "../userContextService.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;
 export const accountResitoryClient = newAccountRespositoryClient;
@@ -17,4 +19,13 @@ export const initializeAccountService = new InitializeAccountService(
 
 export const initializeSchoolService = new InitializeSchoolService(
 	schoolRepositoryClient,
+);
+
+export const userContextService = new UserContextService(
+	newAccountRespositoryClient,
+	schoolRepositoryClient,
+);
+
+export const enrollAccountToSchoolService = new EnrollAccountToSchoolService(
+	userContextService,
 );

@@ -14,5 +14,11 @@ export const AccountCreateSchema = z.object({
 	email: z.string().min(1, { message: "無効なメール形式です" }),
 });
 
+export const EnrollSchoolCreateSchema = z.object({
+	accountId: z.string().min(1, { message: "accountIdがないです" }),
+	schoolId: z.string().min(1, { message: "schoolIdがないです" }),
+});
+
 export type accountCreateData = z.infer<typeof AccountCreateSchema>;
 export type schoolCreateData = z.infer<typeof SchoolCreateSchema>;
+export type shareCodeCreateData = z.infer<typeof EnrollSchoolCreateSchema>;

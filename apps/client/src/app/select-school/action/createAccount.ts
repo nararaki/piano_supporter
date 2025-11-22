@@ -1,26 +1,25 @@
-import { apiResponseHandler } from "@/lib/apiResponse";
+import { client } from "@/lib/apiClient";
+import type { createServerAccount } from "@piano_supporter/common/domains/account.ts";
+import type { Result } from "@piano_supporter/common/lib/error.ts";
 
 export const createAccount = async (
 	userId: string,
 	lastName: string,
 	firstName: string,
-	email: string | null,
-) => {
+	email: string,
+): Promise<Result<createServerAccount>> => {
 	const requestBody = {
 		userId: userId,
 		lastName: lastName,
 		firstName: firstName,
 		email: email,
 	};
-	console.log(process.env.API_SERVER_DOMAIN);
-	const rawResult = await fetch("http://localhost:8000/" + "account-init", {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(requestBody),
+	const rawResult = await client['account-init'].$post({
+		json: requestBody,
 	});
-
-	const result = await apiResponseHandler(rawResult);
-	return result;
+	const response = await rawResult.json();
+	if (!rawResult.ok) {
+		return response;
+	}
+	return response;
 };
