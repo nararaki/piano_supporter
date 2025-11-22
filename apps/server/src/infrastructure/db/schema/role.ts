@@ -33,11 +33,11 @@ export const accountRoles = mysqlTable('account_role', {
       columns: [table.accountSchoolRelationId],
       foreignColumns: [accountSchoolRelation.id],
       name: 'ar_asr_id_fk',
-    }).onDelete('cascade').onUpdate('no action'),
+    }).onUpdate('no action'),
     roleFk: foreignKey({
       columns: [table.roleId],
       foreignColumns: [roles.id],
       name: 'ar_role_id_fk',
-    }).onDelete('cascade').onUpdate('no action'),
+    }).onUpdate('no action'),
   };
 });
