@@ -5,13 +5,15 @@ erDiagram
     school ||--o{ account_school_relation: "has"
     account ||--o{ practice: "has"
     practice ||--o{ annotation: "has"
+    account_school_relation ||--o| account_role: "has"
+    account_role ||--o{ role: "has"
+    annotation ||--o{ task: "has"
 
     account {
         varchar id PK 
         varchar name 
         varchar email 
         varchar passwordHash 
-        varchar shareCode 
         timeStamp createdAt 
         timeStamp updatedAt 
     }
@@ -20,6 +22,21 @@ erDiagram
         varchar id PK
         varchar accountId FK
         varchar schoolId FK
+        timeStamp createdAt 
+        timeStamp updatedAt 
+    }
+
+    account_role {
+        varchar id PK
+        varchar accountSchoolRelationId FK
+        varchar roleId FK
+        timeStamp createdAt 
+        timeStamp updatedAt
+    }
+
+    role {
+        varchar id PK
+        varchar name 
         timeStamp createdAt 
         timeStamp updatedAt 
     }
@@ -45,6 +62,7 @@ erDiagram
         varchar id PK
         varchar practiceId FK
         text content
+        varchar taskId FK "nullable"
         int sectionNumber
         int timePosition
         int positionX

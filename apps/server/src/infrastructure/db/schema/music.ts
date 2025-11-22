@@ -1,13 +1,19 @@
-import {
-	int,
-	mysqlTable,
-	text,
-	timestamp,
-	varchar,
-} from "drizzle-orm/mysql-core";
+import { 
+  mysqlTable, 
+  varchar, 
+  text,
+  int
+} from 'drizzle-orm/mysql-core';
+import { baseTimestampColumns } from './time.ts';
+import { practice } from './practice.ts';
+import { composer,arranger } from './composer.ts';
+import { task } from './task.ts';
 
-export const musics = mysqlTable("music", {
-	id: int("id").autoincrement().primaryKey().notNull(),
-	title: varchar("title", { length: 255 }).notNull(),
-	composerId: int("composer_id").notNull(),
+export const music = mysqlTable('music', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  composerId: varchar('composer_id', { length: 255 }).notNull().references(() => composer.id),
+  arrangerId: varchar('arranger_id', { length: 255 }).notNull().references(() => arranger.id),
+  sheetMusicUrl: varchar('sheet_music_url', { length: 512 }),
+  ...baseTimestampColumns,
 });

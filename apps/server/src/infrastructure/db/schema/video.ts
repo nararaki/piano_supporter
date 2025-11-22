@@ -5,9 +5,13 @@ import {
 	timestamp,
 	varchar,
 } from "drizzle-orm/mysql-core";
+import { baseTimestampColumns } from "./time.ts";
+import { post } from "./post.ts";
 
-export const videos = mysqlTable("videos", {
-	id: int("id").autoincrement().primaryKey().notNull(),
-	postId: int("post_id").notNull(),
-	url: text("url").notNull(),
+export const video = mysqlTable('video', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  postId: varchar('post_id', { length: 255 }).notNull().references(() => post.id, { onDelete: 'cascade' }),
+  url: varchar('url', { length: 512 }).notNull(),
+  type: varchar('type', { length: 50 }),
+  ...baseTimestampColumns,
 });

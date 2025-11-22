@@ -6,11 +6,18 @@ import {
 import { post } from './post.ts';
 import { account } from './account.ts';
 import { baseTimestampColumns } from './time.ts';
-export const comment = mysqlTable('comment', {
+import { comment } from './comment.ts';
+
+export const postLike = mysqlTable('post_like', {
   id: varchar('id', { length: 255 }).primaryKey(),
   postId: varchar('post_id', { length: 255 }).notNull().references(() => post.id, { onDelete: 'cascade' }),
   accountId: varchar('account_id', { length: 255 }).notNull().references(() => account.id, { onDelete: 'cascade' }),
-  parentCommentId: varchar('parent_comment_id', { length: 255 }).references((): any => comment.id, { onDelete: 'cascade' }),
-  content: text('content').notNull(),
+  ...baseTimestampColumns,
+});
+
+export const commentLike = mysqlTable('comment_like', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  commentId: varchar('comment_id', { length: 255 }).notNull().references(() => comment.id, { onDelete: 'cascade' }),
+  accountId: varchar('account_id', { length: 255 }).notNull().references(() => account.id, { onDelete: 'cascade' }),
   ...baseTimestampColumns,
 });
