@@ -17,6 +17,6 @@ export const task = mysqlTable('task', {
   title: varchar('title', { length: 255 }).notNull(),
   description: text('description'),
   statusId: varchar('status_id', { length: 255 }).notNull().references(() => status.id),
-  practiceId: varchar('practice_id', { length: 255 }).notNull().references(() => practice.id, { onDelete: 'cascade' }),
+  practiceId: varchar('practice_id', { length: 255 }).notNull().references(() => practice.id),
   ...baseTimestampColumns,
 });

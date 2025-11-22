@@ -11,7 +11,7 @@ import { music } from './music.ts';
 
 export const practice = mysqlTable('practice', {
   id: varchar('id', { length: 255 }).primaryKey(),
-  accountId: varchar('account_id', { length: 255 }).notNull().references(() => account.id, { onDelete: 'cascade' }),
+  accountId: varchar('account_id', { length: 255 }).notNull().references(() => account.id),
   musicId: varchar('music_id', { length: 255 }).notNull().references(() => music.id),
   ...baseTimestampColumns,
 });

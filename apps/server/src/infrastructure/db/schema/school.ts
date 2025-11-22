@@ -12,4 +12,3 @@ export const school = mysqlTable("school", {
 	shareCode: varchar("shareCode", { length: 40 }).notNull(),
 	...baseTimestampColumns,
 });
-
