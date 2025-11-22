@@ -1,6 +1,6 @@
 "use client";
 
-import type { School } from "@piano_supporter/common/domains/index";
+import type { School } from "@piano_supporter/common/domains/index.ts";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";

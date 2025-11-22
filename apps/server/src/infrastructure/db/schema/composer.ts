@@ -5,8 +5,16 @@ import {
 	timestamp,
 	varchar,
 } from "drizzle-orm/mysql-core";
+import { baseTimestampColumns } from "./time.ts";
 
-export const composers = mysqlTable("composers", {
-	id: int("id").autoincrement().primaryKey().notNull(),
-	name: varchar("name", { length: 255 }).notNull(),
+export const composer = mysqlTable('composer', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  ...baseTimestampColumns,
+});
+
+export const arranger = mysqlTable('arranger', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  ...baseTimestampColumns,
 });

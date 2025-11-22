@@ -1,12 +1,15 @@
-import { sql } from "drizzle-orm"; // 💡 sqlヘルパーのインポート
-import { datetime } from "drizzle-orm/mysql-core";
+import { 
+  mysqlTable, 
+  varchar, 
+  text, 
+  timestamp, 
+  int, 
+  primaryKey 
+} from 'drizzle-orm/mysql-core';
+import { relations, sql } from 'drizzle-orm';
 
+// --- 共通のタイムスタンプヘルパー ---
 export const baseTimestampColumns = {
-	createdAt: datetime("created_at", { mode: "date" })
-		.default(sql`CURRENT_TIMESTAMP`)
-		.notNull(),
-
-	updatedAt: datetime("updated_at", { mode: "date" })
-		.default(sql`CURRENT_TIMESTAMP`)
-		.$onUpdate(() => new Date()),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().onUpdateNow().notNull(),
 };

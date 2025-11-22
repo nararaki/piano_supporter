@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "@piano_supporter/common/lib/error";
+import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 
 /**
  * Fetch APIのResponseをResult<T>型に変換する汎用ハンドラ
