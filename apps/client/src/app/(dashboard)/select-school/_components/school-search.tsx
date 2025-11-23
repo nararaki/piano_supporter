@@ -86,3 +86,4 @@ export function SchoolSearch({ onSchoolSelect }: SchoolSearchProps) {
 		</div>
 	);
 }
+

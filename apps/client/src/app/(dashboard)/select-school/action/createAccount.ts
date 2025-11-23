@@ -23,3 +23,4 @@ export const createAccount = async (
 	}
 	return response;
 };
+

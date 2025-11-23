@@ -19,6 +19,8 @@ import { SchoolIdInput } from "./_components/school-id-input";
 import { SchoolSearch } from "./_components/school-search";
 import { createAccount } from "./action/createAccount";
 import { enrollSchool } from "./action/enrollSchool";
+import { createServerAccount } from "@piano_supporter/common/domains/account.ts";
+import { Result } from "@piano_supporter/common/lib/error.ts";
 
 export default function SelectSchoolPage() {
 	const router = useRouter();
@@ -35,7 +37,7 @@ export default function SelectSchoolPage() {
 				user.firstName &&
 				user.emailAddresses
 			) {
-				const result = await createAccount(
+				const result: Result<createServerAccount> = await createAccount(
 					user.id,
 					user.lastName,
 					user.firstName,
@@ -131,3 +133,4 @@ export default function SelectSchoolPage() {
 		</div>
 	);
 }
+

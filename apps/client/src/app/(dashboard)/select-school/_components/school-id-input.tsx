@@ -104,3 +104,4 @@ export function SchoolIdInput({ onSchoolSelect }: SchoolIdInputProps) {
 		</div>
 	);
 }
+

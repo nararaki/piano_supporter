@@ -12,3 +12,4 @@ export const createSchool = async(data:SchoolCreateData)=>{
     }
     return ok(response);
 }
+

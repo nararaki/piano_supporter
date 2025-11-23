@@ -1,7 +1,9 @@
 "use client";
 
-import type { SchoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
-import type { createServerSchool } from "@piano_supporter/common/domains/school.ts";
+import type {
+	SchoolCreateData,
+	createServerSchool,
+} from "@piano_supporter/common/domains/school.ts";
 import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -126,3 +128,4 @@ export function SchoolCreateForm({ onSchoolCreate }: SchoolCreateFormProps) {
 		</form>
 	);
 }
+
