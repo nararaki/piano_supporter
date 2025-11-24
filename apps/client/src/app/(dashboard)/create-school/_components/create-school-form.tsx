@@ -14,7 +14,7 @@ import { createSchool } from "../action/create-school";
 import { useUser } from "@clerk/nextjs";
 
 interface SchoolCreateFormProps {
-	onSchoolCreate: (school: SchoolCreateData) => void;
+	onSchoolCreate: (school: createServerSchool) => void;
 }
 
 export function SchoolCreateForm({ onSchoolCreate }: SchoolCreateFormProps) {
@@ -39,25 +39,24 @@ export function SchoolCreateForm({ onSchoolCreate }: SchoolCreateFormProps) {
 			};
 			const result = await createSchool(createSchoolData);
 			if (!result.ok) {
-				showError("errorが発生しました");
+				const errorMessage = result.error?.message || "エラーが発生しました";
+				showError("スクールの作成に失敗しました", errorMessage);
+				return;
 			}
 
-			if (result.ok) {
-				const newSchool = result.value as createServerSchool;
+			const newSchool = result.value;
+			console.log("[v0] Creating school:", newSchool);
+			showSuccess(
+				"スクールを作成しました",
+				`${formData.name}を作成しました。スクールコード: ${newSchool.shareCode}`,
+			);
+			onSchoolCreate(newSchool);
 
-				console.log("[v0] Creating school:", newSchool);
-				showSuccess(
-					"スクールを作成しました",
-					`${formData.name}を作成しました。スクールコード: ${newSchool.shareCode}`,
-				);
-				onSchoolCreate(newSchool);
-
-				setFormData({
-					name: "",
-					location: "",
-					email: "",
-				});
-			}
+			setFormData({
+				name: "",
+				location: "",
+				email: "",
+			});
 		} catch (error) {
 			console.error("[v0] Error creating school:", error);
 			showError(

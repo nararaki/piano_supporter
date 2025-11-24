@@ -15,11 +15,10 @@ class SchoolRepositoryClient implements schoolRepository {
 	): Promise<Result<createServerSchool>> {
 		try {
 			console.log("dbへのinsert開始します...");
-			const result = await db
+			await db
 				.insert(school)
-				.values(schoolData)
-				.$returningId();
-			console.log("dbへのinsert成功しました", result);
+				.values(schoolData);
+			console.log("dbへのinsert成功しました");
 			return ok({
 				...schoolData,
 			});

@@ -15,10 +15,9 @@ import { SchoolCreateForm } from "./_components/create-school-form";
 export default function CreateSchoolPage() {
 	const router = useRouter();
 
-	const handleSchoolCreate = () => {
-		// スクール作成後はschoolのdashboardページへ戻る
-		// TODO: 作成したスクールを自動選択する処理を追加
-		router.push("/");
+	const handleSchoolCreate = (school: { id: string }) => {
+		// スクール作成後、スクール管理ページに遷移
+		router.push(`/admin-school/${school.id}`);
 	};
 
 	return (

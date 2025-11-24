@@ -7,7 +7,8 @@
 		"dev": "tsx watch src/interface/index.ts",
 		"build": "tsc",
 		"start": "node dist/index.js",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"seed": "tsx src/infrastructure/db/seed/index.ts"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.19.6",
