@@ -8,6 +8,7 @@ import {
 	accountResitoryClient,
 } from "../service/container/index.ts";
 import { AccountCreateSchema, EnrollSchoolCreateSchema, SchoolCreateSchema } from "./schema.ts";
+import { err } from "@piano_supporter/common/lib/error.ts";
 
 export const accountRoute = new Hono()
 	.get("/:userId", async (c) => {
@@ -57,13 +58,16 @@ export const enrollSchoolRoute = new Hono()
 	.get("/share-code/:shareCode", async (c) => {
 		const shareCode = c.req.param("shareCode");
 		if (!shareCode) {
-			return c.json({ message: "shareCodeが必要です" }, 400);
+			return c.json(err({
+				type: "BAD_REQUEST",
+				message: "shareCodeが必要です",
+			}), 400);
 		}
 		const result = await schoolRepositoryClient.findByShareCode(shareCode);
 		if (!result.ok) {
-			return c.json({ message: result.error.message }, 404);
+			return c.json(result, 404);
 		}
-		return c.json(result.value, 200);
+		return c.json(result, 200);
 	})
 	.post(
 		"/",

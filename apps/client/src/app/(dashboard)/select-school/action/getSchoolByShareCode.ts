@@ -1,56 +1,38 @@
 import { client } from "@/lib/apiClient";
 import type { School } from "@piano_supporter/common/domains/school.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
+import { ok } from "@piano_supporter/common/lib/error.ts";
 
 export const getSchoolByShareCode = async (
 	shareCode: string,
 ): Promise<Result<School>> => {
 	try {
-		// hono clientのパスパラメータの使い方: client['route-name']['path-segment'][param].$get()
 		const rawResult = await client['enroll-school']['share-code'][":shareCode"].$get({
             param: { shareCode: shareCode }
         });
-		if (!rawResult.ok) {
-			// 404エラーの場合
-			if (rawResult.status === 404) {
-				return {
-					ok: false,
-					error: {
-						type: "NOT_FOUND",
-						message: "スクールが見つかりませんでした",
-					},
-				};
-			}
-			return {
-				ok: false,
-				error: {
-					type: "UNEXPECTED",
-					message: "スクールの取得に失敗しました",
-				},
-			};
+		const response = await rawResult.json() as Result<{
+			id: string;
+			name: string;
+			email: string;
+			location: string;
+			shareCode: string;
+			createdAt: string;
+			updatedAt: string | null;
+		}>;
+		
+		if (!response.ok) {
+			return response as Result<School>;
 		}
-        const response = await rawResult.json();
-		// JSONレスポンスの日付文字列をDateオブジェクトに変換
+		
+		// サーバー側でISO文字列として返される日付をDateオブジェクトに変換
 		const school: School = {
-			...response,
-			createdAt: new Date(response.createdAt),
-			updatedAt: response.updatedAt ? new Date(response.updatedAt) : null,
+			...response.value,
+			createdAt: new Date(response.value.createdAt),
+			updatedAt: response.value.updatedAt ? new Date(response.value.updatedAt) : null,
 		};
-		return {
-			ok: true,
-			value: school,
-		};
+		
+		return ok(school);
 	} catch (error) {
-		// 404エラーの場合（アカウントが存在しない）は正常なケースとして扱う
-		if (error instanceof Error && error.message.includes('404')) {
-			return {
-				ok: false,
-				error: {
-					type: "NOT_FOUND",
-					message: "スクールが見つかりませんでした",
-				},
-			};
-		}
 		return {
 			ok: false,
 			error: {
