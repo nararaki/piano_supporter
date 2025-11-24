@@ -37,8 +37,14 @@ export class AccountRespositoryClient implements AccountRepository {
 				.where(eq(account.id, id))
 				.limit(1)
 				.execute();
-			const accountData = result as Account;
-			return ok(accountData);
+			if(result){
+				const accountData = result as Account;
+				return ok(accountData);
+			}
+			return err({
+				type: "CANNOT_FIND_ACCOUNT",
+				message: "アカウントが見つかりません",
+			});
 		} catch (e) {
 			return err({
 				type: "UNEXPECTED",

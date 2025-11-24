@@ -17,16 +17,20 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
+		"@clerk/nextjs": "^6.35.4",
 		"@hono/node-server": "^1.19.6",
 		"dotenv": "^17.2.3",
 		"drizzle-orm": "^0.44.7",
 		"hono": "^4.10.6",
+		"lucide-react": "^0.554.0",
+		"react": "^19.2.0",
 		"uuidv7": "^1.0.2",
 		"zod": "^4.1.12"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.5",
 		"@types/node": "^24.10.1",
+		"@types/react": "^19.2.6",
 		"drizzle-kit": "^0.31.7",
 		"tsx": "^4.20.6",
 		"typescript": "^5.9.3",

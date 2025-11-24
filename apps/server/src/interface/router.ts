@@ -5,28 +5,40 @@ import {
 	initializeAccountService,
 	initializeSchoolService,
 	schoolRepositoryClient,
+	accountResitoryClient,
 } from "../service/container/index.ts";
 import { AccountCreateSchema, EnrollSchoolCreateSchema, SchoolCreateSchema } from "./schema.ts";
-import { ok } from "@piano_supporter/common/lib/error.ts";
 
-export const accountRoute = new Hono().post(
-	"/",
-	zValidator("json", AccountCreateSchema),
-	async (c) => {
-		const body = await c.req.json();
-		const { userId, lastName, firstName, email } = body;
-		const result = await initializeAccountService.exec(
-			userId,
-			lastName,
-			firstName,
-			email,
-		);
+export const accountRoute = new Hono()
+	.get("/:userId", async (c) => {
+		const userId = c.req.param("userId");
+		if (!userId) {
+			return c.json({ ok: false, error: { type: "INVALID_INPUT", message: "userIdが必要です" } }, 400);
+		}
+		const result = await accountResitoryClient.findById(userId);
 		if (!result.ok) {
-			return c.json(result, 500);
+			return c.json(result, 404);
 		}
 		return c.json(result, 200);
-	},
-);
+	})
+	.post(
+		"/",
+		zValidator("json", AccountCreateSchema),
+		async (c) => {
+			const body = await c.req.json();
+			const { userId, lastName, firstName, email } = body;
+			const result = await initializeAccountService.exec(
+				userId,
+				lastName,
+				firstName,
+				email,
+			);
+			if (!result.ok) {
+				return c.json(result, 500);
+			}
+			return c.json(result, 200);
+		},
+	);
 
 export const schoolRoute = new Hono().post(
 	"/",
