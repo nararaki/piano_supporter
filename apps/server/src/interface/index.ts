@@ -3,11 +3,12 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { accountRoute, schoolRoute } from "./router.ts";
+import { accountRoute, enrollSchoolRoute, schoolRoute } from "./router.ts";
 
 export const apiRoutes = new Hono()
 	.route("/account-init", accountRoute)
-	.route("/school-init", schoolRoute);
+	.route("/school-init", schoolRoute)
+	.route("/enroll-school", enrollSchoolRoute);
 
 const app = new Hono()
 	.use(

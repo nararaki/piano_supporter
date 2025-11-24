@@ -2,26 +2,25 @@ import type {
 	createSchoolDatabase,
 	createServerSchool,
 	School,
-} from "@piano_supporter/common/domains/index.ts";
+} from "@piano_supporter/common/domains/school.ts";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { eq } from "drizzle-orm";
-import type { schoolRepository } from "../../../domain/school/repository.ts";
+import type { schoolRepository } from "../../../repository/school/repository.ts";
 import { db } from "../initial.ts";
-import { schoolScheme } from "../schema/school.ts";
+import { school } from "../schema/school.ts";
 
 class SchoolRepositoryClient implements schoolRepository {
 	async createAccount(
-		school: createSchoolDatabase,
+		schoolData: createSchoolDatabase,
 	): Promise<Result<createServerSchool>> {
 		try {
 			console.log("dbへのinsert開始します...");
-			const result = await db
-				.insert(schoolScheme)
-				.values(school)
-				.$returningId();
-			console.log("dbへのinsert成功しました", result);
+			await db
+				.insert(school)
+				.values(schoolData);
+			console.log("dbへのinsert成功しました");
 			return ok({
-				...school,
+				...schoolData,
 			});
 		} catch (e) {
 			console.log("sippai", e);
@@ -36,8 +35,8 @@ class SchoolRepositoryClient implements schoolRepository {
 		try {
 			const [data] = await db
 				.select()
-				.from(schoolScheme)
-				.where(eq(schoolScheme.id, id))
+				.from(school)
+				.where(eq(school.id, id))
 				.limit(1)
 				.execute();
 			if (data) {
@@ -60,8 +59,8 @@ class SchoolRepositoryClient implements schoolRepository {
 		try {
 			const [data] = await db
 				.select()
-				.from(schoolScheme)
-				.where(eq(schoolScheme.shareCode, id))
+				.from(school)
+				.where(eq(school.shareCode, id))
 				.limit(1)
 				.execute();
 			if (data) {

@@ -1,0 +1,10 @@
+export interface Post {
+	id: string;
+	description: string;
+	videoUrl: string;
+	musicId: string;
+	accountId: string;
+	createdAt: Date;
+	updatedAt: Date | null;
+}
+

@@ -1,5 +1,5 @@
 import { err, ok } from "@piano_supporter/common/lib/error.ts";
-import type { IFileUploader } from "../domain/media/IFileUploader.ts";
+import type { IFileUploader } from "../repository/media/IFileUploader.ts";
 import { fileToBuffer } from "../lib/fileConverter.ts";
 
 export class UploadVideoService {

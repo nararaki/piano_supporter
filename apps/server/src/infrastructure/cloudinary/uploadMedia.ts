@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { v2 as cloudinary, type UploadApiOptions } from "cloudinary";
 import streamifier from "streamifier";
-import type { IFileUploader } from "../../domain/media/IFileUploader.ts";
+import type { IFileUploader } from "../../repository/media/IFileUploader.ts";
 
 export class CloudinaryApiClient implements IFileUploader {
 	constructor() {
