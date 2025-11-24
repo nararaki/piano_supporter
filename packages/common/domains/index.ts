@@ -8,7 +8,7 @@ export * from "./school";
 export * from "./userContext";
 
 // Membership関連
-export * from "./membership";
+export * from "./schoolAccountRelation";
 
 // Post関連
 export * from "./post";
@@ -21,3 +21,6 @@ export * from "./video";
 
 // Modification関連
 export * from "./modification";
+
+// Role関連
+export * from "./role";

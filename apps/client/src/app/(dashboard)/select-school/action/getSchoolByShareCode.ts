@@ -1,9 +1,9 @@
-import { client } from "@/lib/apiClient";
-import { deserialize } from "@/lib/serializeSchool.ts";
+import { client } from "@/lib/apiClient.ts";
+import { deserialize } from "@/lib/serialize.ts";
 import type { School } from "@piano_supporter/common/domains/school.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { ok } from "@piano_supporter/common/lib/error.ts";
-import type { Deserializable } from "@/lib/serializeSchool.ts";
+import type { Deserializable } from "@/lib/serialize.ts";
 
 export const getSchoolByShareCode = async (
 	shareCode: string,

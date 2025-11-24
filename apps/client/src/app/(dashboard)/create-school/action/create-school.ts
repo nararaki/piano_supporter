@@ -1,8 +1,8 @@
 import { client } from "@/lib/apiClient";
 import { ok } from "@piano_supporter/common/lib/error.ts";
-import type { SchoolCreateData } from "@piano_supporter/common/domains/school.ts";
+import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
 
-export const createSchool = async(data:SchoolCreateData)=>{
+export const createSchool = async(data:schoolCreateData)=>{
     const rawResult = await client['school-init'].$post({
         json: data
     });
@@ -12,4 +12,3 @@ export const createSchool = async(data:SchoolCreateData)=>{
     }
     return ok(response);
 }
-

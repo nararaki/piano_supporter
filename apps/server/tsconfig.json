@@ -11,6 +11,6 @@
 		"skipLibCheck": true,
 		"baseUrl": "."
 	},
-	"include": ["**/*.ts", "**/*.tsx"],
+	"include": ["**/*.ts", "**/*.tsx", "../../packages/common/domains/role.ts"],
 	"exclude": ["node_modules"]
 }

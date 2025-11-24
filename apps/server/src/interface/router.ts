@@ -7,8 +7,9 @@ import {
 	schoolRepositoryClient,
 	accountResitoryClient,
 } from "../service/container/index.ts";
-import { AccountCreateSchema, EnrollSchoolCreateSchema, SchoolCreateSchema } from "./schema.ts";
+import { AccountCreateSchema, SchoolCreateSchema, EnrollSchoolCreateSchema } from "./sheme.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
+import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
 
 export const accountRoute = new Hono()
 	.get("/:userId", async (c) => {
@@ -45,7 +46,7 @@ export const schoolRoute = new Hono().post(
 	"/",
 	zValidator("json", SchoolCreateSchema),
 	async (c) => {
-		const body = await c.req.json();
+		const body = await c.req.json() as schoolCreateData;
 		const result = await initializeSchoolService.exec(body);
 		if (!result.ok) {
 			return c.json(result, 500);

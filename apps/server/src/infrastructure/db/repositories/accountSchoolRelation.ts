@@ -2,18 +2,14 @@ import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { db } from "../initial.ts";
 import { accountSchoolRelation } from "../schema/role.ts";
 import { uuidv7 } from "uuidv7";
+import type { SchoolAccountRelation } from "@piano_supporter/common/domains/schoolAccountRelation.ts";
+import type { accountSchoolRelationRepository } from "../../../repository/accountSchoolRelation/repository.js";
 
-export interface AccountSchoolRelationData {
-	id: string;
-	accountId: string;
-	schoolId: string;
-}
-
-class AccountSchoolRelationRepository {
+class AccountSchoolRelationRepository implements accountSchoolRelationRepository {
 	async create(
 		accountId: string,
 		schoolId: string,
-	): Promise<Result<AccountSchoolRelationData>> {
+	): Promise<Result<SchoolAccountRelation>> {
 		try {
 			const relationId = uuidv7();
 			await db.insert(accountSchoolRelation).values({
@@ -21,10 +17,13 @@ class AccountSchoolRelationRepository {
 				accountId,
 				schoolId,
 			});
+			const now = new Date();
 			return ok({
 				id: relationId,
 				accountId,
 				schoolId,
+				createdAt: now,
+				updatedAt: now
 			});
 		} catch (e) {
 			console.log("アカウントとスクールの連携に失敗しました", e);

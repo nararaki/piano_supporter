@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { showError, showSuccess } from "@/components/ui/toast";
 import { createSchool } from "../action/create-school";
+import { useUser } from "@clerk/nextjs";
 
 interface SchoolCreateFormProps {
 	onSchoolCreate: (school: SchoolCreateData) => void;
@@ -23,13 +24,20 @@ export function SchoolCreateForm({ onSchoolCreate }: SchoolCreateFormProps) {
 		location: "",
 		email: "",
 	});
+	const { user } = useUser();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
 
 		try {
-			const result = await createSchool(formData);
+			const createSchoolData = {
+				name: formData.name,
+				location: formData.location,
+				email: formData.email,
+				userId: user?.id || "",
+			};
+			const result = await createSchool(createSchoolData);
 			if (!result.ok) {
 				showError("errorが発生しました");
 			}

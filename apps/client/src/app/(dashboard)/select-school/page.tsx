@@ -52,8 +52,8 @@ export default function SelectSchoolPage() {
 
 			showSuccess("スクールを選択しました", `${school.name}を選択しました`);
 
-			// TODO: 次のページへ遷移
-			// router.push('/dashboard');
+			// 登録成功後、/homeに遷移
+			router.push("/home");
 		} catch (error) {
 			console.error("[v0] Error selecting school:", error);
 			showError(
