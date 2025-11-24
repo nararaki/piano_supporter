@@ -17,48 +17,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { showError, showSuccess } from "@/components/ui/toast";
 import { SchoolIdInput } from "./_components/school-id-input";
 import { SchoolSearch } from "./_components/school-search";
-import { createAccount } from "./action/createAccount";
 import { enrollSchool } from "./action/enrollSchool";
-import { createServerAccount } from "@piano_supporter/common/domains/account.ts";
-import { Result } from "@piano_supporter/common/lib/error.ts";
 
 export default function SelectSchoolPage() {
 	const router = useRouter();
 	const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
-	const [accountId, setAccountId] = useState<string | null>(null);
 	const { isLoaded, userId, sessionId } = useAuth();
 	const { isLoaded: isUserLoaded, isSignedIn, user } = useUser();
-	useEffect(() => {
-		const handleAccountCreation = async () => {
-			if (
-				isSignedIn &&
-				user &&
-				user.lastName &&
-				user.firstName &&
-				user.emailAddresses
-			) {
-				const result: Result<createServerAccount> = await createAccount(
-					user.id,
-					user.lastName,
-					user.firstName,
-					user.emailAddresses[0].emailAddress,
-				);
-				if (!result.ok) {
-					showError("アカウント登録に失敗しました");
-					router.push("/sign-in");
-					return;
-				}
-				// アカウントIDを保存（レスポンスから取得）
-				if (result.value && result.value.id) {
-					setAccountId(result.value.id);
-				} else {
-					// フォールバック: userIdを使用
-					setAccountId(user.id);
-				}
-			}
-		};
-		handleAccountCreation();
-	}, [user, isSignedIn, router]);
+
+	// アカウントIDはuserIdを使用（homeで既にアカウントが作成されている）
+	const accountId = userId;
 
 	const handleSchoolSelect = async (school: School) => {
 		try {
