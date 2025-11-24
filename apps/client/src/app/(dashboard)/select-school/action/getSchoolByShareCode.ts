@@ -1,7 +1,9 @@
 import { client } from "@/lib/apiClient";
+import { deserialize } from "@/lib/serializeSchool.ts";
 import type { School } from "@piano_supporter/common/domains/school.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { ok } from "@piano_supporter/common/lib/error.ts";
+import type { Deserializable } from "@/lib/serializeSchool.ts";
 
 export const getSchoolByShareCode = async (
 	shareCode: string,
@@ -10,28 +12,18 @@ export const getSchoolByShareCode = async (
 		const rawResult = await client['enroll-school']['share-code'][":shareCode"].$get({
             param: { shareCode: shareCode }
         });
-		const response = await rawResult.json() as Result<{
-			id: string;
-			name: string;
-			email: string;
-			location: string;
-			shareCode: string;
-			createdAt: string;
-			updatedAt: string | null;
-		}>;
+		const response = await rawResult.json() as Result<Deserializable<School>>;
 		
 		if (!response.ok) {
 			return response as Result<School>;
 		}
 		
 		// サーバー側でISO文字列として返される日付をDateオブジェクトに変換
-		const school: School = {
-			...response.value,
-			createdAt: new Date(response.value.createdAt),
-			updatedAt: response.value.updatedAt ? new Date(response.value.updatedAt) : null,
-		};
-		
-		return ok(school);
+		const parsseResult = deserialize(response.value);
+		if(!parsseResult.ok){
+			return parsseResult;
+		}
+		return ok(parsseResult.value);
 	} catch (error) {
 		return {
 			ok: false,
