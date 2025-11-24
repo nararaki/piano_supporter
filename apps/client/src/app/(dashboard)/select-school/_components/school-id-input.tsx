@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { getSchoolByShareCode } from "../action/getSchoolByShareCode";
 
 interface SchoolIdInputProps {
 	onSchoolSelect: (school: School) => void;
@@ -29,20 +30,13 @@ export function SchoolIdInput({ onSchoolSelect }: SchoolIdInputProps) {
 		setFoundSchool(null);
 
 		try {
-			// APIエンドポイントを呼び出し
-			const response = await fetch(
-				`http://localhost:8000/enroll-school/share-code/${shareCode}`,
-			);
-
-			if (!response.ok) {
-				if (response.status === 404) {
-					throw new Error("スクールが見つかりませんでした");
-				}
-				throw new Error("スクールの取得に失敗しました");
+			const result = await getSchoolByShareCode(shareCode);
+			if (!result.ok) {
+				setError(result.error.message || "スクールの取得に失敗しました");
+				return;
 			}
 
-			const school: School = await response.json();
-			setFoundSchool(school);
+			setFoundSchool(result.value);
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "エラーが発生しました");
 		} finally {
