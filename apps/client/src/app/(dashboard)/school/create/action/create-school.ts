@@ -12,3 +12,4 @@ export const createSchool = async(
 	const response = await rawResult.json() as Result<createServerSchool>;
 	return response;
 };
+
