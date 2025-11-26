@@ -17,7 +17,7 @@ export default function CreateSchoolPage() {
 
 	const handleSchoolCreate = (school: { id: string }) => {
 		// スクール作成後、スクール管理ページに遷移
-		router.push(`/admin-school/${school.id}`);
+		router.push(`/school/admin/${school.id}`);
 	};
 
 	return (
@@ -28,7 +28,7 @@ export default function CreateSchoolPage() {
 						<Button
 							variant="ghost"
 							size="sm"
-							onClick={() => router.push("/select-school")}
+							onClick={() => router.push("/school/select")}
 							className="gap-2"
 						>
 							<ArrowLeft className="h-4 w-4" />

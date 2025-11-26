@@ -18,3 +18,13 @@ export const EnrollSchoolCreateSchema = z.object({
 	accountId: z.string().min(1, { message: "accountIdがないです" }),
 	schoolId: z.string().min(1, { message: "schoolIdがないです" }),
 });
+
+export const GetPostsSchema = z.object({
+	accountId: z.string().min(1, { message: "accountIdがないです" }),
+});
+
+export const CreatePostSchema = z.object({
+	accountId: z.string().min(1, { message: "accountIdがないです" }),
+	title: z.string().min(1, { message: "タイトルは必須です" }),
+	content: z.string().min(1, { message: "内容は必須です" }),
+});

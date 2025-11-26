@@ -8,3 +8,9 @@ export interface Post {
 	updatedAt: Date | null;
 }
 
+export interface mockPot{
+	id: string;
+	accountId: string;
+	title: string;
+	content: string;
+}

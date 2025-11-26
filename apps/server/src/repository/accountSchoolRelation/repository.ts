@@ -3,4 +3,5 @@ import type { SchoolAccountRelation } from "@piano_supporter/common/domains/scho
 
 export interface accountSchoolRelationRepository {
 	create(accountId: string, schoolId: string): Promise<Result<SchoolAccountRelation>>;
+	findByAccountId(accountId: string): Promise<Result<SchoolAccountRelation[]>>;
 }

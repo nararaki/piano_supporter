@@ -89,7 +89,7 @@ export default function SelectSchoolPage() {
 					<div className="mt-6 flex items-center justify-center border-t pt-6">
 						<Button
 							variant="outline"
-							onClick={() => router.push("/create-school")}
+							onClick={() => router.push("/school/create")}
 							className="w-full sm:w-auto"
 						>
 							<Plus className="mr-2 h-4 w-4" />

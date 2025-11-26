@@ -36,8 +36,8 @@ export default function DashboardLayout({
 		{ icon: Music, label: "練習中曲一覧", href: "/practicing" },
 		{ icon: CheckSquare, label: "task", href: "/tasks" },
 		{ icon: Plus, label: "投稿する", href: "/newpost" },
-		{ icon: School, label: "スクールを作成", href: "/create-school" },
-		{ icon: LinkIcon, label: "スクール連携", href: "/select-school" },
+		{ icon: School, label: "スクールを作成", href: "/school/create" },
+		{ icon: LinkIcon, label: "スクール連携", href: "/school/select" },
 	];
 
 	return (

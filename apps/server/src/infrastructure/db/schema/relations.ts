@@ -22,6 +22,7 @@ export const schoolRelations = relations(school, ({ many }) => ({
 
 export const postRelations = relations(post, ({ one, many }) => ({
   account: one(account, { fields: [post.accountId], references: [account.id] }),
+  school: one(school, { fields: [post.schoolId], references: [school.id] }),
   videos: many(video),
   comments: many(comment),
   likes: many(postLike),
