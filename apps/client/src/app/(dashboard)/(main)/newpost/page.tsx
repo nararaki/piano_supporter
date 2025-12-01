@@ -2,7 +2,7 @@
 
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { showError, showSuccess } from "@/components/ui/toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Video, X } from "lucide-react";
+import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { createPost } from "./action/createPost";
 
 export default function NewPostPage() {
@@ -24,6 +25,62 @@ export default function NewPostPage() {
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+	const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+	const videoInputRef = useRef<HTMLInputElement>(null);
+
+	const validateVideoFile = (file: File): Result<void> => {
+		const maxSize = 500 * 1024 * 1024; // 500MB
+		const allowedVideoTypes = [
+			"video/mp4",
+			"video/webm",
+			"video/mov",
+			"video/avi",
+			"video/quicktime",
+		];
+
+		if (file.size > maxSize) {
+			return err({
+				type: "BAD_REQUEST",
+				message: "ファイルサイズは500MB以下にしてください",
+			});
+		}
+
+		if (!allowedVideoTypes.includes(file.type)) {
+			return err({
+				type: "BAD_REQUEST",
+				message: "サポートされていない動画形式です。MP4、WebM、MOV、AVI形式をサポートしています",
+			});
+		}
+
+		return ok(undefined);
+	};
+
+	const handleVideoSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (!file) return;
+
+		const result = validateVideoFile(file);
+		if (!result.ok) {
+			showError("ファイルエラー", result.error.message);
+			return;
+		}
+
+		setSelectedVideo(file);
+		const url = URL.createObjectURL(file);
+		setPreviewUrl(url);
+	};
+
+	const removeVideo = () => {
+		if (previewUrl) {
+			URL.revokeObjectURL(previewUrl);
+		}
+		setSelectedVideo(null);
+		setPreviewUrl(null);
+		if (videoInputRef.current) {
+			videoInputRef.current.value = "";
+		}
+	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -46,6 +103,12 @@ export default function NewPostPage() {
 		setIsLoading(true);
 
 		try {
+			// TODO: ビデオアップロードロジックを実装
+			// if (selectedVideo) {
+			//   const videoUrl = await uploadVideoToS3(selectedVideo);
+			//   // videoUrlを使用して投稿を作成
+			// }
+
 			const result = await createPost({
 				accountId: userId,
 				title: title.trim(),
@@ -62,6 +125,7 @@ export default function NewPostPage() {
 			// フォームをリセット
 			setTitle("");
 			setContent("");
+			removeVideo();
 
 			// ホームページに遷移
 			router.push("/home");
@@ -114,6 +178,68 @@ export default function NewPostPage() {
 								disabled={isLoading}
 								className="min-h-[200px]"
 							/>
+						</div>
+
+						<div className="space-y-2">
+							<Label htmlFor="video">動画</Label>
+							{!selectedVideo ? (
+								<div className="flex items-center gap-2">
+									<Label htmlFor="video-upload" className="cursor-pointer">
+										<Button
+											type="button"
+											variant="outline"
+											className="gap-2"
+											disabled={isLoading}
+											asChild
+										>
+											<span>
+												<Video className="h-4 w-4" />
+												動画を選択
+											</span>
+										</Button>
+									</Label>
+									<Input
+										ref={videoInputRef}
+										id="video-upload"
+										type="file"
+										accept="video/*"
+										onChange={handleVideoSelect}
+										className="hidden"
+										disabled={isLoading}
+									/>
+									<p className="text-sm text-muted-foreground">
+										最大500MB、MP4、WebM、MOV、AVI形式をサポート
+									</p>
+								</div>
+							) : (
+								<div className="space-y-2">
+									<div className="relative rounded-lg overflow-hidden border bg-muted">
+										{previewUrl && (
+											<video
+												src={previewUrl}
+												controls
+												className="w-full max-h-[400px]"
+											/>
+										)}
+										<div className="absolute top-2 right-2">
+											<Button
+												type="button"
+												variant="destructive"
+												size="icon"
+												onClick={removeVideo}
+												disabled={isLoading}
+												className="h-8 w-8"
+											>
+												<X className="h-4 w-4" />
+											</Button>
+										</div>
+									</div>
+									<div className="text-sm text-muted-foreground">
+										<p>ファイル名: {selectedVideo.name}</p>
+										<p>サイズ: {(selectedVideo.size / (1024 * 1024)).toFixed(2)} MB</p>
+									</div>
+								</div>
+							)}
 						</div>
 
 						<div className="flex gap-2 justify-end">
