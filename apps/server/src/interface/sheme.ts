@@ -28,3 +28,13 @@ export const CreatePostSchema = z.object({
 	title: z.string().min(1, { message: "タイトルは必須です" }),
 	content: z.string().min(1, { message: "内容は必須です" }),
 });
+
+export const GeneratePresignedUrlSchema = z.object({
+	fileName: z.string().min(1, { message: "ファイル名は必須です" }),
+	contentType: z.string().min(1, { message: "Content-Typeは必須です" }),
+});
+
+export const UploadVideoSchema = z.object({
+	fileName: z.string().min(1, { message: "ファイル名は必須です" }),
+	contentType: z.string().min(1, { message: "Content-Typeは必須です" }),
+});

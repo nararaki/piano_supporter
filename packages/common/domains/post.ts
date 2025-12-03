@@ -14,3 +14,16 @@ export interface mockPot{
 	title: string;
 	content: string;
 }
+
+export interface CreatePostData {
+	accountId: string;
+	title: string;
+	content: string;
+	videoUrl?: string;
+}
+
+export interface PresignedUrlResponse {
+	presignedUrl: string;
+	key: string;
+	cloudFrontUrl: string;
+}

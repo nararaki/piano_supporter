@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { showError, showSuccess } from "@/components/ui/toast";
-import { Loader2, Video, X } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Loader2, Video, X, Upload } from "lucide-react";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { createPost } from "./action/createPost";
 
@@ -27,6 +28,8 @@ export default function NewPostPage() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+	const [uploadProgress, setUploadProgress] = useState(0);
+	const [isUploading, setIsUploading] = useState(false);
 	const videoInputRef = useRef<HTMLInputElement>(null);
 
 	const validateVideoFile = (file: File): Result<void> => {
@@ -103,17 +106,25 @@ export default function NewPostPage() {
 		setIsLoading(true);
 
 		try {
-			// TODO: ビデオアップロードロジックを実装
-			// if (selectedVideo) {
-			//   const videoUrl = await uploadVideoToS3(selectedVideo);
-			//   // videoUrlを使用して投稿を作成
-			// }
+			// ビデオファイルを含めて投稿を作成（S3アップロードも含む）
+			if (selectedVideo) {
+				setIsUploading(true);
+				setUploadProgress(0);
+			}
 
-			const result = await createPost({
-				accountId: userId,
-				title: title.trim(),
-				content: content.trim(),
-			});
+			const result = await createPost(
+				{
+					accountId: userId,
+					title: title.trim(),
+					content: content.trim(),
+					videoFile: selectedVideo || undefined,
+				},
+				(progress) => {
+					setUploadProgress(progress);
+				},
+			);
+
+			setIsUploading(false);
 
 			if (!result.ok) {
 				showError("投稿の作成に失敗しました", result.error.message || "エラーが発生しました");
@@ -134,6 +145,8 @@ export default function NewPostPage() {
 			showError("エラー", "投稿の作成中にエラーが発生しました");
 		} finally {
 			setIsLoading(false);
+			setIsUploading(false);
+			setUploadProgress(0);
 		}
 	};
 
@@ -182,6 +195,15 @@ export default function NewPostPage() {
 
 						<div className="space-y-2">
 							<Label htmlFor="video">動画</Label>
+							{isUploading && (
+								<div className="space-y-2">
+									<div className="flex items-center gap-2 text-sm text-muted-foreground">
+										<Upload className="h-4 w-4" />
+										アップロード中... {uploadProgress}%
+									</div>
+									<Progress value={uploadProgress} className="h-2" />
+								</div>
+							)}
 							{!selectedVideo ? (
 								<div className="flex items-center gap-2">
 									<Label htmlFor="video-upload" className="cursor-pointer">
@@ -215,6 +237,7 @@ export default function NewPostPage() {
 								<div className="space-y-2">
 									<div className="relative rounded-lg overflow-hidden border bg-muted">
 										{previewUrl && (
+											// biome-ignore lint/a11y/useMediaCaption: <explanation>
 											<video
 												src={previewUrl}
 												controls

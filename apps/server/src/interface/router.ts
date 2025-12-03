@@ -9,9 +9,10 @@ import {
 	getPostsService,
 	createPostService,
 } from "../service/container/index.ts";
-import { AccountCreateSchema, SchoolCreateSchema, EnrollSchoolCreateSchema, GetPostsSchema, CreatePostSchema } from "./sheme.ts";
+import { AccountCreateSchema, SchoolCreateSchema, EnrollSchoolCreateSchema, GetPostsSchema, CreatePostSchema, GeneratePresignedUrlSchema } from "./sheme.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import { newS3PresignedUrlGenerator } from "src/infrastructure/s3/presignedUrlGenerator.ts";
 
 export const accountRoute = new Hono()
 	.get("/:userId", async (c) => {
@@ -110,6 +111,22 @@ export const postsRoute = new Hono()
 			const result = await getPostsService.exec(accountId);
 			if (!result.ok) {
 				return c.json(result, 404);
+			}
+			return c.json(result, 200);
+		},
+	)
+	.post(
+		"/presigned-url",
+		zValidator("json", GeneratePresignedUrlSchema),
+		async (c) => {
+			const body = await c.req.json();
+			const { fileName, contentType } = body;
+			const result = await newS3PresignedUrlGenerator.generatePresignedUrl(
+				fileName,
+				contentType,
+			);
+			if (!result.ok) {
+				return c.json(result, 500);
 			}
 			return c.json(result, 200);
 		},
