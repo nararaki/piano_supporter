@@ -1,5 +1,5 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
-import type { mockPot } from "@piano_supporter/common/domains/post.ts";
+import type { Post } from "@piano_supporter/common/domains/post.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { accountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.ts";
 import type { PostsRepository } from "../repository/posts/repository.ts";
@@ -10,7 +10,7 @@ export class GetPostsService {
 		private postsRepository: PostsRepository,
 	) {}
 
-	async exec(accountId: string): Promise<Result<mockPot[]>> {
+	async exec(accountId: string): Promise<Result<Post[]>> {
 		// accountIdからAccountSchoolRelationを検索
 		const relationsResult = await this.accountSchoolRelationRepository.findByAccountId(accountId);
 		

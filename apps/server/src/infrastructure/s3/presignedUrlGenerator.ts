@@ -2,7 +2,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import type { PresignedUrlResponse } from "@piano_supporter/common/domains/post.ts";
-import { randomUUID } from "crypto";
+import { uuidv7 } from "uuidv7";
 
 export class S3PresignedUrlGenerator {
 	private s3Client: S3Client;
@@ -59,7 +59,7 @@ export class S3PresignedUrlGenerator {
 
 			// ファイル名を安全にする（UUID + 元の拡張子）
 			const fileExtension = fileName.split(".").pop() || "mp4";
-			const key = `videos/${randomUUID()}.${fileExtension}`;
+			const key = `videos/${uuidv7()}.${fileExtension}`;
 
 			const command = new PutObjectCommand({
 				Bucket: this.bucketName,

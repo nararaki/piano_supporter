@@ -1,6 +1,6 @@
 import { client } from "@/lib/apiClient";
 import type {
-	mockPot,
+	Post,
 	CreatePostData,
 	PresignedUrlResponse,
 } from "@piano_supporter/common/domains/post.ts";
@@ -271,7 +271,7 @@ const uploadVideoToS3 = async (
 export const createPost = async (
 	data: CreatePostData & { videoFile?: File },
 	onProgress?: (progress: number) => void,
-): Promise<Result<mockPot>> => {
+): Promise<Result<Post>> => {
 	try {
 		let videoUrl: string | undefined;
 
@@ -335,7 +335,7 @@ export const createPost = async (
 			ok: rawResult.ok,
 		});
 
-		const response = (await rawResult.json()) as Result<mockPot>;
+		const response = (await rawResult.json()) as Result<Post>;
 
 		if (!response.ok) {
 			console.error("[createPost] 投稿作成失敗", {

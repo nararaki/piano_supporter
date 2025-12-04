@@ -8,7 +8,7 @@ import { createAccount } from "@/app/(dashboard)/(main)/home/action/createAccoun
 import { getAccount } from "@/app/(dashboard)/(main)/home/action/getAccount";
 import { getPosts } from "@/app/(dashboard)/(main)/home/action/getPosts";
 import { createServerAccount } from "@piano_supporter/common/domains/account.ts";
-import type { mockPot } from "@piano_supporter/common/domains/post.ts";
+import type { Post } from "@piano_supporter/common/domains/post.ts";
 import { Result } from "@piano_supporter/common/lib/error.ts";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
@@ -18,7 +18,7 @@ export default function HomePage() {
 	const { isLoaded, isSignedIn, userId } = useAuth();
 	const { isLoaded: isUserLoaded, user } = useUser();
 	const accountCreatedRef = useRef(false);
-	const [posts, setPosts] = useState<mockPot[]>([]);
+	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoadingPosts, setIsLoadingPosts] = useState(false);
 
 	useEffect(() => {

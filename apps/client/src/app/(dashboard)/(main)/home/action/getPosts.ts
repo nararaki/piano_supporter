@@ -1,15 +1,15 @@
 import { client } from "@/lib/apiClient";
-import type { mockPot } from "@piano_supporter/common/domains/post.ts";
+import type { Post } from "@piano_supporter/common/domains/post.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 
 export const getPosts = async (
 	accountId: string,
-): Promise<Result<mockPot[]>> => {
+): Promise<Result<Post[]>> => {
 	try {
 		const rawResult = await client['posts'].$post({
 			json: { accountId: accountId }
 		});
-		const response = await rawResult.json() as Result<mockPot[]>;
+		const response = await rawResult.json() as Result<Post[]>;
 		
 		if (!response.ok) {
 			return {

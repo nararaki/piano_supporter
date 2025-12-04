@@ -1,5 +1,5 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
-import type { mockPot, CreatePostData } from "@piano_supporter/common/domains/post.ts";
+import type { Post, CreatePostData } from "@piano_supporter/common/domains/post.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { accountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.ts";
 import type { PostsRepository } from "../repository/posts/repository.ts";
@@ -10,7 +10,7 @@ export class CreatePostService {
 		private postsRepository: PostsRepository,
 	) {}
 
-	async exec(data: CreatePostData): Promise<Result<mockPot>> {
+	async exec(data: CreatePostData): Promise<Result<Post>> {
 		// accountIdからAccountSchoolRelationを検索
 		const relationsResult = await this.accountSchoolRelationRepository.findByAccountId(data.accountId);
 		
@@ -39,6 +39,7 @@ export class CreatePostService {
 			schoolId: schoolId,
 			title: data.title,
 			content: data.content,
+			videoUrl: data.videoUrl,
 		});
 
 		if (!createResult.ok) {
