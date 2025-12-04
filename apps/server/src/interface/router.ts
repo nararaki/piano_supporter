@@ -102,7 +102,7 @@ export const enrollSchoolRoute = new Hono()
 	);
 
 export const postsRoute = new Hono()
-	.post(
+	.get(
 		"/",
 		zValidator("json", GetPostsSchema),
 		async (c) => {
@@ -132,7 +132,7 @@ export const postsRoute = new Hono()
 		},
 	)
 	.post(
-		"/create",
+		"/",
 		zValidator("json", CreatePostSchema),
 		async (c) => {
 			const body = await c.req.json();

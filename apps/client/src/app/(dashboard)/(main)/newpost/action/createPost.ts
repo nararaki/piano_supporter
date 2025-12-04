@@ -1,4 +1,5 @@
 import { client } from "@/lib/apiClient";
+import { callApi } from "@/lib/apiResponse";
 import type {
 	Post,
 	CreatePostData,
@@ -6,6 +7,7 @@ import type {
 } from "@piano_supporter/common/domains/post.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { err, ok } from "@piano_supporter/common/lib/error.ts";
+import type { createPostData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
 
 /**
  * Presigned URLを取得
@@ -14,63 +16,46 @@ const getPresignedUrl = async (
 	fileName: string,
 	contentType: string,
 ): Promise<Result<PresignedUrlResponse>> => {
-	try {
-		console.log("[getPresignedUrl] リクエスト開始", {
-			fileName,
-			contentType,
-		});
+	console.log("[getPresignedUrl] リクエスト開始", {
+		fileName,
+		contentType,
+	});
 
-		const rawResult = await client["posts"]["presigned-url"].$post({
+	const result = await callApi<Result<PresignedUrlResponse>>(() =>
+		client["posts"]["presigned-url"].$post({
 			json: { fileName, contentType },
-		});
+		}),
+	);
 
-		console.log("[getPresignedUrl] レスポンス受信", {
-			status: rawResult.status,
-			statusText: rawResult.statusText,
-			ok: rawResult.ok,
-		});
-
-		const response = (await rawResult.json()) as Result<PresignedUrlResponse>;
-
-		if (!response.ok) {
-			console.error("[getPresignedUrl] エラーレスポンス", {
-				error: response.error,
-				errorType: response.error.type,
-				errorMessage: response.error.message,
-				fullResponse: response,
-			});
-			return {
-				ok: false,
-				error: response.error,
-			};
-		}
-
-		console.log("[getPresignedUrl] 成功", {
-			key: response.value.key,
-			cloudFrontUrl: response.value.cloudFrontUrl,
-		});
-
-		return response;
-	} catch (error) {
-		console.error("[getPresignedUrl] 例外発生", {
-			error,
-			errorType: error instanceof Error ? error.constructor.name : typeof error,
-			errorMessage: error instanceof Error ? error.message : String(error),
-			errorStack: error instanceof Error ? error.stack : undefined,
+	if (!result.ok) {
+		console.error("[getPresignedUrl] エラーレスポンス", {
+			error: result.error,
+			errorType: result.error.type,
+			errorMessage: result.error.message,
 			fileName,
 			contentType,
 		});
-		return {
-			ok: false,
-			error: {
-				type: "UNEXPECTED",
-				message:
-					error instanceof Error
-						? error.message
-						: "Presigned URLの取得に失敗しました",
-			},
-		};
+		return result;
 	}
+
+	// レスポンスボディがResult型の場合、そのまま返す
+	const response = result.value;
+	if (!response.ok) {
+		console.error("[getPresignedUrl] エラーレスポンス", {
+			error: response.error,
+			errorType: response.error.type,
+			errorMessage: response.error.message,
+			fullResponse: response,
+		});
+		return response;
+	}
+
+	console.log("[getPresignedUrl] 成功", {
+		key: response.value.key,
+		cloudFrontUrl: response.value.cloudFrontUrl,
+	});
+
+	return response;
 };
 
 /**
@@ -325,18 +310,23 @@ export const createPost = async (
 			hasVideoUrl: !!postData.videoUrl,
 		});
 
-		const rawResult = await client["posts"]["create"].$post({
-			json: postData as any,
-		});
+		const result = await callApi<Result<Post>>(async() =>
+			await client["posts"].$post({
+				json: postData as createPostData,
+			}),
+		);
 
-		console.log("[createPost] 投稿作成レスポンス受信", {
-			status: rawResult.status,
-			statusText: rawResult.statusText,
-			ok: rawResult.ok,
-		});
+		if (!result.ok) {
+			console.error("[createPost] 投稿作成失敗", {
+				error: result.error,
+				errorType: result.error.type,
+				errorMessage: result.error.message,
+				requestData: postData,
+			});
+			return result;
+		}
 
-		const response = (await rawResult.json()) as Result<Post>;
-
+		const response = result.value;
 		if (!response.ok) {
 			console.error("[createPost] 投稿作成失敗", {
 				error: response.error,
@@ -345,10 +335,7 @@ export const createPost = async (
 				fullResponse: response,
 				requestData: postData,
 			});
-			return {
-				ok: false,
-				error: response.error,
-			};
+			return response;
 		}
 
 		console.log("[createPost] 投稿作成成功", {

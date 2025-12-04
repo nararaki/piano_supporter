@@ -21,6 +21,7 @@ export const apiResponseHandler = async <T>(
 	}
 
 	switch (res.status) {
+		//todo: Api側で返すエラーのレスポンス番号を定義しておく
 		case 400: {
 			const errorBody = await res
 				.json()
@@ -62,5 +63,37 @@ export const apiResponseHandler = async <T>(
 				type: "UNEXPECTED",
 				message: `不明なエラー (Status: ${res.status})`,
 			});
+	}
+};
+
+/**
+ * Hono ClientのAPI呼び出しをラップし、ネットワークエラーとステータスコードに対応した汎用関数
+ * @param apiCall Hono Clientのメソッド呼び出し（Promise<Response>を返す関数）
+ * @template T 成功時のレスポンスボディの型
+ * @returns Result<T>型のレスポンス
+ */
+export const callApi = async <T>(
+	apiCall: () => Promise<Response>,
+): Promise<Result<T>> => {
+	try {
+		const response = await apiCall();
+		return await apiResponseHandler<T>(response);
+	} catch (error) {
+		// ネットワークエラー（接続エラー、タイムアウトなど）
+		if (error instanceof TypeError && error.message.includes("fetch")) {
+			return err({
+				type: "UNEXPECTED",
+				message: "ネットワークエラーが発生しました。インターネット接続を確認してください。",
+			});
+		}
+
+		// その他の予期しないエラー
+		return err({
+			type: "UNEXPECTED",
+			message:
+				error instanceof Error
+					? `API呼び出しに失敗しました: ${error.message}`
+					: "API呼び出しに失敗しました",
+		});
 	}
 };
