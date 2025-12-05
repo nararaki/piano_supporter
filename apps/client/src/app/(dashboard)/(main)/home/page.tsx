@@ -1,25 +1,42 @@
 "use client";
 
 import { useAuth, useUser } from "@clerk/nextjs";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { showError } from "@/components/ui/toast";
 import { createAccount } from "@/app/(dashboard)/(main)/home/action/createAccount";
 import { getAccount } from "@/app/(dashboard)/(main)/home/action/getAccount";
 import { getPosts } from "@/app/(dashboard)/(main)/home/action/getPosts";
-import { createServerAccount } from "@piano_supporter/common/domains/account.ts";
+import type { createServerAccount } from "@piano_supporter/common/domains/account.ts";
 import type { Post } from "@piano_supporter/common/domains/post.ts";
-import { Result } from "@piano_supporter/common/lib/error.ts";
+import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 export default function HomePage() {
-	const router = useRouter();
 	const { isLoaded, isSignedIn, userId } = useAuth();
 	const { isLoaded: isUserLoaded, user } = useUser();
 	const accountCreatedRef = useRef(false);
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoadingPosts, setIsLoadingPosts] = useState(false);
+
+	const fetchPosts = useCallback(async (accountId: string) => {
+		setIsLoadingPosts(true);
+		try {
+			const result = await getPosts(accountId);
+			if (!result.ok) {
+				// school登録されていない場合はエラーを表示しない（正常な状態）
+				if (result.error.type !== "CANNOT_FIND_SCHOOL" && result.error.type !== "OrgValidaterError") {
+					console.error("Failed to fetch posts:", result.error);
+				}
+				return;
+			}
+			setPosts(result.value);
+		} catch (error) {
+			console.error("Unexpected error fetching posts:", error);
+		} finally {
+			setIsLoadingPosts(false);
+		}
+	}, []);
 
 	useEffect(() => {
 		const handleAccountCreation = async () => {
@@ -82,28 +99,8 @@ export default function HomePage() {
 				}
 			}
 		};
-
 		handleAccountCreation();
-	}, [isLoaded, isUserLoaded, isSignedIn, user, userId]);
-
-	const fetchPosts = async (accountId: string) => {
-		setIsLoadingPosts(true);
-		try {
-			const result = await getPosts(accountId);
-			if (!result.ok) {
-				// school登録されていない場合はエラーを表示しない（正常な状態）
-				if (result.error.type !== "CANNOT_FIND_SCHOOL" && result.error.type !== "OrgValidaterError") {
-					console.error("Failed to fetch posts:", result.error);
-				}
-				return;
-			}
-			setPosts(result.value);
-		} catch (error) {
-			console.error("Unexpected error fetching posts:", error);
-		} finally {
-			setIsLoadingPosts(false);
-		}
-	};
+	}, [isLoaded, isUserLoaded, isSignedIn, user, userId, fetchPosts]);
 
 	return (
 		<div className="container mx-auto px-4 py-6 pb-24">
