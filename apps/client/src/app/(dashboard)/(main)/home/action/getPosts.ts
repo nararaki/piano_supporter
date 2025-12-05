@@ -6,7 +6,7 @@ export const getPosts = async (
 	accountId: string,
 ): Promise<Result<Post[]>> => {
 	try {
-		const rawResult = await client['posts'].$post({
+		const rawResult = await client['posts'].$get({
 			json: { accountId: accountId }
 		});
 		const response = await rawResult.json() as Result<Post[]>;

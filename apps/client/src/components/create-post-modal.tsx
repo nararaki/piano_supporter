@@ -10,6 +10,7 @@ import {
 	Video,
 	X,
 } from "lucide-react";
+import Image from "next/image";
 import type React from "react";
 import { useRef, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -30,10 +31,11 @@ import {
 	ALLOWED_VIDEO_TYPES,
 	MAX_IMAGE_SIZE,
 } from "@piano_supporter/common/constants/upload.ts";
+import type { Post } from "@piano_supporter/common/domains/post.ts";
 
 interface CreatePostModalProps {
 	trigger: React.ReactNode;
-	onPostCreated: (post: any) => void;
+	onPostCreated: (post: Post) => void;
 }
 
 export default function CreatePostModal({
@@ -144,19 +146,16 @@ export default function CreatePostModal({
 			// Simulate post creation
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 
-			const newPost = {
-				id: Date.now(),
-				user: "あなた",
-				username: "@you",
+			// Note: This is a mock implementation. In production, use createPost function
+			// and pass the actual Post object returned from the server
+			const newPost: Post = {
+				id: Date.now().toString(),
+				accountId: "",
+				title: "",
 				content: content.trim(),
-				video: previewUrl || "/placeholder.svg?height=300&width=400",
-				likes: 0,
-				comments: 0,
-				shares: 0,
-				time: "今",
-				verified: false,
-				fileType: fileType,
-				videoDuration: videoDuration,
+				video: null,
+				createdAt: new Date(),
+				updatedAt: null,
 			};
 
 			onPostCreated(newPost);
@@ -167,6 +166,7 @@ export default function CreatePostModal({
 			setIsLoading(false);
 			setIsOpen(false);
 		} catch (error) {
+			console.error("投稿の作成に失敗しました", error);
 			setUploadError("投稿の作成に失敗しました");
 			setIsLoading(false);
 		}
@@ -214,11 +214,15 @@ export default function CreatePostModal({
 											</div>
 										</div>
 									) : (
-										<img
-											src={previewUrl || "/placeholder.svg"}
-											alt="プレビュー"
-											className="w-full h-48 object-cover"
-										/>
+										<div className="relative w-full h-48">
+											<Image
+												src={previewUrl || "/placeholder.svg"}
+												alt="プレビュー"
+												fill
+												className="object-cover"
+												unoptimized
+											/>
+										</div>
 									)}
 									<Button
 										type="button"
