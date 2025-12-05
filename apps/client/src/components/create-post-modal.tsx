@@ -25,6 +25,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
+import {
+	ALLOWED_IMAGE_TYPES,
+	ALLOWED_VIDEO_TYPES,
+	MAX_IMAGE_SIZE,
+} from "@piano_supporter/common/constants/upload.ts";
 
 interface CreatePostModalProps {
 	trigger: React.ReactNode;
@@ -49,28 +54,18 @@ export default function CreatePostModal({
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const validateFile = (file: File): string | null => {
-		const maxSize = 100 * 1024 * 1024; // 100MB
-		const allowedImageTypes = [
-			"image/jpeg",
-			"image/png",
-			"image/gif",
-			"image/webp",
-		];
-		const allowedVideoTypes = [
-			"video/mp4",
-			"video/webm",
-			"video/mov",
-			"video/avi",
-		];
-
-		if (file.size > maxSize) {
+		if (file.size > MAX_IMAGE_SIZE) {
 			return "ファイルサイズは100MB以下にしてください";
 		}
 
-		if (
-			!allowedImageTypes.includes(file.type) &&
-			!allowedVideoTypes.includes(file.type)
-		) {
+		const isImage = ALLOWED_IMAGE_TYPES.includes(
+			file.type as typeof ALLOWED_IMAGE_TYPES[number],
+		);
+		const isVideo = ALLOWED_VIDEO_TYPES.includes(
+			file.type as typeof ALLOWED_VIDEO_TYPES[number],
+		);
+
+		if (!isImage && !isVideo) {
 			return "サポートされていないファイル形式です";
 		}
 

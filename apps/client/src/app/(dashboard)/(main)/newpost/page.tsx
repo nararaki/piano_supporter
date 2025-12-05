@@ -18,6 +18,10 @@ import { showError, showSuccess } from "@/components/ui/toast";
 import { Progress } from "@/components/ui/progress";
 import { Loader2, Video, X, Upload } from "lucide-react";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
+import {
+	ALLOWED_VIDEO_TYPES,
+	MAX_VIDEO_SIZE,
+} from "@piano_supporter/common/constants/upload.ts";
 import { createPost } from "./action/createPost";
 
 export default function NewPostPage() {
@@ -33,23 +37,14 @@ export default function NewPostPage() {
 	const videoInputRef = useRef<HTMLInputElement>(null);
 
 	const validateVideoFile = (file: File): Result<void> => {
-		const maxSize = 500 * 1024 * 1024; // 500MB
-		const allowedVideoTypes = [
-			"video/mp4",
-			"video/webm",
-			"video/mov",
-			"video/avi",
-			"video/quicktime",
-		];
-
-		if (file.size > maxSize) {
+		if (file.size > MAX_VIDEO_SIZE) {
 			return err({
 				type: "BAD_REQUEST",
 				message: "ファイルサイズは500MB以下にしてください",
 			});
 		}
 
-		if (!allowedVideoTypes.includes(file.type)) {
+		if (!ALLOWED_VIDEO_TYPES.includes(file.type as typeof ALLOWED_VIDEO_TYPES[number])) {
 			return err({
 				type: "BAD_REQUEST",
 				message: "サポートされていない動画形式です。MP4、WebM、MOV、AVI形式をサポートしています",
