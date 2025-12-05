@@ -27,6 +27,8 @@ export const CreatePostSchema = z.object({
 	accountId: z.string().min(1, { message: "accountIdがないです" }),
 	title: z.string().min(1, { message: "タイトルは必須です" }),
 	content: z.string().min(1, { message: "内容は必須です" }),
+	videoUrl: z.string().min(1, { message: "動画URLは必須です" }),
+	videoType: z.string().min(1, { message: "動画タイプは必須です" }),
 });
 
 export const GeneratePresignedUrlSchema = z.object({

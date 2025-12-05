@@ -17,14 +17,8 @@ class VideoRepositoryClient implements VideoRepository {
 				.execute();
 
 			if (result) {
-				return ok({
-					id: result.id,
-					postId: result.postId,
-					url: result.url,
-					type: result.type || null,
-					createdAt: result.createdAt,
-					updatedAt: result.updatedAt || null,
-				});
+				const videoData = result as Video;
+				return ok(videoData);
 			}
 
 			return err({
@@ -50,14 +44,8 @@ class VideoRepositoryClient implements VideoRepository {
 				.execute();
 
 			if (result) {
-				return ok({
-					id: result.id,
-					postId: result.postId,
-					url: result.url,
-					type: result.type || null,
-					createdAt: result.createdAt,
-					updatedAt: result.updatedAt || null,
-				});
+				const videoData = result as Video;
+				return ok(videoData);
 			}
 
 			return ok(null);
@@ -78,17 +66,18 @@ class VideoRepositoryClient implements VideoRepository {
 				id: videoId,
 				postId: data.postId,
 				url: data.url,
-				type: data.type || null,
+				type: data.type,
 			});
 
-			return ok({
+			const videoData = {
 				id: videoId,
 				postId: data.postId,
 				url: data.url,
-				type: data.type || null,
+				type: data.type,
 				createdAt: now,
-				updatedAt: null,
-			});
+				updatedAt: now,
+			} as Video;
+			return ok(videoData);
 		} catch (e) {
 			console.log("動画の作成に失敗しました", e);
 			return err({

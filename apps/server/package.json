@@ -8,7 +8,10 @@
 		"build": "tsc",
 		"start": "node dist/index.js",
 		"typecheck": "tsc --noEmit",
-		"seed": "tsx src/infrastructure/db/seed/index.ts"
+		"seed": "tsx src/infrastructure/db/seed/index.ts",
+		"clear": "tsx src/infrastructure/db/clear/init.ts",
+		"migrate": "drizzle-kit migrate",
+		"generate": "drizzle-kit generate"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.940.0",

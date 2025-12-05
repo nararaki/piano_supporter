@@ -98,6 +98,11 @@ export default function NewPostPage() {
 			return;
 		}
 
+		if (!selectedVideo) {
+			showError("エラー", "動画ファイルを選択してください");
+			return;
+		}
+
 		setIsLoading(true);
 
 		try {
@@ -112,7 +117,7 @@ export default function NewPostPage() {
 					accountId: userId,
 					title: title.trim(),
 					content: content.trim(),
-					videoFile: selectedVideo || undefined,
+					videoFile: selectedVideo,
 				},
 				(progress) => {
 					setUploadProgress(progress);

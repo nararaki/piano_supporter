@@ -7,7 +7,10 @@
 		"build": "esbuild  --format=esm --bundle src/interface/index.ts --platform=node --outfile=dist/bundle.js  --packages=external",
 		"check": "biome check --write .",
 		"start": "node dist/bundle.js",
-		"db:generate": "drizzle-kit generate"
+		"db:generate": "npm run generate --workspace=@piano_supporter/server",
+		"db:migrate": "npm run migrate --workspace=@piano_supporter/server",
+		"db:clear": "npm run clear --workspace=@piano_supporter/server",
+		"db:seed": "npm run seed --workspace=@piano_supporter/server"
 	},
 	"repository": {
 		"type": "git",

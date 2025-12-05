@@ -13,7 +13,7 @@ export interface Video {
 	id: string;
 	postId: string;
 	url: string;
-	type: string | null;
+	type: string;
 	createdAt: Date;
 	updatedAt: Date | null;
 }
@@ -22,7 +22,8 @@ export interface CreatePostData {
 	accountId: string;
 	title: string;
 	content: string;
-	videoUrl?: string;
+	videoUrl: string;
+	videoType: string;
 }
 
 export interface PresignedUrlResponse {

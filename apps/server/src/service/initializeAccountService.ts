@@ -1,5 +1,5 @@
-import { err, ok, Result } from "@piano_supporter/common/lib/error.ts";
-import { createAccountEntity, createServerAccount } from "@piano_supporter/common/domains/account.ts";
+import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
+import { createAccountEntity, type createServerAccount } from "@piano_supporter/common/domains/account.ts";
 import type { AccountRepository } from "../repository/account/repository.ts";
 
 export class InitializeAccountService {

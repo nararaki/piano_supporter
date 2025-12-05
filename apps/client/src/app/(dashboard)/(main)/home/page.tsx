@@ -9,8 +9,8 @@ import { getPosts } from "@/app/(dashboard)/(main)/home/action/getPosts";
 import type { createServerAccount } from "@piano_supporter/common/domains/account.ts";
 import type { Post } from "@piano_supporter/common/domains/post.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { PostCard } from "@/components/post-card";
 
 export default function HomePage() {
 	const { isLoaded, isSignedIn, userId } = useAuth();
@@ -122,14 +122,7 @@ export default function HomePage() {
 			{!isLoadingPosts && posts.length > 0 && (
 				<div className="space-y-4">
 					{posts.map((post) => (
-						<Card key={post.id}>
-							<CardHeader>
-								<h3 className="text-lg font-semibold">{post.title}</h3>
-							</CardHeader>
-							<CardContent>
-								<p className="text-foreground leading-relaxed whitespace-pre-wrap">{post.content}</p>
-							</CardContent>
-						</Card>
+						<PostCard key={post.id} post={post} />
 					))}
 				</div>
 			)}

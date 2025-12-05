@@ -3,11 +3,13 @@ import type { Post, CreatePostData } from "@piano_supporter/common/domains/post.
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { accountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.ts";
 import type { PostsRepository } from "../repository/posts/repository.ts";
+import type { VideoRepository } from "../repository/video/repository.ts";
 
 export class CreatePostService {
 	constructor(
 		private accountSchoolRelationRepository: accountSchoolRelationRepository,
 		private postsRepository: PostsRepository,
+		private videoRepository: VideoRepository,
 	) {}
 
 	async exec(data: CreatePostData): Promise<Result<Post>> {
@@ -44,6 +46,23 @@ export class CreatePostService {
 
 		if (!createResult.ok) {
 			return createResult;
+		}
+
+		if (!data.videoUrl || !data.videoType) {
+			return err({
+				type: "BAD_REQUEST",
+				message: "動画URLと動画タイプは必須です",
+			});
+		}
+
+		const videoResult = await this.videoRepository.create({
+			postId: createResult.value.id,
+			url: data.videoUrl,
+			type: data.videoType,
+		});
+
+		if (!videoResult.ok) {
+			return videoResult;
 		}
 
 		return createResult;
