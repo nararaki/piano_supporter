@@ -1,8 +1,5 @@
 import {
-	int,
 	mysqlTable,
-	text,
-	timestamp,
 	varchar,
 } from "drizzle-orm/mysql-core";
 import { baseTimestampColumns } from "./time.ts";
