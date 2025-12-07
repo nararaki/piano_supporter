@@ -88,7 +88,7 @@ class PostsRepositoryClient implements PostsRepository {
 				.where(eq(post.schoolId, schoolId))
 				.execute();
 			
-			// 各投稿に対してvideoを取得
+			// 各投稿に対してvideoとaccountを取得
 			//いずれはバッチ処理にしたいよね多分joinとかでできるから
 			const posts: Post[] = await Promise.all(
 				data.map(async (row) => {

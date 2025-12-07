@@ -104,14 +104,17 @@ export const enrollSchoolRoute = new Hono()
 export const postsRoute = new Hono()
 	.get(
 		"/",
-		zValidator("json", GetPostsSchema),
+		zValidator("query", GetPostsSchema),
 		async (c) => {
-			const body = await c.req.json();
-			const { accountId } = body;
+			console.log("c.req.query()", c.req.query());
+			const query = await c.req.query();
+			const { accountId } = query;
 			const result = await getPostsService.exec(accountId);
 			if (!result.ok) {
+				console.log("result", result);
 				return c.json(result, 404);
 			}
+			console.log("result", result);
 			return c.json(result, 200);
 		},
 	)

@@ -20,7 +20,7 @@ export class GetPostsService {
 				message: "スクールに登録されていません",
 			});
 		}
-
+		console.log("relationsResult", relationsResult);
 		const relations = relationsResult.value;
 		
 		// 結果の[0]番目のschoolIdを取得
@@ -30,12 +30,12 @@ export class GetPostsService {
 				message: "教室に所属していません",
 			});
 		}
-
+		console.log("relations", relations);
 		const schoolId = relations[0].schoolId;
 
 		// 取得したschoolIdをもつ投稿を取得
 		const postsResult = await this.postsRepository.findBySchoolId(schoolId);
-		
+		console.log("postsResult", postsResult);
 		if (!postsResult.ok) {
 			return postsResult;
 		}

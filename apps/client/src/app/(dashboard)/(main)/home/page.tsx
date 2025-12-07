@@ -6,7 +6,7 @@ import { showError } from "@/components/ui/toast";
 import { createAccount } from "@/app/(dashboard)/(main)/home/action/createAccount";
 import { getAccount } from "@/app/(dashboard)/(main)/home/action/getAccount";
 import { getPosts } from "@/app/(dashboard)/(main)/home/action/getPosts";
-import type { createServerAccount } from "@piano_supporter/common/domains/account.ts";
+import type { createServerAccount, Account } from "@piano_supporter/common/domains/account.ts";
 import type { Post } from "@piano_supporter/common/domains/post.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { Loader2 } from "lucide-react";
@@ -18,6 +18,7 @@ export default function HomePage() {
 	const accountCreatedRef = useRef(false);
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoadingPosts, setIsLoadingPosts] = useState(false);
+	const [accountMap, setAccountMap] = useState<Map<string, Account>>(new Map());
 
 	const fetchPosts = useCallback(async (accountId: string) => {
 		setIsLoadingPosts(true);
@@ -31,6 +32,23 @@ export default function HomePage() {
 				return;
 			}
 			setPosts(result.value);
+
+			// 各投稿のアカウント情報を取得
+			const uniqueAccountIds = [...new Set(result.value.map((post) => post.accountId))];
+			const accountResults = await Promise.all(
+				uniqueAccountIds.map(async (id) => {
+					const accountResult = await getAccount(id);
+					return accountResult.ok ? { id, account: accountResult.value } : null;
+				}),
+			);
+
+			const newAccountMap = new Map<string, Account>();
+			accountResults.forEach((result) => {
+				if (result) {
+					newAccountMap.set(result.id, result.account);
+				}
+			});
+			setAccountMap(newAccountMap);
 		} catch (error) {
 			console.error("Unexpected error fetching posts:", error);
 		} finally {
@@ -121,9 +139,24 @@ export default function HomePage() {
 
 			{!isLoadingPosts && posts.length > 0 && (
 				<div className="space-y-4">
-					{posts.map((post) => (
-						<PostCard key={post.id} post={post} />
-					))}
+					{posts.map((post) => {
+						const account = accountMap.get(post.accountId);
+						return (
+							<PostCard
+								key={post.id}
+								post={post}
+								authorName={
+									account
+										? {
+												lastName: account.lastName,
+												firstName: account.firstName,
+												profileImage: account.profileImage,
+											}
+										: undefined
+								}
+							/>
+						);
+					})}
 				</div>
 			)}
 		</div>

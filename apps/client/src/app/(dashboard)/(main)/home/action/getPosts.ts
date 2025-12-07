@@ -7,10 +7,10 @@ export const getPosts = async (
 ): Promise<Result<Post[]>> => {
 	try {
 		const rawResult = await client['posts'].$get({
-			json: { accountId: accountId }
+			query: { accountId: accountId }
 		});
 		const response = await rawResult.json() as Result<Post[]>;
-		
+		console.log("response", response);
 		if (!response.ok) {
 			return {
 				ok: false,
