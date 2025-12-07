@@ -8,9 +8,14 @@
 		"build": "tsc",
 		"start": "node dist/index.js",
 		"typecheck": "tsc --noEmit",
-		"seed": "tsx src/infrastructure/db/seed/index.ts"
+		"seed": "tsx src/infrastructure/db/seed/index.ts",
+		"clear": "tsx src/infrastructure/db/clear/init.ts",
+		"migrate": "drizzle-kit migrate",
+		"generate": "drizzle-kit generate"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.940.0",
+		"@aws-sdk/s3-request-presigner": "^3.940.0",
 		"@hono/node-server": "^1.19.6",
 		"@hono/zod-validator": "^0.7.5",
 		"@piano_supporter/common": "*",
@@ -20,12 +25,10 @@
 		"hono": "^4.10.6",
 		"mysql2": "^3.15.3",
 		"streamifier": "^0.1.1",
+		"uuidv7": "^1.0.2",
 		"zod": "^4.1.12"
 	},
 	"devDependencies": {
-		"@types/node": "^24.10.1",
-		"@types/streamifier": "^0.1.2",
-		"tsx": "^4.20.6",
-		"typescript": "^5.9.3"
+		"@types/streamifier": "^0.1.2"
 	}
 }

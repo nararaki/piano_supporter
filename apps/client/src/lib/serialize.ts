@@ -3,7 +3,7 @@
  * クライアント側のSchool型（日付がDateオブジェクト）に変換
  */
 
-import { err, Result } from "@piano_supporter/common/lib/error.ts";
+import { err, type Result } from "@piano_supporter/common/lib/error.ts";
 import { ok } from "@piano_supporter/common/lib/error.ts";
 
 export type Deserializable<T> = T & {

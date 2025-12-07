@@ -1,22 +1,18 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
-import type { mockPot } from "@piano_supporter/common/domains/post.ts";
+import type { Post, CreatePostData } from "@piano_supporter/common/domains/post.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { accountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.ts";
 import type { PostsRepository } from "../repository/posts/repository.ts";
-
-export interface CreatePostRequest {
-	accountId: string;
-	title: string;
-	content: string;
-}
+import type { VideoRepository } from "../repository/video/repository.ts";
 
 export class CreatePostService {
 	constructor(
 		private accountSchoolRelationRepository: accountSchoolRelationRepository,
 		private postsRepository: PostsRepository,
+		private videoRepository: VideoRepository,
 	) {}
 
-	async exec(data: CreatePostRequest): Promise<Result<mockPot>> {
+	async exec(data: CreatePostData): Promise<Result<Post>> {
 		// accountIdからAccountSchoolRelationを検索
 		const relationsResult = await this.accountSchoolRelationRepository.findByAccountId(data.accountId);
 		
@@ -45,10 +41,28 @@ export class CreatePostService {
 			schoolId: schoolId,
 			title: data.title,
 			content: data.content,
+			videoUrl: data.videoUrl,
 		});
 
 		if (!createResult.ok) {
 			return createResult;
+		}
+
+		if (!data.videoUrl || !data.videoType) {
+			return err({
+				type: "BAD_REQUEST",
+				message: "動画URLと動画タイプは必須です",
+			});
+		}
+
+		const videoResult = await this.videoRepository.create({
+			postId: createResult.value.id,
+			url: data.videoUrl,
+			type: data.videoType,
+		});
+
+		if (!videoResult.ok) {
+			return videoResult;
 		}
 
 		return createResult;

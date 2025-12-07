@@ -9,7 +9,8 @@
 		"noEmit": true,
 		"allowImportingTsExtensions": true,
 		"skipLibCheck": true,
-		"baseUrl": "."
+		"baseUrl": ".",
+		"types": []
 	},
 	"include": ["**/*.ts", "**/*.tsx", "../../packages/common/domains/role.ts"],
 	"exclude": ["node_modules"]

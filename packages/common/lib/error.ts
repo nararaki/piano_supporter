@@ -14,7 +14,7 @@ export type AppError =
 	| { type: "CANNOT_FIND_SCHOOL"; message: string }
 	| { type: "CANNOT_ENROLL_ACCOUNT_TO_SCHOOL"; message: string }
 	| { type: "CANNOT_FIND_ACCOUNT"; message: string }
-
+	| { type: "CANNOT_FIND_VIDEO"; message: string }
 export function ok<T>(value: T): Result<T> {
 	return { ok: true, value };
 }

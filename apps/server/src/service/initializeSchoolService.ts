@@ -1,4 +1,4 @@
-import { err, ok } from "@piano_supporter/common/lib/error.ts";
+import { ok } from "@piano_supporter/common/lib/error.ts";
 import { createSchoolEntity } from "@piano_supporter/common/domains/school.ts";
 import type { schoolRepository } from "../repository/school/repository.ts";
 import type { accountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.js";

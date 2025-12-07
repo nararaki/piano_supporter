@@ -4,6 +4,7 @@ import { newSchoolRepositoryClient } from "../../infrastructure/db/repositories/
 import { newAccountSchoolRelationRepository } from "../../infrastructure/db/repositories/accountSchoolRelation.ts";
 import { newAccountRoleRepositoryClient } from "../../infrastructure/db/repositories/accountRole.ts";
 import { newPostsRepositoryClient } from "../../infrastructure/db/repositories/posts.ts";
+import { newVideoRepositoryClient } from "../../infrastructure/db/repositories/video.ts";
 import { InitializeAccountService } from "../initializeAccountService.ts";
 import { InitializeSchoolService } from "../initializeSchoolService.ts";
 import { UploadVideoService } from "../uploadVideoService.ts";
@@ -49,6 +50,7 @@ export const getPostsService = new GetPostsService(
 export const createPostService = new CreatePostService(
 	newAccountSchoolRelationRepository,
 	newPostsRepositoryClient,
+	newVideoRepositoryClient,
 );
 
 export const roleRepositoryClient = newRoleRepositoryClient;

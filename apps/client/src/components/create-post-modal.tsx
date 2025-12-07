@@ -10,6 +10,7 @@ import {
 	Video,
 	X,
 } from "lucide-react";
+import Image from "next/image";
 import type React from "react";
 import { useRef, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -25,10 +26,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
+import {
+	ALLOWED_IMAGE_TYPES,
+	ALLOWED_VIDEO_TYPES,
+	MAX_IMAGE_SIZE,
+} from "@piano_supporter/common/constants/upload.ts";
+import type { Post } from "@piano_supporter/common/domains/post.ts";
 
 interface CreatePostModalProps {
 	trigger: React.ReactNode;
-	onPostCreated: (post: any) => void;
+	onPostCreated: (post: Post) => void;
 }
 
 export default function CreatePostModal({
@@ -49,28 +56,18 @@ export default function CreatePostModal({
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const validateFile = (file: File): string | null => {
-		const maxSize = 100 * 1024 * 1024; // 100MB
-		const allowedImageTypes = [
-			"image/jpeg",
-			"image/png",
-			"image/gif",
-			"image/webp",
-		];
-		const allowedVideoTypes = [
-			"video/mp4",
-			"video/webm",
-			"video/mov",
-			"video/avi",
-		];
-
-		if (file.size > maxSize) {
+		if (file.size > MAX_IMAGE_SIZE) {
 			return "ファイルサイズは100MB以下にしてください";
 		}
 
-		if (
-			!allowedImageTypes.includes(file.type) &&
-			!allowedVideoTypes.includes(file.type)
-		) {
+		const isImage = ALLOWED_IMAGE_TYPES.includes(
+			file.type as typeof ALLOWED_IMAGE_TYPES[number],
+		);
+		const isVideo = ALLOWED_VIDEO_TYPES.includes(
+			file.type as typeof ALLOWED_VIDEO_TYPES[number],
+		);
+
+		if (!isImage && !isVideo) {
 			return "サポートされていないファイル形式です";
 		}
 
@@ -149,19 +146,16 @@ export default function CreatePostModal({
 			// Simulate post creation
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 
-			const newPost = {
-				id: Date.now(),
-				user: "あなた",
-				username: "@you",
+			// Note: This is a mock implementation. In production, use createPost function
+			// and pass the actual Post object returned from the server
+			const newPost: Post = {
+				id: Date.now().toString(),
+				accountId: "",
+				title: "",
 				content: content.trim(),
-				video: previewUrl || "/placeholder.svg?height=300&width=400",
-				likes: 0,
-				comments: 0,
-				shares: 0,
-				time: "今",
-				verified: false,
-				fileType: fileType,
-				videoDuration: videoDuration,
+				video: null,
+				createdAt: new Date(),
+				updatedAt: null,
 			};
 
 			onPostCreated(newPost);
@@ -172,6 +166,7 @@ export default function CreatePostModal({
 			setIsLoading(false);
 			setIsOpen(false);
 		} catch (error) {
+			console.error("投稿の作成に失敗しました", error);
 			setUploadError("投稿の作成に失敗しました");
 			setIsLoading(false);
 		}
@@ -219,11 +214,15 @@ export default function CreatePostModal({
 											</div>
 										</div>
 									) : (
-										<img
-											src={previewUrl || "/placeholder.svg"}
-											alt="プレビュー"
-											className="w-full h-48 object-cover"
-										/>
+										<div className="relative w-full h-48">
+											<Image
+												src={previewUrl || "/placeholder.svg"}
+												alt="プレビュー"
+												fill
+												className="object-cover"
+												unoptimized
+											/>
+										</div>
 									)}
 									<Button
 										type="button"
