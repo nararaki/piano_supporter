@@ -8,8 +8,24 @@ import {
 	accountResitoryClient,
 	getPostsService,
 	createPostService,
+	getPracticeService,
+	getSchoolService,
+	createPracticeService,
+	getComposersService,
+	getMusicsService,
 } from "../service/container/index.ts";
-import { AccountCreateSchema, SchoolCreateSchema, EnrollSchoolCreateSchema, GetPostsSchema, CreatePostSchema, GeneratePresignedUrlSchema } from "./sheme.ts";
+import { 
+	AccountCreateSchema, 
+	SchoolCreateSchema, 
+	EnrollSchoolCreateSchema, 
+	GetPostsSchema, 
+	CreatePostSchema, 
+	GeneratePresignedUrlSchema, 
+	GetPracticeSchema, 
+	GetSchoolSchema,
+	CreatePracticeSchema,
+	GetMusicsSchema,
+} from "./scheme.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
 import { newS3PresignedUrlGenerator } from "src/infrastructure/s3/presignedUrlGenerator.ts";
@@ -46,6 +62,19 @@ export const accountRoute = new Hono()
 	);
 
 export const schoolRoute = new Hono()
+	.get("/", 
+		zValidator("query", GetSchoolSchema),
+		async (c) => {
+		const query = await c.req.query();
+		const { accountId } = query;
+		console.log("accountId", accountId);
+		const result = await getSchoolService.exec(accountId);
+		console.log("result", result);
+		if (!result.ok) {
+			return c.json(result, 404);
+		}
+		return c.json(result.value, 200);
+	})
 	.get("/:schoolId", async (c) => {
 		const schoolId = c.req.param("schoolId");
 		if (!schoolId) {
@@ -142,6 +171,60 @@ export const postsRoute = new Hono()
 			const result = await createPostService.exec(body);
 			if (!result.ok) {
 				return c.json(result, 500);
+			}
+			return c.json(result, 200);
+		},
+	);
+
+export const practiceRoute = new Hono()
+	.get(
+		"/",
+		zValidator("query", GetPracticeSchema),
+		async (c) => {
+			const query = await c.req.query();
+			const { accountId, schoolId } = query;
+			const result = await getPracticeService.exec(accountId, schoolId);
+			if (!result.ok) {
+				return c.json(result, 404);
+			}
+			return c.json(result, 200);
+		},
+	)
+	.post(
+		"/",
+		zValidator("json", CreatePracticeSchema),
+		async (c) => {
+			const body = await c.req.json();
+			const result = await createPracticeService.exec(body);
+			if (!result.ok) {
+				return c.json(result, 500);
+			}
+			return c.json(result, 200);
+		},
+	);
+
+export const composersRoute = new Hono()
+	.get(
+		"/",
+		async (c) => {
+			const result = await getComposersService.exec();
+			if (!result.ok) {
+				return c.json(result, 404);
+			}
+			return c.json(result, 200);
+		},
+	);
+
+export const musicsRoute = new Hono()
+	.get(
+		"/",
+		zValidator("query", GetMusicsSchema),
+		async (c) => {
+			const query = await c.req.query();
+			const { composerId } = query;
+			const result = await getMusicsService.exec(composerId);
+			if (!result.ok) {
+				return c.json(result, 404);
 			}
 			return c.json(result, 200);
 		},

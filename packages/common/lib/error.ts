@@ -2,7 +2,6 @@ export type Result<T> = { ok: true; value: T } | { ok: false; error: AppError };
 
 export type AppError =
 	| { type: "AccountValidaterError"; message: "ユーザー認証をしてください" }
-	| { type: "OrgValidaterError"; message: "教室に所属していません" }
 	| { type: "FILE_UPLOAD_ERROR"; message: string }
 	| { type: "FILE_CONVERSION_ERROR"; message: string }
 	| { type: "UNEXPECTED"; message: string }
@@ -15,6 +14,7 @@ export type AppError =
 	| { type: "CANNOT_ENROLL_ACCOUNT_TO_SCHOOL"; message: string }
 	| { type: "CANNOT_FIND_ACCOUNT"; message: string }
 	| { type: "CANNOT_FIND_VIDEO"; message: string }
+
 export function ok<T>(value: T): Result<T> {
 	return { ok: true, value };
 }

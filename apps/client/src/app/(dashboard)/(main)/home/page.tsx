@@ -26,7 +26,7 @@ export default function HomePage() {
 			const result = await getPosts(accountId);
 			if (!result.ok) {
 				// school登録されていない場合はエラーを表示しない（正常な状態）
-				if (result.error.type !== "CANNOT_FIND_SCHOOL" && result.error.type !== "OrgValidaterError") {
+				if (result.error.type !== "CANNOT_FIND_SCHOOL") {
 					console.error("Failed to fetch posts:", result.error);
 				}
 				return;

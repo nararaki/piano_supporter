@@ -6,13 +6,17 @@ dotenv.config();
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { accountRoute, enrollSchoolRoute, schoolRoute, postsRoute } from "./router.ts";
+import { accountRoute, enrollSchoolRoute, schoolRoute, postsRoute, practiceRoute, composersRoute, musicsRoute } from "./router.ts";
 
 export const apiRoutes = new Hono()
 	.route("/account-init", accountRoute)
 	.route("/school-init", schoolRoute)
+	.route("/school", schoolRoute)
 	.route("/enroll-school", enrollSchoolRoute)
-	.route("/posts", postsRoute);
+	.route("/posts", postsRoute)
+	.route("/practice", practiceRoute)
+	.route("/composers", composersRoute)
+	.route("/musics", musicsRoute);
 
 const app = new Hono()
 	.use(
@@ -27,9 +31,6 @@ const app = new Hono()
 	)
 	.get("/", (c) => {
 		return c.text("Hello Hono!");
-	})
-	.post("/post", async (c) => {
-		// ... /post のロジック ...
 	})
 	.route("/", apiRoutes);
 

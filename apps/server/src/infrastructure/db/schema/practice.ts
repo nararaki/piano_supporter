@@ -1,17 +1,28 @@
 import { 
   mysqlTable, 
-  varchar, 
-  text, 
-  timestamp, 
-  int, 
+  varchar,
+  foreignKey,
 } from 'drizzle-orm/mysql-core';
 import { baseTimestampColumns } from './time.ts';
-import { account } from './account.ts';
 import { music } from './music.ts';
+import { accountSchoolRelation } from './index.ts';
 
 export const practice = mysqlTable('practice', {
   id: varchar('id', { length: 255 }).primaryKey(),
-  accountId: varchar('account_id', { length: 255 }).notNull().references(() => account.id),
-  musicId: varchar('music_id', { length: 255 }).notNull().references(() => music.id),
+  accountSchoolRelationId: varchar('account_school_relation_id', { length: 255 }).notNull(),
+  musicId: varchar('music_id', { length: 255 }).notNull(),
   ...baseTimestampColumns,
+}, (table) => {
+  return {
+    practiceAccountSchoolRelationFk: foreignKey({
+      columns: [table.accountSchoolRelationId],
+      foreignColumns: [accountSchoolRelation.id],
+      name: 'p_asr_id_fk',
+    }).onUpdate('no action'),
+    practiceMusicFk: foreignKey({
+      columns: [table.musicId],
+      foreignColumns: [music.id],
+      name: 'p_music_id_fk',
+    }).onUpdate('no action'),
+  };
 });

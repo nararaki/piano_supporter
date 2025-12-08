@@ -2,11 +2,11 @@ import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { db } from "../initial.ts";
 import { accountSchoolRelation } from "../schema/role.ts";
 import { uuidv7 } from "uuidv7";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { SchoolAccountRelation } from "@piano_supporter/common/domains/schoolAccountRelation.ts";
-import type { accountSchoolRelationRepository } from "../../../repository/accountSchoolRelation/repository.js";
+import type { AccountSchoolRelationRepository } from "../../../repository/accountSchoolRelation/repository.js";
 
-class AccountSchoolRelationRepository implements accountSchoolRelationRepository {
+class AccountSchoolRelationRepositoryClient implements AccountSchoolRelationRepository {
 	async create(
 		accountId: string,
 		schoolId: string,
@@ -60,7 +60,38 @@ class AccountSchoolRelationRepository implements accountSchoolRelationRepository
 			});
 		}
 	}
+
+	async findByAccountIdAndSchoolId(accountId: string, schoolId: string): Promise<Result<SchoolAccountRelation>> {
+		try {
+			const [data] = await db
+				.select()
+				.from(accountSchoolRelation)
+				.where(
+					and(
+						eq(accountSchoolRelation.accountId, accountId),
+						eq(accountSchoolRelation.schoolId, schoolId)
+					)
+				)
+				.limit(1)
+				.execute();
+			
+			if (!data) {
+				return err({
+					type: "CANNOT_FIND_SCHOOL",
+					message: "スクールが見つかりません",
+				});
+			}
+
+			return ok(data);
+		} catch (e) {
+			console.log("アカウントとスクールの関係取得に失敗しました", e);
+			return err({
+				type: "CANNOT_FIND_SCHOOL",
+				message: "スクールが見つかりません",
+			});
+		}
+	}
 }
 
-export const newAccountSchoolRelationRepository = new AccountSchoolRelationRepository();
+export const newAccountSchoolRelationRepositoryClient = new AccountSchoolRelationRepositoryClient();
 

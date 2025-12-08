@@ -26,7 +26,7 @@ export class GetPostsService {
 		// 結果の[0]番目のschoolIdを取得
 		if (relations.length === 0) {
 			return err({
-				type: "OrgValidaterError",
+				type: "CANNOT_FIND_SCHOOL",
 				message: "教室に所属していません",
 			});
 		}

@@ -1,7 +1,7 @@
 import { newCloudinaryApiClient } from "../../infrastructure/cloudinary/uploadMedia.ts";
 import { newAccountRespositoryClient } from "../../infrastructure/db/repositories/account.ts";
 import { newSchoolRepositoryClient } from "../../infrastructure/db/repositories/school.ts";
-import { newAccountSchoolRelationRepository } from "../../infrastructure/db/repositories/accountSchoolRelation.ts";
+import { newAccountSchoolRelationRepositoryClient } from "../../infrastructure/db/repositories/accountSchoolRelation.ts";
 import { newAccountRoleRepositoryClient } from "../../infrastructure/db/repositories/accountRole.ts";
 import { newPostsRepositoryClient } from "../../infrastructure/db/repositories/posts.ts";
 import { newVideoRepositoryClient } from "../../infrastructure/db/repositories/video.ts";
@@ -12,11 +12,21 @@ import { EnrollAccountToSchoolService } from "../enrollAccountToSchoolService.ts
 import { UserContextService } from "../userContextService.ts";
 import { GetPostsService } from "../getPostsService.ts";
 import { CreatePostService } from "../createPostService.ts";
+import { GetPracticeService } from "../getPracticeService.ts";
+import { CreatePracticeService } from "../createPracticeService.ts";
+import { GetComposersService } from "../getComposersService.ts";
+import { GetMusicsService } from "../getMusicsService.ts";
 import { newRoleRepositoryClient } from "../../infrastructure/db/repositories/role.ts";
+import { newPracticeRepositoryClient } from "../../infrastructure/db/repositories/practice.ts";
+import { newComposerRepositoryClient } from "../../infrastructure/db/repositories/composer.ts";
+import { newMusicRepositoryClient } from "../../infrastructure/db/repositories/music.ts";
+import { GetSchoolService } from "../getSchoolService.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;
 export const accountResitoryClient = newAccountRespositoryClient;
 export const schoolRepositoryClient = newSchoolRepositoryClient;
+export const accountSchoolRelationRepositoryClient = newAccountSchoolRelationRepositoryClient;
+export const roleRepositoryClient = newRoleRepositoryClient;
 
 export const uploadVideoService = new UploadVideoService(cloudinaryApiClient);
 
@@ -26,7 +36,7 @@ export const initializeAccountService = new InitializeAccountService(
 
 export const initializeSchoolService = new InitializeSchoolService(
 	schoolRepositoryClient,
-	newAccountSchoolRelationRepository,
+	newAccountSchoolRelationRepositoryClient,
 	newAccountRoleRepositoryClient,
 	newRoleRepositoryClient,
 );
@@ -43,14 +53,35 @@ export const enrollAccountToSchoolService = new EnrollAccountToSchoolService(
 );
 
 export const getPostsService = new GetPostsService(
-	newAccountSchoolRelationRepository,
+	newAccountSchoolRelationRepositoryClient,
 	newPostsRepositoryClient,
 );
 
 export const createPostService = new CreatePostService(
-	newAccountSchoolRelationRepository,
+	newAccountSchoolRelationRepositoryClient,
 	newPostsRepositoryClient,
 	newVideoRepositoryClient,
 );
 
-export const roleRepositoryClient = newRoleRepositoryClient;
+export const getPracticeService = new GetPracticeService(
+	newPracticeRepositoryClient,
+	accountSchoolRelationRepositoryClient,
+);
+
+export const getSchoolService = new GetSchoolService(
+	accountSchoolRelationRepositoryClient,
+	newSchoolRepositoryClient,
+);
+
+export const createPracticeService = new CreatePracticeService(
+	accountSchoolRelationRepositoryClient,
+	newPracticeRepositoryClient,
+);
+
+export const getComposersService = new GetComposersService(
+	newComposerRepositoryClient,
+);
+
+export const getMusicsService = new GetMusicsService(
+	newMusicRepositoryClient,
+);
