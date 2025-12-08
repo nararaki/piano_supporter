@@ -55,3 +55,7 @@ export const CreatePracticeSchema = z.object({
 	schoolId: z.string().min(1, { message: "schoolIdがないです" }),
 	musicId: z.string().min(1, { message: "musicIdがないです" }),
 });
+
+export const GetMusicsSchema = z.object({
+	composerId: z.string().min(1, { message: "composerIdがないです" }),
+});

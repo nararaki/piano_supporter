@@ -14,8 +14,12 @@ import { GetPostsService } from "../getPostsService.ts";
 import { CreatePostService } from "../createPostService.ts";
 import { GetPracticeService } from "../getPracticeService.ts";
 import { CreatePracticeService } from "../createPracticeService.ts";
+import { GetComposersService } from "../getComposersService.ts";
+import { GetMusicsService } from "../getMusicsService.ts";
 import { newRoleRepositoryClient } from "../../infrastructure/db/repositories/role.ts";
 import { newPracticeRepositoryClient } from "../../infrastructure/db/repositories/practice.ts";
+import { newComposerRepositoryClient } from "../../infrastructure/db/repositories/composer.ts";
+import { newMusicRepositoryClient } from "../../infrastructure/db/repositories/music.ts";
 import { GetSchoolService } from "../getSchoolService.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;
@@ -72,4 +76,12 @@ export const getSchoolService = new GetSchoolService(
 export const createPracticeService = new CreatePracticeService(
 	accountSchoolRelationRepositoryClient,
 	newPracticeRepositoryClient,
+);
+
+export const getComposersService = new GetComposersService(
+	newComposerRepositoryClient,
+);
+
+export const getMusicsService = new GetMusicsService(
+	newMusicRepositoryClient,
 );

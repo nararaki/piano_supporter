@@ -11,6 +11,7 @@ const PracticeCard = (practice: Practice) => {
                 </CardHeader>
                 <CardContent>
                     <p>作曲者: {practice.music.composer.name}</p>
+                    <p>曲名: {practice.music.title}</p>
                     <p>練習アップデート日時: {practice.updatedAt.toLocaleString()}</p>
                 </CardContent>
             </Card>
