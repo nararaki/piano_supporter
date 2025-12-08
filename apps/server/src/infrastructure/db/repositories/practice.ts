@@ -39,6 +39,7 @@ class PracticeRepositoryClient implements PracticeRepository {
 					id: row.composer.id,
 					name: row.composer.name,
 				} as Composer,
+				updatedAt: row.practice.updatedAt,
 			}));
 
 			return ok(result);
