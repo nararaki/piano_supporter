@@ -49,3 +49,9 @@ export const UploadVideoSchema = z.object({
 	fileName: z.string().min(1, { message: "ファイル名は必須です" }),
 	contentType: z.string().min(1, { message: "Content-Typeは必須です" }),
 });
+
+export const CreatePracticeSchema = z.object({
+	accountId: z.string().min(1, { message: "accountIdがないです" }),
+	schoolId: z.string().min(1, { message: "schoolIdがないです" }),
+	musicId: z.string().min(1, { message: "musicIdがないです" }),
+});

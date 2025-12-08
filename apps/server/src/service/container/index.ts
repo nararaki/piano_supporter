@@ -13,6 +13,7 @@ import { UserContextService } from "../userContextService.ts";
 import { GetPostsService } from "../getPostsService.ts";
 import { CreatePostService } from "../createPostService.ts";
 import { GetPracticeService } from "../getPracticeService.ts";
+import { CreatePracticeService } from "../createPracticeService.ts";
 import { newRoleRepositoryClient } from "../../infrastructure/db/repositories/role.ts";
 import { newPracticeRepositoryClient } from "../../infrastructure/db/repositories/practice.ts";
 import { GetSchoolService } from "../getSchoolService.ts";
@@ -66,4 +67,9 @@ export const getPracticeService = new GetPracticeService(
 export const getSchoolService = new GetSchoolService(
 	accountSchoolRelationRepositoryClient,
 	newSchoolRepositoryClient,
+);
+
+export const createPracticeService = new CreatePracticeService(
+	accountSchoolRelationRepositoryClient,
+	newPracticeRepositoryClient,
 );

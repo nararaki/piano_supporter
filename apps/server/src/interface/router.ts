@@ -10,8 +10,19 @@ import {
 	createPostService,
 	getPracticeService,
 	getSchoolService,
+	createPracticeService,
 } from "../service/container/index.ts";
-import { AccountCreateSchema, SchoolCreateSchema, EnrollSchoolCreateSchema, GetPostsSchema, CreatePostSchema, GeneratePresignedUrlSchema, GetPracticeSchema, GetSchoolSchema } from "./sheme.ts";
+import { 
+	AccountCreateSchema, 
+	SchoolCreateSchema, 
+	EnrollSchoolCreateSchema, 
+	GetPostsSchema, 
+	CreatePostSchema, 
+	GeneratePresignedUrlSchema, 
+	GetPracticeSchema, 
+	GetSchoolSchema, 
+	CreatePracticeSchema,
+} from "./scheme.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
 import { newS3PresignedUrlGenerator } from "src/infrastructure/s3/presignedUrlGenerator.ts";
@@ -170,6 +181,18 @@ export const practiceRoute = new Hono()
 			const result = await getPracticeService.exec(accountId, schoolId);
 			if (!result.ok) {
 				return c.json(result, 404);
+			}
+			return c.json(result, 200);
+		},
+	)
+	.post(
+		"/",
+		zValidator("json", CreatePracticeSchema),
+		async (c) => {
+			const body = await c.req.json();
+			const result = await createPracticeService.exec(body);
+			if (!result.ok) {
+				return c.json(result, 500);
 			}
 			return c.json(result, 200);
 		},

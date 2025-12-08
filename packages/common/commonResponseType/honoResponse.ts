@@ -1,6 +1,15 @@
 import type { z } from "zod";
 //インポートきれいにしたいけど分からん
-import type { AccountCreateSchema, SchoolCreateSchema, EnrollSchoolCreateSchema, GeneratePresignedUrlSchema, UploadVideoSchema, CreatePostSchema, GetPostsSchema } from "../../../apps/server/src/interface/sheme.ts";
+import type { 
+    AccountCreateSchema, 
+    SchoolCreateSchema, 
+    EnrollSchoolCreateSchema, 
+    GeneratePresignedUrlSchema, 
+    UploadVideoSchema, 
+    CreatePostSchema, 
+    GetPostsSchema, 
+    CreatePracticeSchema,
+} from "../../../apps/server/src/interface/scheme.ts";
 import type { AppType } from "../../../apps/server/src/interface/index.ts";
 
 export type accountCreateData = z.infer<typeof AccountCreateSchema>;
@@ -10,6 +19,7 @@ export type generatePresignedUrlData = z.infer<typeof GeneratePresignedUrlSchema
 export type uploadVideoData = z.infer<typeof UploadVideoSchema>;
 export type createPostData = z.infer<typeof CreatePostSchema>;
 export type getPostsData = z.infer<typeof GetPostsSchema>;
+export type createPracticeData = z.infer<typeof CreatePracticeSchema>;
 
 
 export type appType = AppType;

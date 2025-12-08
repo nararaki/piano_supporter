@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Loader } from "@/components/ui/loader";
+import { getSchoolId } from "../../action/getSchool";
+import { createPractice } from "../action/createPractice";
 
 export const NewPracticeForm = () => {
 	const { userId } = useAuth();
@@ -39,25 +41,21 @@ export const NewPracticeForm = () => {
 			setError("ユーザー認証が必要です");
 			return;
 		}
-
-		setIsLoading(true);
-
-		try {
-			// TODO: 練習を作成するAPIを呼び出す
-			// const result = await createPractice({ accountId: userId, musicId: selectedMusicId });
+		setIsLoading(true);	
+			const schoolId = await getSchoolId(userId);
+			if (!schoolId.ok) {
+				setError("スクールが見つかりません");
+				return;
+			}
+			const result = await createPractice({ accountId: userId, schoolId: schoolId.value, musicId: selectedMusicId });
 			
-			// 仮の処理
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			
-			// 成功したら練習一覧ページにリダイレクト
+			if(!result.ok) {
+				setError(result.error.message);
+				return;
+			}	
 			router.push("/practicing");
-		} catch (err) {
-			setError(
-				err instanceof Error ? err.message : "練習の作成に失敗しました"
-			);
-		} finally {
 			setIsLoading(false);
-		}
+			return result.value;
 	};
 
 	return (
