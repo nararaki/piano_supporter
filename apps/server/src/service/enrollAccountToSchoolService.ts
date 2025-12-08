@@ -1,5 +1,5 @@
 import { ok, type Result } from "@piano_supporter/common/lib/error.ts";
-import { newAccountSchoolRelationRepository } from "../infrastructure/db/repositories/accountSchoolRelation.ts";
+import { newAccountSchoolRelationRepositoryClient } from "../infrastructure/db/repositories/accountSchoolRelation.ts";
 import type { UserContextService } from "./userContextService.ts";
 import type { SchoolAccountRelation } from "@piano_supporter/common/domains/schoolAccountRelation.ts";
 import type { EnrollAccountToSchoolData } from "@piano_supporter/common/domains/schoolAccountRelation.ts";
@@ -24,7 +24,7 @@ export class EnrollAccountToSchoolService {
 		}
 
 		// アカウントとスクールを連携
-		const relationResult = await newAccountSchoolRelationRepository.create(
+		const relationResult = await newAccountSchoolRelationRepositoryClient.create(
 			data.accountId,
 			data.schoolId,
 		);

@@ -83,13 +83,17 @@ export const NewPracticeForm = () => {
 			return;
 		}
 		setIsLoading(true);	
-			const schoolId = await getSchoolId(userId);
-			if (!schoolId.ok) {
+			const schoolResult = await getSchoolId(userId);
+			
+			if (!schoolResult.ok) {
 				setError("スクールが見つかりません");
 				return;
 			}
-			const result = await createPractice({ accountId: userId, schoolId: schoolId.value, musicId: selectedMusicId });
-			
+			console.log("schoolResult", schoolResult.value);
+			const schoolId = schoolResult.value.id;
+			console.log("schoolId", schoolId);
+			const result = await createPractice({ accountId: userId, schoolId: schoolId, musicId: selectedMusicId });
+			console.log("result", result);
 			if(!result.ok) {
 				setError(result.error.message);
 				return;

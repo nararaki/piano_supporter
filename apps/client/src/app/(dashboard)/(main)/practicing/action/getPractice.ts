@@ -10,7 +10,7 @@ export const getPractice = async (accountId: string): Promise<Result<Practice[]>
     if (!schoolIdResult.ok) {
         return schoolIdResult;
     }
-    const schoolId = schoolIdResult.value;
+    const schoolId = schoolIdResult.value.id;
     const result = await callApi<Result<Practice[]>>(() => 
         client["practice"].$get({
         query: {

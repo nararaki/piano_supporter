@@ -67,11 +67,13 @@ export const schoolRoute = new Hono()
 		async (c) => {
 		const query = await c.req.query();
 		const { accountId } = query;
+		console.log("accountId", accountId);
 		const result = await getSchoolService.exec(accountId);
+		console.log("result", result);
 		if (!result.ok) {
 			return c.json(result, 404);
 		}
-		return c.json(result, 200);
+		return c.json(result.value, 200);
 	})
 	.get("/:schoolId", async (c) => {
 		const schoolId = c.req.param("schoolId");
