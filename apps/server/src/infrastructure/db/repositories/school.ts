@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import type { schoolRepository } from "../../../repository/school/repository.ts";
 import { db } from "../initial.ts";
 import { school } from "../schema/school.ts";
+import { accountSchoolRelation } from "../schema/index.ts";
 
 class SchoolRepositoryClient implements schoolRepository {
 	async createAccount(

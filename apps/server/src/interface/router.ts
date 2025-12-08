@@ -8,8 +8,10 @@ import {
 	accountResitoryClient,
 	getPostsService,
 	createPostService,
+	getPracticeService,
+	getSchoolService,
 } from "../service/container/index.ts";
-import { AccountCreateSchema, SchoolCreateSchema, EnrollSchoolCreateSchema, GetPostsSchema, CreatePostSchema, GeneratePresignedUrlSchema } from "./sheme.ts";
+import { AccountCreateSchema, SchoolCreateSchema, EnrollSchoolCreateSchema, GetPostsSchema, CreatePostSchema, GeneratePresignedUrlSchema, GetPracticeSchema, GetSchoolSchema } from "./sheme.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
 import { newS3PresignedUrlGenerator } from "src/infrastructure/s3/presignedUrlGenerator.ts";
@@ -46,6 +48,17 @@ export const accountRoute = new Hono()
 	);
 
 export const schoolRoute = new Hono()
+	.get("/", 
+		zValidator("query", GetSchoolSchema),
+		async (c) => {
+		const query = await c.req.query();
+		const { accountId } = query;
+		const result = await getSchoolService.exec(accountId);
+		if (!result.ok) {
+			return c.json(result, 404);
+		}
+		return c.json(result, 200);
+	})
 	.get("/:schoolId", async (c) => {
 		const schoolId = c.req.param("schoolId");
 		if (!schoolId) {
@@ -142,6 +155,21 @@ export const postsRoute = new Hono()
 			const result = await createPostService.exec(body);
 			if (!result.ok) {
 				return c.json(result, 500);
+			}
+			return c.json(result, 200);
+		},
+	);
+
+export const practiceRoute = new Hono()
+	.get(
+		"/",
+		zValidator("query", GetPracticeSchema),
+		async (c) => {
+			const query = await c.req.query();
+			const { accountId, schoolId } = query;
+			const result = await getPracticeService.exec(accountId, schoolId);
+			if (!result.ok) {
+				return c.json(result, 404);
 			}
 			return c.json(result, 200);
 		},

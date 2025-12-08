@@ -7,6 +7,10 @@ export const SchoolCreateSchema = z.object({
 	userId: z.string().min(1, { message: "userIdがないです" }),
 });
 
+export const GetSchoolSchema = z.object({
+	accountId: z.string().min(1, { message: "accountIdがないです" }),
+});
+
 export const AccountCreateSchema = z.object({
 	userId: z.string().min(1, { message: "userIdがないです" }),
 	lastName: z.string().min(1, { message: "名字がないです" }),
@@ -21,6 +25,11 @@ export const EnrollSchoolCreateSchema = z.object({
 
 export const GetPostsSchema = z.object({
 	accountId: z.string().min(1, { message: "accountIdがないです" }),
+});
+
+export const GetPracticeSchema = z.object({
+	accountId: z.string().min(1, { message: "accountIdがないです" }),
+	schoolId: z.string().min(1, { message: "schoolIdがないです" }),
 });
 
 export const CreatePostSchema = z.object({

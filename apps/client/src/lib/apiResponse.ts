@@ -11,7 +11,7 @@ export const apiResponseHandler = async <T>(
 	if (res.ok) {
 		try {
 			const result = await res.json();
-			return ok(result);
+			return ok(result as T);
 		} catch (e) {
 			return err({
 				type: "UNEXPECTED",
@@ -40,7 +40,7 @@ export const apiResponseHandler = async <T>(
 
 		case 403: // Forbidden
 			return err({
-				type: "OrgValidaterError",
+				type: "CANNOT_FIND_SCHOOL",
 				message: "教室に所属していません",
 			});
 
