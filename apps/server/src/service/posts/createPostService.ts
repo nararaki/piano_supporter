@@ -1,13 +1,13 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import type { Post, CreatePostData } from "@piano_supporter/common/domains/post.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
-import type { accountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.ts";
-import type { PostsRepository } from "../repository/posts/repository.ts";
-import type { VideoRepository } from "../repository/video/repository.ts";
+import type { AccountSchoolRelationRepository } from "../../repository/accountSchoolRelation/repository.ts";
+import type { PostsRepository } from "../../repository/posts/repository.ts";
+import type { VideoRepository } from "../../repository/video/repository.ts";
 
 export class CreatePostService {
 	constructor(
-		private accountSchoolRelationRepository: accountSchoolRelationRepository,
+		private accountSchoolRelationRepository: AccountSchoolRelationRepository,
 		private postsRepository: PostsRepository,
 		private videoRepository: VideoRepository,
 	) {}

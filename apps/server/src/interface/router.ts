@@ -6,13 +6,14 @@ import {
 	initializeSchoolService,
 	schoolRepositoryClient,
 	accountResitoryClient,
-	getPostsService,
+	getAllPostsService,
 	createPostService,
 	getPracticeService,
 	getSchoolService,
 	createPracticeService,
 	getComposersService,
 	getMusicsService,
+	getAllPracticeService,
 } from "../service/container/index.ts";
 import { 
 	AccountCreateSchema, 
@@ -25,6 +26,7 @@ import {
 	GetSchoolSchema,
 	CreatePracticeSchema,
 	GetMusicsSchema,
+	GetPracticeByIdSchema,
 } from "./scheme.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
@@ -138,7 +140,7 @@ export const postsRoute = new Hono()
 			console.log("c.req.query()", c.req.query());
 			const query = await c.req.query();
 			const { accountId } = query;
-			const result = await getPostsService.exec(accountId);
+			const result = await getAllPostsService.exec(accountId);
 			if (!result.ok) {
 				console.log("result", result);
 				return c.json(result, 404);
@@ -178,15 +180,24 @@ export const postsRoute = new Hono()
 
 export const practiceRoute = new Hono()
 	.get(
-		"/",
+		"/schoolAndAccount",
 		zValidator("query", GetPracticeSchema),
 		async (c) => {
 			const query = await c.req.query();
 			const { accountId, schoolId } = query;
-			const result = await getPracticeService.exec(accountId, schoolId);
+			const result = await getAllPracticeService.exec(accountId, schoolId);
 			if (!result.ok) {
 				return c.json(result, 404);
 			}
+			return c.json(result, 200);
+		},
+	)
+	.get(
+		"/:practiceId",
+		zValidator("param", GetPracticeByIdSchema),
+		async (c) => {
+			const practiceId = c.req.param("practiceId");
+			const result = await getPracticeService.exec(practiceId);
 			return c.json(result, 200);
 		},
 	)

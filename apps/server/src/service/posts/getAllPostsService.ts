@@ -1,12 +1,12 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import type { Post } from "@piano_supporter/common/domains/post.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
-import type { accountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.ts";
-import type { PostsRepository } from "../repository/posts/repository.ts";
+import type { AccountSchoolRelationRepository } from "../../repository/accountSchoolRelation/repository.ts";
+import type { PostsRepository } from "../../repository/posts/repository.ts";
 
-export class GetPostsService {
+export class GetAllPostsService {
 	constructor(
-		private accountSchoolRelationRepository: accountSchoolRelationRepository,
+		private accountSchoolRelationRepository: AccountSchoolRelationRepository,
 		private postsRepository: PostsRepository,
 	) {}
 

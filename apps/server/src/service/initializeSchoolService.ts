@@ -1,7 +1,7 @@
 import { ok } from "@piano_supporter/common/lib/error.ts";
 import { createSchoolEntity } from "@piano_supporter/common/domains/school.ts";
 import type { schoolRepository } from "../repository/school/repository.ts";
-import type { accountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.js";
+import type { AccountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.ts";
 import { uuidv7 } from "uuidv7";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
 import type { accountRoleRepository } from "../repository/role/repository.ts";
@@ -11,7 +11,7 @@ import { ROLE_NAMES } from "@piano_supporter/common/domains/role.ts";
 export class InitializeSchoolService {
 	constructor(
 		private schoolApiRepositry: schoolRepository,
-		private accountSchoolRelationRepository: accountSchoolRelationRepository,
+		private accountSchoolRelationRepository: AccountSchoolRelationRepository,
 		private accountRoleRepository: accountRoleRepository,
 		private roleRepository: roleRepository,
 	) {}
