@@ -1,14 +1,9 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { getPracticeById } from "@/infrastructure/api/practice";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
 
-export const getPractice = async (practiceId: string) => {
-    const result = await callApi<Practice>(() => 
-        client["practice"][":practiceId"].$get({
-        param: {
-            practiceId,
-        },
-    }));
-    return result;
+export const getPractice = async (
+	practiceId: string,
+): Promise<Result<Practice>> => {
+	return await getPracticeById(practiceId);
 };  
