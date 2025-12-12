@@ -75,7 +75,7 @@ export const schoolRoute = new Hono()
 		if (!result.ok) {
 			return c.json(result, 404);
 		}
-		return c.json(result.value, 200);
+		return c.json(result, 200);
 	})
 	.get("/:schoolId", async (c) => {
 		const schoolId = c.req.param("schoolId");

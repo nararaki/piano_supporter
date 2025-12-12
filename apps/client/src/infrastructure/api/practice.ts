@@ -59,11 +59,9 @@ export const createPractice = async (
 			json: data,
 		})
 	);
-
 	if (!result.ok) {
 		return result;
 	}
-
 	return result.value;
 };
 

@@ -13,15 +13,15 @@ import type { schoolCreateData } from "@piano_supporter/common/commonResponseTyp
  */
 export const getSchoolsByAccountId = async (
 	accountId: string,
-): Promise<Result<School[]>> => {
-	const result = await callApi<Result<School[]>>(() =>
+): Promise<Result<School>> => {
+	const result = await callApi<Result<School>>(() =>
 		client["school"].$get({
 			query: {
 				accountId,
 			},
 		})
 	);
-
+	
 	if (!result.ok) {
 		return result;
 	}
