@@ -11,6 +11,45 @@ import type { Music } from "@piano_supporter/common/domains/music.ts";
 import type { Composer } from "@piano_supporter/common/domains/composer.ts";
 
 class PracticeRepositoryClient implements PracticeRepository {
+	async findById(id: string): Promise<Result<Practice>> {
+		try {
+			const [result] = await db
+				.select()
+				.from(practice)
+				.where(eq(practice.id, id))
+				.innerJoin(music, eq(practice.musicId, music.id))
+				.innerJoin(composer, eq(music.composerId, composer.id))
+				.limit(1)
+				.execute();
+			if (!result) {
+				return err({
+					type: "CANNOT_FIND_PRACTICE",
+					message: "練習データが見つかりません",
+				});
+			}
+			const practiceData = {
+				id: result.practice.id,
+				music: {
+					id: result.music.id,
+					title: result.music.title,
+					composer: {
+						id: result.composer.id,
+						name: result.composer.name,
+					} as Composer,
+				},
+				updatedAt: result.practice.updatedAt,
+			} as Practice;
+			return ok(practiceData);
+		
+		} catch (e) {
+			console.log("練習データの取得に失敗しました", e);
+			return err({
+				type: "UNEXPECTED",
+				message: "練習データの取得に失敗しました",
+			});
+		}
+	}
+
 	async findByRelationId(relationId: string): Promise<Result<Practice[]>> {
 		try {
 			const practices = await db
@@ -97,10 +136,6 @@ class PracticeRepositoryClient implements PracticeRepository {
 					} as Composer,
 					sheetMusicUrl: createdPractice.music.sheetMusicUrl || "",
 				} as Music,
-				composer: {
-					id: createdPractice.composer.id,
-					name: createdPractice.composer.name,
-				} as Composer,
 				updatedAt: createdPractice.practice.updatedAt,
 			};
 

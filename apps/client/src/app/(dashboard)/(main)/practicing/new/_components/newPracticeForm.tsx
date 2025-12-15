@@ -31,12 +31,12 @@ export const NewPracticeForm = () => {
 	const [isLoadingMusics, setIsLoadingMusics] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-
 	// 作曲家一覧を取得
 	useEffect(() => {
 		const fetchComposers = async () => {
 			setIsLoadingComposers(true);
 			const result = await getComposers();
+			console.log("result", result);
 			if (result.ok) {
 				setComposers(result.value);
 			}
@@ -62,6 +62,7 @@ export const NewPracticeForm = () => {
 			setIsLoadingMusics(false);
 		};
 		fetchMusics();
+		console.log("コンポーザーが選択されたよ")
 	}, [selectedComposerId]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -82,25 +83,39 @@ export const NewPracticeForm = () => {
 			setError("ユーザー認証が必要です");
 			return;
 		}
-		setIsLoading(true);	
+
+		setIsLoading(true);
+		try {
 			const schoolResult = await getSchoolId(userId);
-			
+			console.log("schoolResult", schoolResult);
 			if (!schoolResult.ok) {
 				setError("スクールが見つかりません");
+				setIsLoading(false);
 				return;
 			}
-			console.log("schoolResult", schoolResult.value);
+
 			const schoolId = schoolResult.value.id;
-			console.log("schoolId", schoolId);
-			const result = await createPractice({ accountId: userId, schoolId: schoolId, musicId: selectedMusicId });
-			console.log("result", result);
-			if(!result.ok) {
+			const result = await createPractice({
+				accountId: userId,
+				schoolId: schoolId,
+				musicId: selectedMusicId,
+			});
+
+			if (!result.ok) {
 				setError(result.error.message);
+				setIsLoading(false);
 				return;
-			}	
+			}
+
 			router.push("/practicing");
+		} catch (error) {
+			setError(
+				error instanceof Error
+					? error.message
+					: "練習の作成に失敗しました"
+			);
 			setIsLoading(false);
-			return result.value;
+		}
 	};
 
 	return (
@@ -191,7 +206,10 @@ export const NewPracticeForm = () => {
 						>
 							キャンセル
 						</Button>
-						<Button type="submit" disabled={isLoading || !selectedComposerId || !selectedMusicId}>
+						<Button
+							type="submit"
+							disabled={isLoading || !selectedComposerId || !selectedMusicId}
+						>
 							{isLoading ? (
 								<>
 									<Loader className="mr-2 h-4 w-4" />

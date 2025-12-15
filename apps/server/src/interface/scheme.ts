@@ -59,3 +59,7 @@ export const CreatePracticeSchema = z.object({
 export const GetMusicsSchema = z.object({
 	composerId: z.string().min(1, { message: "composerIdがないです" }),
 });
+
+export const GetPracticeByIdSchema = z.object({
+	practiceId: z.string().min(1, { message: "practiceIdがないです" }),
+});

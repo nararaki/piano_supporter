@@ -7,6 +7,7 @@ export interface CreatePracticeRepositoryData {
 }
 
 export interface PracticeRepository {
+	findById(id: string): Promise<Result<Practice>>;
 	findByRelationId(relationId: string): Promise<Result<Practice[]>>;
 	create(data: CreatePracticeRepositoryData): Promise<Result<Practice>>;
 }
