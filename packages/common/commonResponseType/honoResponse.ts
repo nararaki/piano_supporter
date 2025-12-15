@@ -9,6 +9,7 @@ import type {
     CreatePostSchema, 
     GetPostsSchema, 
     CreatePracticeSchema,
+    CreateCommentSchema,
 } from "../../../apps/server/src/interface/scheme.ts";
 import type { AppType } from "../../../apps/server/src/interface/index.ts";
 
@@ -20,6 +21,7 @@ export type uploadVideoData = z.infer<typeof UploadVideoSchema>;
 export type createPostData = z.infer<typeof CreatePostSchema>;
 export type getPostsData = z.infer<typeof GetPostsSchema>;
 export type createPracticeData = z.infer<typeof CreatePracticeSchema>;
+export type createCommentData = z.infer<typeof CreateCommentSchema>;
 
 
 export type appType = AppType;

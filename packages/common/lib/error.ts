@@ -15,6 +15,7 @@ export type AppError =
 	| { type: "CANNOT_FIND_ACCOUNT"; message: string }
 	| { type: "CANNOT_FIND_VIDEO"; message: string }
 	| { type: "CANNOT_FIND_PRACTICE"; message: string }
+	| { type: "CANNOT_CREATE_COMMENT"; message: string }
 
 export function ok<T>(value: T): Result<T> {
 	return { ok: true, value };

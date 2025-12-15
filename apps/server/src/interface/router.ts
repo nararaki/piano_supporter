@@ -14,6 +14,7 @@ import {
 	getComposersService,
 	getMusicsService,
 	getAllPracticeService,
+	createCommentService,
 } from "../service/container/index.ts";
 import { 
 	AccountCreateSchema, 
@@ -27,6 +28,7 @@ import {
 	CreatePracticeSchema,
 	GetMusicsSchema,
 	GetPracticeByIdSchema,
+	CreateCommentSchema,
 } from "./scheme.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
@@ -236,6 +238,20 @@ export const musicsRoute = new Hono()
 			const result = await getMusicsService.exec(composerId);
 			if (!result.ok) {
 				return c.json(result, 404);
+			}
+			return c.json(result, 200);
+		},
+	);
+
+export const commentsRoute = new Hono()
+	.post(
+		"/",
+		zValidator("json", CreateCommentSchema),
+		async (c) => {
+			const body = await c.req.json();
+			const result = await createCommentService.exec(body);
+			if (!result.ok) {
+				return c.json(result, 500);
 			}
 			return c.json(result, 200);
 		},

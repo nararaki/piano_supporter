@@ -22,71 +22,84 @@ import { newComposerRepositoryClient } from "../../infrastructure/db/repositorie
 import { newMusicRepositoryClient } from "../../infrastructure/db/repositories/music.ts";
 import { GetSchoolService } from "../getSchoolService.ts";
 import { GetPracticeService } from "../practice/getPracticeService.ts";
+import { CreateCommentService } from "../createCommentService.ts";
+import { newCommentRepositoryClient } from "../../infrastructure/db/repositories/comment.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;
 export const accountResitoryClient = newAccountRespositoryClient;
 export const schoolRepositoryClient = newSchoolRepositoryClient;
 export const accountSchoolRelationRepositoryClient = newAccountSchoolRelationRepositoryClient;
 export const roleRepositoryClient = newRoleRepositoryClient;
+export const commentRepositoryClient = newCommentRepositoryClient;
+export const postRepositoryClient = newPostsRepositoryClient;
+export const videoRepositoryClient = newVideoRepositoryClient;
+export const practiceRepositoryClient = newPracticeRepositoryClient;
+export const composerRepositoryClient = newComposerRepositoryClient;
+export const musicRepositoryClient = newMusicRepositoryClient;
+export const accountRoleRepositoryClient = newAccountRoleRepositoryClient;
 
 export const uploadVideoService = new UploadVideoService(cloudinaryApiClient);
 
 export const initializeAccountService = new InitializeAccountService(
-	newAccountRespositoryClient,
+	accountResitoryClient,
 );
 
 export const initializeSchoolService = new InitializeSchoolService(
 	schoolRepositoryClient,
-	newAccountSchoolRelationRepositoryClient,
-	newAccountRoleRepositoryClient,
-	newRoleRepositoryClient,
+	accountSchoolRelationRepositoryClient,
+	accountRoleRepositoryClient,
+	roleRepositoryClient,
 );
 
 export const userContextService = new UserContextService(
-	newAccountRespositoryClient,
+	accountResitoryClient,
 	schoolRepositoryClient,
 );
 
 export const enrollAccountToSchoolService = new EnrollAccountToSchoolService(
 	userContextService,
-	newRoleRepositoryClient,
-	newAccountRoleRepositoryClient,
+	roleRepositoryClient,
+	accountRoleRepositoryClient,
 );
 
 export const getAllPostsService = new GetAllPostsService(
-	newAccountSchoolRelationRepositoryClient,
-	newPostsRepositoryClient,
+	accountSchoolRelationRepositoryClient,
+	postRepositoryClient,
 );
 
 export const createPostService = new CreatePostService(
 	newAccountSchoolRelationRepositoryClient,
-	newPostsRepositoryClient,
-	newVideoRepositoryClient,
+	postRepositoryClient,
+	videoRepositoryClient,
 );
 
 export const getSchoolService = new GetSchoolService(
 	accountSchoolRelationRepositoryClient,
-	newSchoolRepositoryClient,
+	schoolRepositoryClient,
 );
 
 export const createPracticeService = new CreatePracticeService(
 	accountSchoolRelationRepositoryClient,
-	newPracticeRepositoryClient,
+	practiceRepositoryClient,
 );
 
 export const getComposersService = new GetComposersService(
-	newComposerRepositoryClient,
+	composerRepositoryClient,
 );
 
 export const getMusicsService = new GetMusicsService(
-	newMusicRepositoryClient,
+	musicRepositoryClient,
 );
 
 export const getAllPracticeService = new GetAllPracticeService(
-	newPracticeRepositoryClient,
+	practiceRepositoryClient,
 	accountSchoolRelationRepositoryClient,
 );
 
 export const getPracticeService = new GetPracticeService(
-	newPracticeRepositoryClient,
+	practiceRepositoryClient,
+);
+
+export const createCommentService = new CreateCommentService(
+	commentRepositoryClient,
 );
