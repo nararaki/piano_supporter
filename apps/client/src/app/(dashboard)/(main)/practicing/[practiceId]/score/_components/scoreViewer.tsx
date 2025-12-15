@@ -1,10 +1,6 @@
 "use client";
-import { useParams } from "next/navigation";
-import { getPractice } from "../action/getPractice";
 import { useEffect, useRef, useState } from "react";
-import { Practice } from "@piano_supporter/common/domains/practice.js";
 import { OpenSheetMusicDisplay } from 'opensheetmusicdisplay';
-import { getXmlData } from "../action/getXmlData";
 
 export default function ScorePage({xmlData}: {xmlData: string}) {
     const containerRef = useRef(null); 
