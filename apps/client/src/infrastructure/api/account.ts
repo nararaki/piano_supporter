@@ -10,19 +10,15 @@ import type { createServerAccount } from "@piano_supporter/common/domains/accoun
 export const getAccountByUserId = async (
 	userId: string,
 ): Promise<Result<Account>> => {
-	const accountInitClient = client["account-init"] as unknown as {
-		[key: string]: { $get: () => Promise<Response> };
-	};
-
-	const result = await callApi<Result<Account>>(() =>
-		accountInitClient[userId].$get()
+	const result = await callApi<Account>(() =>
+		client["account-init"][":userId"].$get({
+			param: {
+				userId,
+			},
+		})
 	);
 
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 
 /**
@@ -34,7 +30,7 @@ export const createAccount = async (
 	firstName: string,
 	email: string,
 ): Promise<Result<createServerAccount>> => {
-	const result = await callApi<Result<createServerAccount>>(() =>
+	const result = await callApi<createServerAccount>(() =>
 		client["account-init"].$post({
 			json: {
 				userId,
@@ -45,10 +41,6 @@ export const createAccount = async (
 		})
 	);
 
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 

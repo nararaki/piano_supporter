@@ -9,18 +9,13 @@ import type { Result } from "@piano_supporter/common/lib/error.ts";
 export const getMusicsByComposerId = async (
 	composerId: string,
 ): Promise<Result<Music[]>> => {
-	const result = await callApi<Result<Music[]>>(() =>
-		client["musics"].$get({
-			query: {
+	const result = await callApi<Music[]>(() =>
+		client["musics"][":composerId"].$get({
+			param: {
 				composerId,
 			},
 		})
 	);
-
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 

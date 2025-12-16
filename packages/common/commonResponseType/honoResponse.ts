@@ -1,5 +1,5 @@
 import type { Post } from "../domains/post";
-import type { Comment, CommentNode } from "../domains/comment";
+import type { CommentNode } from "../domains/comment";
 
 export type getPostDetailResponse = {
 	post: Post;

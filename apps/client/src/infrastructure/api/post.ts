@@ -1,10 +1,10 @@
 import { client } from "@/lib/apiClient";
 import { callApi } from "@/lib/apiResponse";
-import { getPostDetailResponse } from "@piano_supporter/common/commonResponseType/honoResponse.js";
-import { CommentNode } from "@piano_supporter/common/domains/comment.js";
+import type { getPostDetailResponse } from "@piano_supporter/common/commonResponseType/honoResponse.js";
+import type { CommentNode } from "@piano_supporter/common/domains/comment.js";
 import type { Post } from "@piano_supporter/common/domains/post.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
-import { err, ok } from "@piano_supporter/common/lib/error.ts";
+import { ok } from "@piano_supporter/common/lib/error.ts";
 
 /**
  * アカウントIDに基づいて投稿一覧を取得
@@ -12,17 +12,14 @@ import { err, ok } from "@piano_supporter/common/lib/error.ts";
 export const getPostsByAccountId = async (
 	accountId: string,
 ): Promise<Result<Post[]>> => {
-	const result = await callApi<Result<Post[]>>(() =>
-		client["posts"].$get({
-			query: { accountId },
+	const result = await callApi<Post[]>(() =>
+		client["posts"][":accountId"].$get({
+			param: {
+				accountId,
+			},
 		})
 	);
-
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 
 export const getPostDetail = async (postId: string): Promise<Result<getPostDetailResponse>> => {
@@ -33,11 +30,14 @@ export const getPostDetail = async (postId: string): Promise<Result<getPostDetai
 			},
 		})
 	);
-
+	console.log("result", result);
 	if (!result.ok) {
+		console.log("result not ok", result.error);
 		return result;
 	}
 	const comments = result.value.comments;
+	console.log("comments", comments);
+	console.log("result.value.post", result.value.post);
 	if(!comments){
 		return ok({
 			post: result.value.post,

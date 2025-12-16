@@ -17,7 +17,7 @@ export function createCommentEntity(data: createCommentData): Comment {
 		postId: data.postId,
 		accountId: data.accountId,
 		content: data.content,
-		parentCommentId: null,
+		parentCommentId: data.parentCommentId ? data.parentCommentId : null,
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};

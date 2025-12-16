@@ -51,6 +51,7 @@ export default function HomePage() {
 			setAccountMap(newAccountMap);
 		} catch (error) {
 			console.error("Unexpected error fetching posts:", error);
+			showError("投稿の読み込みに失敗しました", error instanceof Error ? error.message : "予期しないエラーが発生しました");
 		} finally {
 			setIsLoadingPosts(false);
 		}

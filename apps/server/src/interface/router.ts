@@ -138,12 +138,34 @@ export const enrollSchoolRoute = new Hono()
 
 export const postsRoute = new Hono()
 	.get(
-		"/",
-		zValidator("query", GetPostsSchema),
+		"/detail/:postId",
+		zValidator("param", GetPostSchema),
 		async (c) => {
-			console.log("c.req.query()", c.req.query());
-			const query = await c.req.query();
-			const { accountId } = query;
+			const postId = c.req.param("postId");
+			if (!postId) {
+				return c.json(err({
+					type: "BAD_REQUEST",
+					message: "postIdが必要です",
+				}), 400);
+			}
+			const result = await getPostDetailService.exec(postId);
+			if (!result.ok) {
+				return c.json(result, 500);
+			}
+			return c.json(result, 200);
+		},
+	)
+	.get(
+		"/:accountId",
+		zValidator("param", GetPostsSchema),
+		async (c) => {
+			const accountId = c.req.param("accountId");
+			if (!accountId) {
+				return c.json(err({
+					type: "BAD_REQUEST",
+					message: "accountIdが必要です",
+				}), 400);
+			}
 			const result = await getAllPostsService.exec(accountId);
 			if (!result.ok) {
 				console.log("result", result);
@@ -181,24 +203,6 @@ export const postsRoute = new Hono()
 			return c.json(result, 200);
 		},
 	)
-	.get(
-		"/detail/:postId",
-		zValidator("param", GetPostSchema),
-		async (c) => {
-			const postId = c.req.param("postId");
-			if (!postId) {
-				return c.json(err({
-					type: "BAD_REQUEST",
-					message: "postIdが必要です",
-				}), 400);
-			}
-			const result = await getPostDetailService.exec(postId);
-			if (!result.ok) {
-				return c.json(result, 500);
-			}
-			return c.json(result, 200);
-		},
-	);
 
 export const practiceRoute = new Hono()
 	.get(
@@ -250,11 +254,16 @@ export const composersRoute = new Hono()
 
 export const musicsRoute = new Hono()
 	.get(
-		"/",
-		zValidator("query", GetMusicsSchema),
+		"/:composerId",
+		zValidator("param", GetMusicsSchema),
 		async (c) => {
-			const query = await c.req.query();
-			const { composerId } = query;
+			const composerId = c.req.param("composerId");
+			if (!composerId) {
+				return c.json(err({
+					type: "BAD_REQUEST",
+					message: "composerIdが必要です",
+				}), 400);
+			}
 			const result = await getMusicsService.exec(composerId);
 			if (!result.ok) {
 				return c.json(result, 404);

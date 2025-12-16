@@ -11,7 +11,7 @@ export const getPracticeList = async (
 	accountId: string,
 	schoolId: string,
 ): Promise<Result<Practice[]>> => {
-	const result = await callApi<Result<Practice[]>>(() =>
+	const result = await callApi<Practice[]>(() =>
 		client["practice"]["schoolAndAccount"].$get({
 			query: {
 				accountId,
@@ -20,11 +20,7 @@ export const getPracticeList = async (
 		})
 	);
 
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 
 /**
@@ -50,14 +46,11 @@ export const getPracticeById = async (
 export const createPractice = async (
 	data: createPracticeData,
 ): Promise<Result<Practice>> => {
-	const result = await callApi<Result<Practice>>(() =>
+	const result = await callApi<Practice>(() =>
 		client["practice"].$post({
 			json: data,
 		})
 	);
-	if (!result.ok) {
-		return result;
-	}
-	return result.value;
+	return result;
 };
 

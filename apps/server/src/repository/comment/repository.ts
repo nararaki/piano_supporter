@@ -1,4 +1,4 @@
-import { Result } from "@piano_supporter/common/lib/error.js";
+import { Result } from "@piano_supporter/common/lib/error.ts";
 import type { Comment } from "@piano_supporter/common/domains/comment.ts";
 
 export interface CommentRepository {
