@@ -43,8 +43,7 @@ export function CommentModal({
 			//   return;
 			// }
 
-			// モック実装: 実際のAPIが実装されるまでの仮実装
-			await new Promise((resolve) => setTimeout(resolve, 500));
+			
 
 			console.log("コメントを作成しました:", {
 				postId: post.id,

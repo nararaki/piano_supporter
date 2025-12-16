@@ -3,7 +3,7 @@ import { createSchoolEntity } from "@piano_supporter/common/domains/school.ts";
 import type { schoolRepository } from "../repository/school/repository.ts";
 import type { AccountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.ts";
 import { uuidv7 } from "uuidv7";
-import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import type { accountRoleRepository } from "../repository/role/repository.ts";
 import type { roleRepository } from "../repository/role/repository.ts";
 import { ROLE_NAMES } from "@piano_supporter/common/domains/role.ts";

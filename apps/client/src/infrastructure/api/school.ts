@@ -6,7 +6,7 @@ import type { School } from "@piano_supporter/common/domains/school.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { ok } from "@piano_supporter/common/lib/error.ts";
 import type { createServerSchool } from "@piano_supporter/common/domains/school.ts";
-import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 
 /**
  * アカウントIDに基づいて学校一覧を取得
@@ -42,6 +42,7 @@ export const getSchoolById = async (
 			},
 		})
 	);
+	const schoolClient = client["school-init"];
 
 	if (!result.ok) {
 		return result;

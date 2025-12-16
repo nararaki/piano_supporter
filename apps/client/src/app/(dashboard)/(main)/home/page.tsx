@@ -10,7 +10,7 @@ import type { createServerAccount, Account } from "@piano_supporter/common/domai
 import type { Post } from "@piano_supporter/common/domains/post.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { Loader2 } from "lucide-react";
-import { PostCard } from "@/components/post-card";
+import { PostCard } from "@/app/(dashboard)/(main)/home/_components/post-card";
 
 export default function HomePage() {
 	const { isLoaded, isSignedIn, userId } = useAuth();

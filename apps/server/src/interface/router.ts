@@ -31,8 +31,10 @@ import {
 	CreateCommentSchema,
 } from "./scheme.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
-import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { newS3PresignedUrlGenerator } from "src/infrastructure/s3/presignedUrlGenerator.ts";
+import { GetPostSchema } from "./scheme.ts";
+import { getPostDetailService } from "../service/container/index.ts";
 
 export const accountRoute = new Hono()
 	.get("/:userId", async (c) => {
@@ -173,6 +175,24 @@ export const postsRoute = new Hono()
 		async (c) => {
 			const body = await c.req.json();
 			const result = await createPostService.exec(body);
+			if (!result.ok) {
+				return c.json(result, 500);
+			}
+			return c.json(result, 200);
+		},
+	)
+	.get(
+		"/detail/:postId",
+		zValidator("param", GetPostSchema),
+		async (c) => {
+			const postId = c.req.param("postId");
+			if (!postId) {
+				return c.json(err({
+					type: "BAD_REQUEST",
+					message: "postIdが必要です",
+				}), 400);
+			}
+			const result = await getPostDetailService.exec(postId);
 			if (!result.ok) {
 				return c.json(result, 500);
 			}

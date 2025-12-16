@@ -2,7 +2,7 @@ import { client } from "@/lib/apiClient";
 import { callApi } from "@/lib/apiResponse";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
-import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 
 /**
  * 練習データ一覧を取得
@@ -33,7 +33,7 @@ export const getPracticeList = async (
 export const getPracticeById = async (
 	practiceId: string,
 ): Promise<Result<Practice>> => {
-	const result = await callApi<Result<Practice>>(() =>
+	const result = await callApi<Practice>(() =>
 		client["practice"][":practiceId"].$get({
 			param: {
 				practiceId,
@@ -41,11 +41,7 @@ export const getPracticeById = async (
 		})
 	);
 
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 
 /**

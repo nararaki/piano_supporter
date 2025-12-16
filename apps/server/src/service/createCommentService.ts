@@ -1,6 +1,6 @@
-import { ok, type Result } from "@piano_supporter/common/lib/error.ts";
+import type { Result } from "@piano_supporter/common/lib/error.ts";
 import type { CommentRepository } from "../repository/comment/repository.ts";
-import type { createCommentData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { createCommentData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { createCommentEntity } from "@piano_supporter/common/domains/comment.ts";
 
 export class CreateCommentService {

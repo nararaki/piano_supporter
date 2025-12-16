@@ -69,3 +69,7 @@ export const CreateCommentSchema = z.object({
 	accountId: z.string().min(1, { message: "accountIdがないです" }),
 	content: z.string().min(1, { message: "内容は必須です" }),
 });
+
+export const GetPostSchema = z.object({
+	postId: z.string().min(1, { message: "postIdがないです" }),
+});

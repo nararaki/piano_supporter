@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CommentModal } from "@/components/comment-modal";
+import { CommentModal } from "@/app/(dashboard)/(main)/posts/[postId]/_components/create-comment-modal";
 
 /**
  * 日付を相対時間で表示（例: "3時間前"）

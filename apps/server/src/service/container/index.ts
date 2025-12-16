@@ -24,6 +24,7 @@ import { GetSchoolService } from "../getSchoolService.ts";
 import { GetPracticeService } from "../practice/getPracticeService.ts";
 import { CreateCommentService } from "../createCommentService.ts";
 import { newCommentRepositoryClient } from "../../infrastructure/db/repositories/comment.ts";
+import { GetPostDetailService } from "../getPostDetailService.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;
 export const accountResitoryClient = newAccountRespositoryClient;
@@ -101,5 +102,10 @@ export const getPracticeService = new GetPracticeService(
 );
 
 export const createCommentService = new CreateCommentService(
+	commentRepositoryClient,
+);
+
+export const getPostDetailService = new GetPostDetailService(
+	postRepositoryClient,
 	commentRepositoryClient,
 );

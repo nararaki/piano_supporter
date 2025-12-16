@@ -1,4 +1,4 @@
-import type { createCommentData } from "../commonResponseType/honoResponse.ts";
+import type { createCommentData } from "../commonResponseType/honoRequest.ts";
 import { uuidv7 } from "uuidv7";
 
 export interface Comment {
@@ -21,4 +21,9 @@ export function createCommentEntity(data: createCommentData): Comment {
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};
+}
+
+export interface CommentNode {
+	comment: Comment;
+	children: CommentNode[];
 }

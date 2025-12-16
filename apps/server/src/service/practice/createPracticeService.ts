@@ -3,7 +3,7 @@ import type { Practice } from "@piano_supporter/common/domains/practice.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { AccountSchoolRelationRepository } from "../../repository/accountSchoolRelation/repository.ts";
 import type { PracticeRepository } from "../../repository/practice/repository.ts";
-import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 
 export class CreatePracticeService {
 	constructor(

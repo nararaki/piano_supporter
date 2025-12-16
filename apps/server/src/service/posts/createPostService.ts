@@ -1,10 +1,10 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
-import type { Post, CreatePostData } from "@piano_supporter/common/domains/post.ts";
+import type { Post } from "@piano_supporter/common/domains/post.ts";
 import { err } from "@piano_supporter/common/lib/error.ts";
 import type { AccountSchoolRelationRepository } from "../../repository/accountSchoolRelation/repository.ts";
 import type { PostsRepository } from "../../repository/posts/repository.ts";
 import type { VideoRepository } from "../../repository/video/repository.ts";
-
+import type { createPostData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 export class CreatePostService {
 	constructor(
 		private accountSchoolRelationRepository: AccountSchoolRelationRepository,
@@ -12,7 +12,7 @@ export class CreatePostService {
 		private videoRepository: VideoRepository,
 	) {}
 
-	async exec(data: CreatePostData): Promise<Result<Post>> {
+	async exec(data: createPostData): Promise<Result<Post>> {
 		// accountIdからAccountSchoolRelationを検索
 		const relationsResult = await this.accountSchoolRelationRepository.findByAccountId(data.accountId);
 		
@@ -42,6 +42,7 @@ export class CreatePostService {
 			title: data.title,
 			content: data.content,
 			videoUrl: data.videoUrl,
+			videoType: data.videoType,
 		});
 
 		if (!createResult.ok) {
