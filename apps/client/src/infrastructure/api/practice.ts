@@ -1,5 +1,5 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";

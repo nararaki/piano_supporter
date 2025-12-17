@@ -1,5 +1,5 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import type { Composer } from "@piano_supporter/common/domains/composer.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 
@@ -11,7 +11,6 @@ export const getComposers = async (): Promise<Result<Composer[]>> => {
 		client["composers"].$get({
 		})
 	);
-
 	return result;
 };
 

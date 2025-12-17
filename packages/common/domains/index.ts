@@ -16,9 +16,6 @@ export * from "./post";
 // User関連
 export * from "./user";
 
-// Video関連
-export * from "./video";
-
 // Modification関連
 export * from "./modification";
 

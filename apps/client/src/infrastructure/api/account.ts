@@ -1,9 +1,8 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import type { Account } from "@piano_supporter/common/domains/account.ts";
-import type { Result } from "@piano_supporter/common/lib/error.ts";
+import { err, type Result } from "@piano_supporter/common/lib/error.ts";
 import type { createServerAccount } from "@piano_supporter/common/domains/account.ts";
-
 /**
  * ユーザーIDに基づいてアカウントを取得
  */
@@ -43,4 +42,3 @@ export const createAccount = async (
 
 	return result;
 };
-

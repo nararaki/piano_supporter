@@ -1,5 +1,5 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import { deserialize } from "@/lib/serialize";
 import type { Deserializable } from "@/lib/serialize";
 import type { School } from "@piano_supporter/common/domains/school.ts";

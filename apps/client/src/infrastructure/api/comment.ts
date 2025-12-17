@@ -1,5 +1,5 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import type { Comment } from "@piano_supporter/common/domains/comment.ts";
 
 export const createCommentApi = async (

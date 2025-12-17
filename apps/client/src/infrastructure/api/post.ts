@@ -1,5 +1,5 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import type { getPostDetailResponse } from "@piano_supporter/common/commonResponseType/honoResponse.js";
 import type { CommentNode } from "@piano_supporter/common/domains/comment.js";
 import type { Post } from "@piano_supporter/common/domains/post.ts";
