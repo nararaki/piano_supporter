@@ -1,5 +1,5 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import type {
 	Post,
 	CreatePostData,
@@ -7,7 +7,7 @@ import type {
 } from "@piano_supporter/common/domains/post.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { err, ok } from "@piano_supporter/common/lib/error.ts";
-import type { createPostData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { createPostData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 
 /**
  * Presigned URLを取得
@@ -16,23 +16,13 @@ const getPresignedUrl = async (
 	fileName: string,
 	contentType: string,
 ): Promise<Result<PresignedUrlResponse>> => {
-	const result = await callApi<Result<PresignedUrlResponse>>(() =>
+	const result = await callApi<PresignedUrlResponse>(() =>
 		client["posts"]["presigned-url"].$post({
 			json: { fileName, contentType },
 		}),
 	);
 
-	if (!result.ok) {
-		return result;
-	}
-
-	// レスポンスボディがResult型の場合、そのまま返す
-	const response = result.value;
-	if (!response.ok) {
-		return response;
-	}
-
-	return response;
+	return result;
 };
 
 /**
@@ -184,22 +174,13 @@ export const createPost = async (
 			videoType: videoType,
 		};
 
-		const result = await callApi<Result<Post>>(async() =>
+		const result = await callApi<Post>(async() =>
 			await client["posts"].$post({
 				json: postData as createPostData,
 			}),
 		);
 
-		if (!result.ok) {
-			return result;
-		}
-
-		const response = result.value;
-		if (!response.ok) {
-			return response;
-		}
-
-		return response;
+		return result;
 	} catch (error) {
 		return {
 			ok: false,

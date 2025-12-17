@@ -1,6 +1,6 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
-import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { createPractice as createPracticeApi } from "@/infrastructure/api/practice";
 
 export const createPractice = async (

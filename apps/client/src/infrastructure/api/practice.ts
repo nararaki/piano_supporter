@@ -1,8 +1,8 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
-import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 
 /**
  * 練習データ一覧を取得
@@ -11,7 +11,7 @@ export const getPracticeList = async (
 	accountId: string,
 	schoolId: string,
 ): Promise<Result<Practice[]>> => {
-	const result = await callApi<Result<Practice[]>>(() =>
+	const result = await callApi<Practice[]>(() =>
 		client["practice"]["schoolAndAccount"].$get({
 			query: {
 				accountId,
@@ -20,11 +20,7 @@ export const getPracticeList = async (
 		})
 	);
 
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 
 /**
@@ -33,7 +29,7 @@ export const getPracticeList = async (
 export const getPracticeById = async (
 	practiceId: string,
 ): Promise<Result<Practice>> => {
-	const result = await callApi<Result<Practice>>(() =>
+	const result = await callApi<Practice>(() =>
 		client["practice"][":practiceId"].$get({
 			param: {
 				practiceId,
@@ -41,11 +37,7 @@ export const getPracticeById = async (
 		})
 	);
 
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 
 /**
@@ -54,14 +46,11 @@ export const getPracticeById = async (
 export const createPractice = async (
 	data: createPracticeData,
 ): Promise<Result<Practice>> => {
-	const result = await callApi<Result<Practice>>(() =>
+	const result = await callApi<Practice>(() =>
 		client["practice"].$post({
 			json: data,
 		})
 	);
-	if (!result.ok) {
-		return result;
-	}
-	return result.value;
+	return result;
 };
 

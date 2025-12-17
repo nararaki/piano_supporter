@@ -6,7 +6,6 @@ export interface Post {
 	video: Video | null;
 	createdAt: Date;
 	updatedAt: Date | null;
-	//後々追加musicId: string;
 }
 
 export interface Video {

@@ -3,14 +3,46 @@ import { db } from "../initial.ts";
 import { post } from "../schema/post.ts";
 import { eq } from "drizzle-orm";
 import { uuidv7 } from "uuidv7";
-import type { PostsRepository, CreatePostData } from "../../../repository/posts/repository.ts";
-import type { Post } from "@piano_supporter/common/domains/post.ts";
+import type { PostsRepository } from "../../../repository/posts/repository.ts";
+import type { Post, Video } from "@piano_supporter/common/domains/post.ts";
 import { newVideoRepositoryClient } from "./video.ts";
+import { video } from "../schema/video.ts";
+import type { createPostData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 
 class PostsRepositoryClient implements PostsRepository {
-	async findById(id: number): Promise<any> {
-		// 未実装
-		return null;
+	async findById(postId: string): Promise<Result<Post>> {
+		try{
+			const [data] = await db
+				.select()
+				.from(post)
+				.where(eq(post.id, postId))
+				.innerJoin(video, eq(post.id, video.postId))
+				.limit(1)
+				.execute();
+			const videoData: Video = {
+				id: data.video.id,
+				postId: data.video.postId,
+				url: data.video.url,
+				type: data.video.type || "",
+				createdAt: data.video.createdAt,
+				updatedAt: data.video.updatedAt,
+			}
+			return ok({
+				id: data.post.id,
+				accountId: data.post.accountId,
+				title: data.post.title || "",
+				content: data.post.content || "",
+				video: videoData,
+				createdAt: data.post.createdAt,
+				updatedAt: data.post.updatedAt,
+			});
+		} catch (e) {
+			console.log("投稿の取得に失敗しました", e);
+			return err({
+				type: "UNEXPECTED",
+				message: "投稿の取得に失敗しました",
+			});
+		}
 	}
 
 	async findByUserId(userId: string): Promise<any[]> {
@@ -22,7 +54,7 @@ class PostsRepositoryClient implements PostsRepository {
 		// 未実装
 	}
 
-	async create(data: CreatePostData): Promise<Result<Post>> {
+	async create(data: createPostData & { schoolId: string }): Promise<Result<Post>> {
 		try {
 			const postId = uuidv7();
 			const now = new Date();

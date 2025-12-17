@@ -63,3 +63,14 @@ export const GetMusicsSchema = z.object({
 export const GetPracticeByIdSchema = z.object({
 	practiceId: z.string().min(1, { message: "practiceIdがないです" }),
 });
+
+export const CreateCommentSchema = z.object({
+	postId: z.string().min(1, { message: "postIdがないです" }),
+	accountId: z.string().min(1, { message: "accountIdがないです" }),
+	content: z.string().min(1, { message: "内容は必須です" }),
+	parentCommentId: z.string().min(1, { message: "parentCommentIdがないです" }).optional(),
+});
+
+export const GetPostSchema = z.object({
+	postId: z.string().min(1, { message: "postIdがないです" }),
+});

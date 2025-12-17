@@ -14,6 +14,7 @@ import {
 	getComposersService,
 	getMusicsService,
 	getAllPracticeService,
+	createCommentService,
 } from "../service/container/index.ts";
 import { 
 	AccountCreateSchema, 
@@ -27,20 +28,27 @@ import {
 	CreatePracticeSchema,
 	GetMusicsSchema,
 	GetPracticeByIdSchema,
+	CreateCommentSchema,
 } from "./scheme.ts";
-import { err } from "@piano_supporter/common/lib/error.ts";
-import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import { err, ok } from "@piano_supporter/common/lib/error.ts";
+import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { newS3PresignedUrlGenerator } from "src/infrastructure/s3/presignedUrlGenerator.ts";
+import { GetPostSchema } from "./scheme.ts";
+import { getPostDetailService } from "../service/container/index.ts";
 
 export const accountRoute = new Hono()
 	.get("/:userId", async (c) => {
 		const userId = c.req.param("userId");
 		if (!userId) {
-			return c.json({ ok: false, error: { type: "INVALID_INPUT", message: "userIdが必要です" } }, 400);
+			return c.json(
+				err({
+					type: "BAD_REQUEST",
+					message: "userIdが必要です",
+				}),400);
 		}
 		const result = await accountResitoryClient.findById(userId);
 		if (!result.ok) {
-			return c.json(result, 404);
+			return c.json(result, 200);
 		}
 		return c.json(result, 200);
 	})
@@ -57,7 +65,7 @@ export const accountRoute = new Hono()
 				email,
 			);
 			if (!result.ok) {
-				return c.json(result, 500);
+				return c.json(result, 200);
 			}
 			return c.json(result, 200);
 		},
@@ -73,7 +81,7 @@ export const schoolRoute = new Hono()
 		const result = await getSchoolService.exec(accountId);
 		console.log("result", result);
 		if (!result.ok) {
-			return c.json(result, 404);
+			return c.json(result, 200);
 		}
 		return c.json(result, 200);
 	})
@@ -87,7 +95,7 @@ export const schoolRoute = new Hono()
 		}
 		const result = await schoolRepositoryClient.findById(schoolId);
 		if (!result.ok) {
-			return c.json(result, 404);
+			return c.json(result, 200);
 		}
 		return c.json(result, 200);
 	})
@@ -98,7 +106,7 @@ export const schoolRoute = new Hono()
 			const body = await c.req.json() as schoolCreateData;
 			const result = await initializeSchoolService.exec(body);
 			if (!result.ok) {
-				return c.json(result, 500);
+				return c.json(result, 200);
 			}
 			return c.json(result, 200);
 		},
@@ -115,7 +123,7 @@ export const enrollSchoolRoute = new Hono()
 		}
 		const result = await schoolRepositoryClient.findByShareCode(shareCode);
 		if (!result.ok) {
-			return c.json(result, 404);
+			return c.json(result, 200);
 		}
 		return c.json(result, 200);
 	})
@@ -126,7 +134,7 @@ export const enrollSchoolRoute = new Hono()
 			const body = await c.req.json();
 			const result = await enrollAccountToSchoolService.exec(body);
 		if (!result.ok) {
-			return c.json(result, 500);
+			return c.json(result, 200);
 		}
 		return c.json(result, 200);
 		},
@@ -134,16 +142,47 @@ export const enrollSchoolRoute = new Hono()
 
 export const postsRoute = new Hono()
 	.get(
-		"/",
-		zValidator("query", GetPostsSchema),
+		"/detail/:postId",
+		zValidator("param", GetPostSchema),
 		async (c) => {
-			console.log("c.req.query()", c.req.query());
-			const query = await c.req.query();
-			const { accountId } = query;
+			const postId = c.req.param("postId");
+			if (!postId) {
+				return c.json(err({
+					type: "BAD_REQUEST",
+					message: "postIdが必要です",
+				}), 400);
+			}
+			const result = await getPostDetailService.exec(postId);
+			
+			if (!result.ok) {
+				return c.json(result, 200);
+			}
+			const commentsAsObject = Object.fromEntries(result.value.comments);
+                
+                // resultの中身を書き換えた新しいオブジェクトを作る（またはresultを直接書き換える）
+            const responseData = {
+					...result.value,
+					comments: commentsAsObject
+			};
+            
+			return c.json(ok(responseData), 200);
+		},
+	)
+	.get(
+		"/:accountId",
+		zValidator("param", GetPostsSchema),
+		async (c) => {
+			const accountId = c.req.param("accountId");
+			if (!accountId) {
+				return c.json(err({
+					type: "BAD_REQUEST",
+					message: "accountIdが必要です",
+				}), 400);
+			}
 			const result = await getAllPostsService.exec(accountId);
 			if (!result.ok) {
 				console.log("result", result);
-				return c.json(result, 404);
+				return c.json(result, 200);
 			}
 			console.log("result", result);
 			return c.json(result, 200);
@@ -160,7 +199,7 @@ export const postsRoute = new Hono()
 				contentType,
 			);
 			if (!result.ok) {
-				return c.json(result, 500);
+				return c.json(result, 200);
 			}
 			return c.json(result, 200);
 		},
@@ -172,11 +211,11 @@ export const postsRoute = new Hono()
 			const body = await c.req.json();
 			const result = await createPostService.exec(body);
 			if (!result.ok) {
-				return c.json(result, 500);
+				return c.json(result, 200);
 			}
 			return c.json(result, 200);
 		},
-	);
+	)
 
 export const practiceRoute = new Hono()
 	.get(
@@ -187,7 +226,7 @@ export const practiceRoute = new Hono()
 			const { accountId, schoolId } = query;
 			const result = await getAllPracticeService.exec(accountId, schoolId);
 			if (!result.ok) {
-				return c.json(result, 404);
+				return c.json(result, 200);
 			}
 			return c.json(result, 200);
 		},
@@ -208,7 +247,7 @@ export const practiceRoute = new Hono()
 			const body = await c.req.json();
 			const result = await createPracticeService.exec(body);
 			if (!result.ok) {
-				return c.json(result, 500);
+				return c.json(result, 200);
 			}
 			return c.json(result, 200);
 		},
@@ -220,7 +259,7 @@ export const composersRoute = new Hono()
 		async (c) => {
 			const result = await getComposersService.exec();
 			if (!result.ok) {
-				return c.json(result, 404);
+				return c.json(result, 200);
 			}
 			return c.json(result, 200);
 		},
@@ -228,14 +267,33 @@ export const composersRoute = new Hono()
 
 export const musicsRoute = new Hono()
 	.get(
-		"/",
-		zValidator("query", GetMusicsSchema),
+		"/:composerId",
+		zValidator("param", GetMusicsSchema),
 		async (c) => {
-			const query = await c.req.query();
-			const { composerId } = query;
+			const composerId = c.req.param("composerId");
+			if (!composerId) {
+				return c.json(err({
+					type: "BAD_REQUEST",
+					message: "composerIdが必要です",
+				}), 400);
+			}
 			const result = await getMusicsService.exec(composerId);
 			if (!result.ok) {
-				return c.json(result, 404);
+				return c.json(result, 200);
+			}
+			return c.json(result, 200);
+		},
+	);
+
+export const commentsRoute = new Hono()
+	.post(
+		"/",
+		zValidator("json", CreateCommentSchema),
+		async (c) => {
+			const body = await c.req.json();
+			const result = await createCommentService.exec(body);
+			if (!result.ok) {
+				return c.json(result, 200);
 			}
 			return c.json(result, 200);
 		},

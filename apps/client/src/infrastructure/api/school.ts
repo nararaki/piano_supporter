@@ -1,12 +1,12 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import { deserialize } from "@/lib/serialize";
 import type { Deserializable } from "@/lib/serialize";
 import type { School } from "@piano_supporter/common/domains/school.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { ok } from "@piano_supporter/common/lib/error.ts";
 import type { createServerSchool } from "@piano_supporter/common/domains/school.ts";
-import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoResponse.ts";
+import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 
 /**
  * アカウントIDに基づいて学校一覧を取得
@@ -14,7 +14,7 @@ import type { schoolCreateData } from "@piano_supporter/common/commonResponseTyp
 export const getSchoolsByAccountId = async (
 	accountId: string,
 ): Promise<Result<School>> => {
-	const result = await callApi<Result<School>>(() =>
+	const result = await callApi<School>(() =>
 		client["school"].$get({
 			query: {
 				accountId,
@@ -22,11 +22,7 @@ export const getSchoolsByAccountId = async (
 		})
 	);
 	
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 
 /**
@@ -35,25 +31,20 @@ export const getSchoolsByAccountId = async (
 export const getSchoolById = async (
 	schoolId: string,
 ): Promise<Result<School>> => {
-	const result = await callApi<Result<Deserializable<School>>>(() =>
+	const result = await callApi<Deserializable<School>>(() =>
 		client["school-init"][":schoolId"].$get({
 			param: {
 				schoolId,
 			},
 		})
 	);
-
-	if (!result.ok) {
+	if(!result.ok){
 		return result;
 	}
-
 	const response = result.value;
-	if (!response.ok) {
-		return response as Result<School>;
-	}
 
 	// サーバー側でISO文字列として返される日付をDateオブジェクトに変換
-	const deserializeResult = deserialize(response.value);
+	const deserializeResult = deserialize(response);
 	if (!deserializeResult.ok) {
 		return deserializeResult;
 	}
@@ -67,17 +58,13 @@ export const getSchoolById = async (
 export const createSchool = async (
 	data: schoolCreateData,
 ): Promise<Result<createServerSchool>> => {
-	const result = await callApi<Result<createServerSchool>>(() =>
+	const result = await callApi<createServerSchool>(() =>
 		client["school-init"].$post({
 			json: data,
 		})
 	);
 
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 
 /**
@@ -86,7 +73,7 @@ export const createSchool = async (
 export const getSchoolByShareCode = async (
 	shareCode: string,
 ): Promise<Result<School>> => {
-	const result = await callApi<Result<Deserializable<School>>>(() =>
+	const result = await callApi<Deserializable<School>>(() =>
 		client["enroll-school"]["share-code"][":shareCode"].$get({
 			param: {
 				shareCode,
@@ -99,12 +86,9 @@ export const getSchoolByShareCode = async (
 	}
 
 	const response = result.value;
-	if (!response.ok) {
-		return response as Result<School>;
-	}
 
 	// サーバー側でISO文字列として返される日付をDateオブジェクトに変換
-	const deserializeResult = deserialize(response.value);
+	const deserializeResult = deserialize(response);
 	if (!deserializeResult.ok) {
 		return deserializeResult;
 	}
@@ -119,9 +103,8 @@ export const enrollAccountToSchool = async (
 	accountId: string,
 	schoolId: string,
 ): Promise<Result<{ id: string; accountId: string; schoolId: string }>> => {
-	const result = await callApi<
-		Result<{ id: string; accountId: string; schoolId: string }>
-	>(() =>
+	const result = await callApi
+	<{ id: string; accountId: string; schoolId: string }>(() =>
 		client["enroll-school"].$post({
 			json: {
 				accountId,
@@ -130,11 +113,7 @@ export const enrollAccountToSchool = async (
 		})
 	);
 
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 
 /**
@@ -143,7 +122,7 @@ export const enrollAccountToSchool = async (
 export const getSchoolShareCode = async (
 	schoolId: string,
 ): Promise<Result<string>> => {
-	const result = await callApi<Result<Deserializable<School>>>(() =>
+	const result = await callApi<Deserializable<School>>(() =>
 		client["school-init"][":schoolId"].$get({
 			param: {
 				schoolId,
@@ -156,15 +135,10 @@ export const getSchoolShareCode = async (
 	}
 
 	const response = result.value;
-	if (!response.ok) {
-		return {
-			ok: false,
-			error: response.error,
-		};
-	}
+	
 
 	// サーバー側でISO文字列として返される日付をDateオブジェクトに変換
-	const deserializeResult = deserialize(response.value);
+	const deserializeResult = deserialize(response);
 	if (!deserializeResult.ok) {
 		return deserializeResult;
 	}

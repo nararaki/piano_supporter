@@ -11,7 +11,8 @@ export const apiResponseHandler = async <T>(
 	if (res.ok) {
 		try {
 			const result = await res.json();
-			return ok(result as T);
+			console.log("result", result);
+			return result as Result<T>;
 		} catch (e) {
 			return err({
 				type: "UNEXPECTED",

@@ -1,5 +1,5 @@
-import { client } from "@/lib/apiClient";
-import { callApi } from "@/lib/apiResponse";
+import { client } from "@/infrastructure/api/apiClient";
+import { callApi } from "@/infrastructure/api/apiResponse";
 import type { Music } from "@piano_supporter/common/domains/music.ts";
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 
@@ -9,18 +9,13 @@ import type { Result } from "@piano_supporter/common/lib/error.ts";
 export const getMusicsByComposerId = async (
 	composerId: string,
 ): Promise<Result<Music[]>> => {
-	const result = await callApi<Result<Music[]>>(() =>
-		client["musics"].$get({
-			query: {
+	const result = await callApi<Music[]>(() =>
+		client["musics"][":composerId"].$get({
+			param: {
 				composerId,
 			},
 		})
 	);
-
-	if (!result.ok) {
-		return result;
-	}
-
-	return result.value;
+	return result;
 };
 

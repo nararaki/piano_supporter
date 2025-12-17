@@ -3,6 +3,11 @@
 import type { Post } from "@piano_supporter/common/domains/post.ts";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { MessageCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { CommentModal } from "@/app/(dashboard)/(main)/posts/[postId]/_components/create-comment-modal";
 
 /**
  * 日付を相対時間で表示（例: "3時間前"）
@@ -44,6 +49,15 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, authorName }: PostCardProps) {
+	const router = useRouter();
+	const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+	const handleClick = () => {
+		router.push(`/posts/${post.id}`);
+	};
+	const handleCommentClick = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		setIsCommentModalOpen(true);
+	};
 	const displayName = authorName
 		? `${authorName.lastName} ${authorName.firstName}`
 		: "ユーザー";
@@ -75,7 +89,7 @@ export function PostCard({ post, authorName }: PostCardProps) {
 					</div>
 				</div>
 			</CardHeader>
-			<CardContent className="pt-0">
+			<CardContent className="pt-0" onClick={handleClick}>
 				{post.title && (
 					<h3 className="text-lg font-semibold mb-2">{post.title}</h3>
 				)}
@@ -97,6 +111,22 @@ export function PostCard({ post, authorName }: PostCardProps) {
 					</div>
 				)}
 			</CardContent>
+			<div className="px-6 pb-4">
+				<Button
+					variant="ghost"
+					size="sm"
+					className="gap-2 hover:text-blue-500 transition-colors"
+					onClick={handleCommentClick}
+				>
+					<MessageCircle className="h-4 w-4" />
+					コメント
+				</Button>
+			</div>
+			<CommentModal
+				post={post}
+				isOpen={isCommentModalOpen}
+				onOpenChange={setIsCommentModalOpen}
+			/>
 		</Card>
 	);
 }
