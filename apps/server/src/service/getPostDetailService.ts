@@ -25,8 +25,9 @@ export class GetPostDetailService {
 				message: "コメントが見つかりません",
 			});
 		}
+		console.log("comments", comments.value);
 		const commentTree = this.commentTree(comments.value);
-
+		console.log("commentTree", commentTree);
 		return ok({
 			post: post.value,
 			comments: commentTree,

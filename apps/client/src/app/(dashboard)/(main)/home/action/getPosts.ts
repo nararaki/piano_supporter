@@ -7,4 +7,3 @@ export const getPosts = async (
 ): Promise<Result<Post[]>> => {
 	return await getPostsByAccountId(accountId);
 };
-

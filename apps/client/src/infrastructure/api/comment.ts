@@ -8,6 +8,7 @@ export const createCommentApi = async (
     content: string,
     parentCommentId?: string | null
 ) => {
+    console.log("createCommentApi", postId, accountId, content, parentCommentId);
     const result = await callApi<Comment>(() =>
         client["comments"].$post({
             json: {

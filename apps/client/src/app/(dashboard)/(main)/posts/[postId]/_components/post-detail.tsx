@@ -21,6 +21,7 @@ export default function PostDetail({ postId }: { postId: string }) {
             return;
         }
         setPost(result.value.post);
+        console.log(result.value.comments);
         setComments(result.value.comments);
     }, [postId]);
 

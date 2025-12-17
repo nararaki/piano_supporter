@@ -30,7 +30,7 @@ import {
 	GetPracticeByIdSchema,
 	CreateCommentSchema,
 } from "./scheme.ts";
-import { err } from "@piano_supporter/common/lib/error.ts";
+import { err, ok } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { newS3PresignedUrlGenerator } from "src/infrastructure/s3/presignedUrlGenerator.ts";
 import { GetPostSchema } from "./scheme.ts";
@@ -153,10 +153,19 @@ export const postsRoute = new Hono()
 				}), 400);
 			}
 			const result = await getPostDetailService.exec(postId);
+			
 			if (!result.ok) {
 				return c.json(result, 200);
 			}
-			return c.json(result, 200);
+			const commentsAsObject = Object.fromEntries(result.value.comments);
+                
+                // resultの中身を書き換えた新しいオブジェクトを作る（またはresultを直接書き換える）
+            const responseData = {
+					...result.value,
+					comments: commentsAsObject
+			};
+            
+			return c.json(ok(responseData), 200);
 		},
 	)
 	.get(

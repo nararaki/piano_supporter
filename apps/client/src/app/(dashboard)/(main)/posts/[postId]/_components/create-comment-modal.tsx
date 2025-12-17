@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@clerk/nextjs";
+import { createComment } from "../action/createComment";
 
 interface CommentModalProps {
 	post: Post;
@@ -36,14 +37,11 @@ export function CommentModal({
 		setIsSubmitting(true);
 
 		try {
-			// TODO: コメント作成APIを実装する
-			// const result = await createComment(post.id, userId, commentContent);
-			// if (!result.ok) {
-			//   console.error("コメントの作成に失敗しました", result.error);
-			//   return;
-			// }
-
-			
+			const result = await createComment(post.id, userId, commentContent);
+			 if (!result.ok) {
+			   console.error("コメントの作成に失敗しました", result.error);
+			   return;
+			 }
 
 			console.log("コメントを作成しました:", {
 				postId: post.id,
