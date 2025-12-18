@@ -85,7 +85,9 @@ Hono.routeメソッドは
 ### ルーティングの中身を作る
 ```typescript
 export const accountRoute = new Hono()
-	.get("/:userId", async (c) => {
+	.get("/:userId",
+	zValidator("param", GetAccountSchema),
+	 async (c) => {
 		const userId = c.req.param("userId");
 		if (!userId) {
 			return c.json({ ok: false, error: { type: "INVALID_INPUT", message: "userIdが必要です" } }, 400);
@@ -130,7 +132,7 @@ export const apiRoutes = new Hono()
 	.route("/composers", composersRoute)
 	.route("/musics", musicsRoute)
 	.route("/comments", commentsRoute);
-export type AppType = typeof apiRoutes;
+export type appType = typeof apiRoutes;
 ```
 <div style="font-size: 0.7em;">
   export type AppType = typeof apiRoutes;
@@ -188,12 +190,32 @@ export const getAccountByAccountId = async (
 ![](./images/honoTypeCapture.png)
 
 ---
+# 注目ポイント3 midlewareにzod
+@hono/zod-validator
+を利用することで、midlewareでzodスキーマを利用できます
+```typescript
+import { zValidator } from "@hono/zod-validator";
+const AccountCreateSchema = z.object({
+	userId: z.string().min(1, { message: "userIdがないです" }),
+	lastName: z.string().min(1, { message: "名字がないです" }),
+	firstName: z.string().min(1, { message: "名前が無いです" }),
+	email: z.string().min(1, { message: "無効なメール形式です" }),
+});
+const accountRoute = new Hono().post(
+		"/",
+		zValidator("json", AccountCreateSchema),
+		async (c) => {
+			const body = await c.req.json();
+			//リクエストに対する処理
+		},
+	);
+```
+---
 ## モノレポとの相性の良さ
 npm workspace等のモノレポ構成にすることで、サーバーとクライアントで型を共有しやすくなります
 ![](./images/monorepo.png)
 
 ---
-
 ## まとめ
 - Honoはtypescript向けの軽量webフレームワーク
 - 関数型の考え方が取り入れられている

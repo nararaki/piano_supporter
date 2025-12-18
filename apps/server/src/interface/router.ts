@@ -29,11 +29,11 @@ import {
 	GetMusicsSchema,
 	GetPracticeByIdSchema,
 	CreateCommentSchema,
-} from "./scheme.ts";
+	GetPostSchema,
+} from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { err, ok } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { newS3PresignedUrlGenerator } from "src/infrastructure/s3/presignedUrlGenerator.ts";
-import { GetPostSchema } from "./scheme.ts";
 import { getPostDetailService } from "../service/container/index.ts";
 
 export const accountRoute = new Hono()
