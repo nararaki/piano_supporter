@@ -8,10 +8,10 @@ export default function TaskComponent({ task }: { task: Task }) {
                 <CardTitle>{task.title}</CardTitle>
             </CardHeader>
             <CardContent>
-                <p>{task.content}</p>
+                <p>{task.annotation.content}</p>
             </CardContent>
             <CardFooter>
-                <p>{task.status}</p>
+                <p>{task.status.name}</p>
             </CardFooter>
         </Card>
 	);

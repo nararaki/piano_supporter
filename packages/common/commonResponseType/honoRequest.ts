@@ -76,6 +76,14 @@ export const GetPostSchema = z.object({
 	postId: z.string().min(1, { message: "postIdがないです" }),
 });
 
+export const CreateTaskSchema = z.object({
+    title: z.string().min(1,{message: "titleがないです"}),
+    content: z.string().min(1,{message: "コメントする内容を書いてください"}),
+    practiceId: z.string().min(1,{message:"practiceIdがないです"}),
+	sectionNumber: z.number().min(1,{message:"sectionNumberがないです"}),
+	timePosition: z.number().min(1,{message:"timePositionがないです"}),
+});
+
 export type accountCreateData = z.infer<typeof AccountCreateSchema>;
 export type schoolCreateData = z.infer<typeof SchoolCreateSchema>;
 export type shareCodeCreateData = z.infer<typeof EnrollSchoolCreateSchema>;
@@ -85,6 +93,6 @@ export type createPostData = z.infer<typeof CreatePostSchema>;
 export type getPostsData = z.infer<typeof GetPostsSchema>;
 export type createPracticeData = z.infer<typeof CreatePracticeSchema>;
 export type createCommentData = z.infer<typeof CreateCommentSchema>;
-
+export type createTaskData = z.infer<typeof CreateTaskSchema>;
 
 export type appType = AppType;

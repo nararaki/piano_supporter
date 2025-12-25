@@ -30,6 +30,7 @@ import {
 	GetPracticeByIdSchema,
 	CreateCommentSchema,
 	GetPostSchema,
+	CreateTaskSchema,
 } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { err, ok } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
@@ -298,3 +299,17 @@ export const commentsRoute = new Hono()
 			return c.json(result, 200);
 		},
 	);
+
+export const taskRoute = new Hono()
+	.post(
+		"/",
+		zValidator("json",CreateTaskSchema),
+		async(c)=>{
+			const body = await c.req.json();
+			const result = await createTaskService.exec(body);
+			if (!result.ok) {
+				return c.json(result, 200);
+			}
+			return c.json(result, 200);
+		}
+	)

@@ -25,6 +25,8 @@ import { GetPracticeService } from "../practice/getPracticeService.ts";
 import { CreateCommentService } from "../createCommentService.ts";
 import { newCommentRepositoryClient } from "../../infrastructure/db/repositories/comment.ts";
 import { GetPostDetailService } from "../getPostDetailService.ts";
+import { CreateTaskService } from "../createTaskService.ts";
+import { taskRepositoryClient } from "src/infrastructure/db/repositories/task.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;
 export const accountResitoryClient = newAccountRespositoryClient;
@@ -38,6 +40,8 @@ export const practiceRepositoryClient = newPracticeRepositoryClient;
 export const composerRepositoryClient = newComposerRepositoryClient;
 export const musicRepositoryClient = newMusicRepositoryClient;
 export const accountRoleRepositoryClient = newAccountRoleRepositoryClient;
+export const taskRepositoryClient = newTaskRepositoryClient;
+export const annotationRepositoryClient = newAnnotationRepositoryClient;
 
 export const uploadVideoService = new UploadVideoService(cloudinaryApiClient);
 
@@ -108,4 +112,9 @@ export const createCommentService = new CreateCommentService(
 export const getPostDetailService = new GetPostDetailService(
 	postRepositoryClient,
 	commentRepositoryClient,
+);
+
+export const createTaskService = new CreateTaskService(
+	taskRepositoryClient,
+	annotationRepositoryClient,
 );
