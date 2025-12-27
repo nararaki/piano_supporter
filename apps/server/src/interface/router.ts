@@ -15,6 +15,8 @@ import {
 	getMusicsService,
 	getAllPracticeService,
 	createCommentService,
+	createTaskService,
+	getTasksService
 } from "../service/container/index.ts";
 import { 
 	AccountCreateSchema, 
@@ -30,6 +32,7 @@ import {
 	GetPracticeByIdSchema,
 	CreateCommentSchema,
 	GetPostSchema,
+	CreateTaskSchema,
 } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { err, ok } from "@piano_supporter/common/lib/error.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
@@ -298,3 +301,35 @@ export const commentsRoute = new Hono()
 			return c.json(result, 200);
 		},
 	);
+
+export const taskRoute = new Hono()
+	.get(
+		"/:practiceId",
+		zValidator("param", GetPracticeByIdSchema),
+		async (c) => {
+			const practiceId = c.req.param("practiceId");
+			if (!practiceId) {
+				return c.json(err({
+					type: "BAD_REQUEST",
+					message: "practiceIdが必要です",
+				}), 400);
+			}
+			const result = await getTasksService.exec(practiceId);
+			if (!result.ok) {
+				return c.json(result, 200);
+			}
+			return c.json(result, 200);
+		},
+	)
+	.post(
+		"/",
+		zValidator("json",CreateTaskSchema),
+		async(c)=>{
+			const body = await c.req.json();
+			const result = await createTaskService.exec(body);
+			if (!result.ok) {
+				return c.json(result, 200);
+			}
+			return c.json(result, 200);
+		}
+	)

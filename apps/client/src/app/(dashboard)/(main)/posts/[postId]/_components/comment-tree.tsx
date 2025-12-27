@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { createComment } from "../action/createComment";
-import { showError, showSuccess } from "@/components/ui/toast";
+import { showError } from "@/components/ui/toast";
 
 interface CommentTreeProps {
     node: CommentNode;

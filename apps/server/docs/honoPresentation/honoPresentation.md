@@ -31,6 +31,14 @@ yusukebeさん(日本人)
 ```typescript
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
+const accountApp = new Hono()
+  .get("/", (c) => {
+    console.log("hello");
+    return c.json({ message: "hello" });
+  });
+const apiRoutes = new Hono()
+  .route("/account", accountApp);
+const app = new Hono().route("/",apiRoutes);
 const app = new Hono().route("/",apiRoutes)
 serve(
 	{
