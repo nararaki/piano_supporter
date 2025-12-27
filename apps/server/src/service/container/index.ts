@@ -26,7 +26,9 @@ import { CreateCommentService } from "../createCommentService.ts";
 import { newCommentRepositoryClient } from "../../infrastructure/db/repositories/comment.ts";
 import { GetPostDetailService } from "../getPostDetailService.ts";
 import { CreateTaskService } from "../createTaskService.ts";
-import { taskRepositoryClient } from "src/infrastructure/db/repositories/task.ts";
+import { GetTasksService } from "../task/getTasksService.ts";
+import { newTaskRepositoryClient } from "src/infrastructure/db/repositories/task.ts";
+import { newAnnotationRepositoryClient } from "src/infrastructure/db/repositories/annotation.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;
 export const accountResitoryClient = newAccountRespositoryClient;
@@ -117,4 +119,8 @@ export const getPostDetailService = new GetPostDetailService(
 export const createTaskService = new CreateTaskService(
 	taskRepositoryClient,
 	annotationRepositoryClient,
+);
+
+export const getTasksService = new GetTasksService(
+	taskRepositoryClient,
 );

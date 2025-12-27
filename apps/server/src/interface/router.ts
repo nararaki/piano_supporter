@@ -15,6 +15,8 @@ import {
 	getMusicsService,
 	getAllPracticeService,
 	createCommentService,
+	createTaskService,
+	getTasksService
 } from "../service/container/index.ts";
 import { 
 	AccountCreateSchema, 
@@ -301,6 +303,24 @@ export const commentsRoute = new Hono()
 	);
 
 export const taskRoute = new Hono()
+	.get(
+		"/:practiceId",
+		zValidator("param", GetPracticeByIdSchema),
+		async (c) => {
+			const practiceId = c.req.param("practiceId");
+			if (!practiceId) {
+				return c.json(err({
+					type: "BAD_REQUEST",
+					message: "practiceIdが必要です",
+				}), 400);
+			}
+			const result = await getTasksService.exec(practiceId);
+			if (!result.ok) {
+				return c.json(result, 200);
+			}
+			return c.json(result, 200);
+		},
+	)
 	.post(
 		"/",
 		zValidator("json",CreateTaskSchema),

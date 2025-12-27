@@ -18,6 +18,7 @@ export class AnnotationRepositoryClient implements AnnotationRepository{
             });
             return ok(data);
         } catch (error) {
+            console.error(error);
             return err({
                 type: "UNEXPECTED",
                 message: "アノテーションの作成に失敗しました" + error,

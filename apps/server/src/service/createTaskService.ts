@@ -13,13 +13,13 @@ export class CreateTaskService{
     async exec(data:createTaskData){
         const annotation = createAnnotationEntity(data.content,data.sectionNumber,data.timePosition);
         const task = createTaskEntity(data.title,[annotation],TaskStatus.PROGRESS,data.practiceId);
-        const annotationResult = await this.annotationRepository.create(annotation);
-        if (!annotationResult.ok) {
-            return annotationResult;
-        }
         const taskResult = await this.taskRepository.createTask(task);
         if (!taskResult.ok) {
             return taskResult;
+        }
+        const annotationResult = await this.annotationRepository.create(annotation,task.id);
+        if (!annotationResult.ok) {
+            return annotationResult;
         }
         return ok(task);
     }
