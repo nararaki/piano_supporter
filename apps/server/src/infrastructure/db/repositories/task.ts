@@ -1,5 +1,5 @@
 import type { TaskRepository } from "src/repository/task/repository.ts";
-import { Task, type Annotation } from "@piano_supporter/common/domains/task.ts";
+import type { Task, Annotation } from "@piano_supporter/common/domains/task.ts";
 import { type Result,ok,err } from "@piano_supporter/common/lib/error.ts";
 import { db } from "../initial.ts";
 import { task } from "../schema/task.ts";

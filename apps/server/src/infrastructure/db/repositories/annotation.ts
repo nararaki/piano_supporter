@@ -1,4 +1,4 @@
-import { Annotation } from "@piano_supporter/common/domains/task.ts";
+import type { Annotation } from "@piano_supporter/common/domains/task.ts";
 import { ok, Result,err } from "@piano_supporter/common/lib/error.ts";
 import { db } from "../initial.ts";
 import { annotation } from "../schema/annotation.ts";

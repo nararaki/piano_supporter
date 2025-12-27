@@ -1,5 +1,4 @@
-import { createTaskData } from "@piano_supporter/common/commonResponseType/honoRequest.js";
-import type { Task } from "@piano_supporter/common/domains/task.js";
+import type { Task } from "@piano_supporter/common/domains/task.ts";
 import type { Result } from "@piano_supporter/common/lib/error.js";
 
 export interface TaskRepository{
