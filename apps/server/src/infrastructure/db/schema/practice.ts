@@ -11,6 +11,7 @@ export const practice = mysqlTable('practice', {
   id: varchar('id', { length: 255 }).primaryKey(),
   accountSchoolRelationId: varchar('account_school_relation_id', { length: 255 }).notNull(),
   musicId: varchar('music_id', { length: 255 }).notNull(),
+  sheetMusicUrl: varchar('sheet_music_url', { length: 512 }).notNull(),
   ...baseTimestampColumns,
 }, (table) => {
   return {

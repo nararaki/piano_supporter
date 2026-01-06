@@ -1,13 +1,9 @@
 import { 
   mysqlTable, 
   varchar, 
-  text,
-  int
 } from 'drizzle-orm/mysql-core';
 import { baseTimestampColumns } from './time.ts';
-import { practice } from './practice.ts';
 import { composer,arranger } from './composer.ts';
-import { task } from './task.ts';
 
 export const music = mysqlTable('music', {
   id: varchar('id', { length: 255 }).primaryKey(),

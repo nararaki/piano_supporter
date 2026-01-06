@@ -8,7 +8,8 @@
 		"build": "tsc",
 		"start": "node dist/index.js",
 		"typecheck": "tsc --noEmit",
-		"seed": "tsx src/infrastructure/db/seed/index.ts",
+		"seed": "tsx src/util/seed/db/index.ts",
+		"seed:xml": "tsx src/util/seed/db/seedXmlOnly.ts",
 		"clear": "tsx src/infrastructure/db/clear/init.ts",
 		"migrate": "drizzle-kit migrate",
 		"generate": "drizzle-kit generate"
@@ -21,7 +22,6 @@
 		"@piano_supporter/common": "*",
 		"cloudinary": "^2.8.0",
 		"dotenv": "^17.2.3",
-		"drizzle-kit": "^0.18.1",
 		"fast-xml-parser": "^5.2.5",
 		"hono": "^4.10.6",
 		"mysql2": "^3.15.3",
@@ -30,6 +30,7 @@
 		"zod": "^4.1.12"
 	},
 	"devDependencies": {
-		"@types/streamifier": "^0.1.2"
+		"@types/streamifier": "^0.1.2",
+		"drizzle-kit": "^0.31.8"
 	}
 }

@@ -1,5 +1,5 @@
-import { db } from "../initial.ts";
-import { roles } from "../schema/role.ts";
+import { db } from "../../../infrastructure/db/initial.ts";
+import { roles } from "../../../infrastructure/db/schema/role.ts";
 import { ROLE_NAMES } from "@piano_supporter/common/domains/role.ts";
 import { eq } from "drizzle-orm";
 import { uuidv7 } from "uuidv7";

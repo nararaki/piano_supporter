@@ -4,11 +4,8 @@ import { practice } from "../schema/practice.ts";
 import { music } from "../schema/music.ts";
 import { composer } from "../schema/composer.ts";
 import { eq } from "drizzle-orm";
-import { uuidv7 } from "uuidv7";
-import type { PracticeRepository, CreatePracticeRepositoryData } from "../../../repository/practice/repository.ts";
+import type { PracticeRepository } from "../../../repository/practice/repository.ts";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
-import type { Music } from "@piano_supporter/common/domains/music.ts";
-import type { Composer } from "@piano_supporter/common/domains/composer.ts";
 
 class PracticeRepositoryClient implements PracticeRepository {
 	async findById(id: string): Promise<Result<Practice>> {
@@ -27,7 +24,7 @@ class PracticeRepositoryClient implements PracticeRepository {
 					message: "練習データが見つかりません",
 				});
 			}
-			const practiceData = {
+			const practiceData: Practice = {
 				id: result.practice.id,
 				music: {
 					id: result.music.id,
@@ -35,10 +32,13 @@ class PracticeRepositoryClient implements PracticeRepository {
 					composer: {
 						id: result.composer.id,
 						name: result.composer.name,
-					} as Composer,
+					},
+					sheetMusicUrl: result.music.sheetMusicUrl || "",
 				},
+				sheetMusicUrl: result.practice.sheetMusicUrl || "",
+				createdAt: result.practice.createdAt,
 				updatedAt: result.practice.updatedAt,
-			} as Practice;
+			};
 			return ok(practiceData);
 		
 		} catch (e) {
@@ -72,13 +72,15 @@ class PracticeRepositoryClient implements PracticeRepository {
 					composer: {
 						id: row.composer.id,
 						name: row.composer.name,
-					} as Composer,
+					},
 					sheetMusicUrl: row.music.sheetMusicUrl || "",
-				} as Music,
+				},
 				composer: {
 					id: row.composer.id,
 					name: row.composer.name,
-				} as Composer,
+				},
+				sheetMusicUrl: row.music.sheetMusicUrl || "",
+				createdAt: row.practice.createdAt,
 				updatedAt: row.practice.updatedAt,
 			}));
 
@@ -92,54 +94,18 @@ class PracticeRepositoryClient implements PracticeRepository {
 		}
 	}
 
-	async create(data: CreatePracticeRepositoryData): Promise<Result<Practice>> {
+	async create(data: Practice,relationId: string): Promise<Result<Practice>> {
 		try {
-			const practiceId = uuidv7();
-			const now = new Date();
-			
 			await db.insert(practice).values({
-				id: practiceId,
-				accountSchoolRelationId: data.accountSchoolRelationId,
-				musicId: data.musicId,
-				createdAt: now,
+				id: data.id,
+				accountSchoolRelationId: relationId,
+				musicId: data.music.id,
+				sheetMusicUrl: data.sheetMusicUrl,
+				createdAt: data.createdAt,
+				updatedAt: data.updatedAt,
 			});
 
-			// 作成したpracticeを取得（musicとcomposerを含む）
-			const [createdPractice] = await db
-				.select({
-					practice: practice,
-					music: music,
-					composer: composer,
-				})
-				.from(practice)
-				.innerJoin(music, eq(practice.musicId, music.id))
-				.innerJoin(composer, eq(music.composerId, composer.id))
-				.where(eq(practice.id, practiceId))
-				.limit(1)
-				.execute();
-
-			if (!createdPractice) {
-				return err({
-					type: "UNEXPECTED",
-					message: "練習データの作成に失敗しました",
-				});
-			}
-
-			const result: Practice = {
-				id: createdPractice.practice.id,
-				music: {
-					id: createdPractice.music.id,
-					title: createdPractice.music.title,
-					composer: {
-						id: createdPractice.composer.id,
-						name: createdPractice.composer.name,
-					} as Composer,
-					sheetMusicUrl: createdPractice.music.sheetMusicUrl || "",
-				} as Music,
-				updatedAt: createdPractice.practice.updatedAt,
-			};
-
-			return ok(result);
+			return ok(data);
 		} catch (e) {
 			console.log("練習データの作成に失敗しました", e);
 			return err({

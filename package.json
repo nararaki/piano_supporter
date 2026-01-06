@@ -10,7 +10,8 @@
 		"db:generate": "npm run generate --workspace=@piano_supporter/server",
 		"db:migrate": "npm run migrate --workspace=@piano_supporter/server",
 		"db:clear": "npm run clear --workspace=@piano_supporter/server",
-		"db:seed": "npm run seed --workspace=@piano_supporter/server"
+		"db:seed": "npm run seed --workspace=@piano_supporter/server",
+		"server:seed:xml": "npm run seed:xml --workspace=@piano_supporter/server"
 	},
 	"repository": {
 		"type": "git",
