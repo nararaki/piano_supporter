@@ -29,6 +29,8 @@ import { CreateTaskService } from "../createTaskService.ts";
 import { GetTasksService } from "../task/getTasksService.ts";
 import { newTaskRepositoryClient } from "src/infrastructure/db/repositories/task.ts";
 import { newAnnotationRepositoryClient } from "src/infrastructure/db/repositories/annotation.ts";
+import { XmlEditService } from "../xmlEditService.ts";
+import { MediaStorage } from "../../infrastructure/s3/mediaStorage.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;
 export const accountResitoryClient = newAccountRespositoryClient;
@@ -44,6 +46,7 @@ export const musicRepositoryClient = newMusicRepositoryClient;
 export const accountRoleRepositoryClient = newAccountRoleRepositoryClient;
 export const taskRepositoryClient = newTaskRepositoryClient;
 export const annotationRepositoryClient = newAnnotationRepositoryClient;
+export const newMediaStorage = new MediaStorage();
 
 export const uploadVideoService = new UploadVideoService(cloudinaryApiClient);
 
@@ -88,6 +91,7 @@ export const getSchoolService = new GetSchoolService(
 export const createPracticeService = new CreatePracticeService(
 	accountSchoolRelationRepositoryClient,
 	practiceRepositoryClient,
+	musicRepositoryClient,
 );
 
 export const getComposersService = new GetComposersService(
@@ -116,9 +120,13 @@ export const getPostDetailService = new GetPostDetailService(
 	commentRepositoryClient,
 );
 
+export const xmlEditService = new XmlEditService(newMediaStorage);
+
 export const createTaskService = new CreateTaskService(
 	taskRepositoryClient,
 	annotationRepositoryClient,
+	practiceRepositoryClient,
+	xmlEditService,
 );
 
 export const getTasksService = new GetTasksService(

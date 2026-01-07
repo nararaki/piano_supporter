@@ -26,9 +26,11 @@ export class MediaStorage {
 	 */
 	async get(cloudFrontUrl: string): Promise<Result<Buffer>> {
 		try {
+			console.log("cloudFrontUrl", cloudFrontUrl);
+			console.log("this.bucketName", this.bucketName);
 			// CloudFrontのURLに対してHTTPリクエストを送信
 			const response = await fetch(cloudFrontUrl);
-
+			console.log("response", response);
 			if (!response.ok) {
 				if (response.status === 404) {
 					return err({
@@ -68,13 +70,13 @@ export class MediaStorage {
 	 * @param key S3オブジェクトのキー（例: "original/musicId/file.xml"）
 	 * @param content アップロードするコンテンツ（Buffer）
 	 * @param contentType コンテンツタイプ（例: "application/xml", "text/plain"）
-	 * @returns CloudFrontのURL
+	 * @returns 成功/失敗の結果
 	 */
 	async put(
 		key: string,
 		content: Buffer,
 		contentType: string,
-	): Promise<Result<string>> {
+	): Promise<Result<void>> {
 		try {
 			// 環境変数の検証
 			if (!this.bucketName) {
@@ -110,12 +112,10 @@ export class MediaStorage {
 
 			await this.s3Client.send(command);
 
-			// CloudFrontのURLを構築
-			const cloudFrontUrl = `https://${this.cloudFrontDomain}/${key}`;
-
+			const cloudFrontUrl = this.getCloudFrontUrl(key);
 			console.log(`[put] アップロード成功: ${key} -> ${cloudFrontUrl}`);
 
-			return ok(cloudFrontUrl);
+			return ok(undefined);
 		} catch (error) {
 			console.error("[put] エラー発生", {
 				error,
@@ -128,7 +128,34 @@ export class MediaStorage {
 			});
 		}
 	}
-}
 
-export const newMediaStorage = new MediaStorage();
+	/**
+	 * S3キーからCloudFrontのURLを生成
+	 * @param key S3オブジェクトのキー（例: "original/musicId/file.xml"）
+	 * @returns CloudFrontのURL
+	 */
+	getCloudFrontUrl(key: string): string {
+		return `https://${this.cloudFrontDomain}/${key}`;
+	}
+
+	/**
+	 * CloudFrontのURLからS3キーを抽出
+	 * @param cloudFrontUrl CloudFrontのURL（例: "https://cloudfront-domain/original/musicId/file.xml"）
+	 * @returns S3キー（例: "original/musicId/file.xml"）、抽出できない場合はnull
+	 */
+	extractKeyFromUrl(cloudFrontUrl: string): string | null {
+		try {
+			const urlObj = new URL(cloudFrontUrl);
+			// pathnameから先頭のスラッシュを削除
+			const key = urlObj.pathname.startsWith("/") ? urlObj.pathname.slice(1) : urlObj.pathname;
+			return key || null;
+		} catch (error) {
+			console.error("[extractKeyFromUrl] URL解析エラー", {
+				error,
+				cloudFrontUrl,
+			});
+			return null;
+		}
+	}
+}
 

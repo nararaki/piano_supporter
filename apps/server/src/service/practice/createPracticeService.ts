@@ -4,8 +4,8 @@ import { err } from "@piano_supporter/common/lib/error.ts";
 import type { AccountSchoolRelationRepository } from "../../repository/accountSchoolRelation/repository.ts";
 import type { PracticeRepository } from "../../repository/practice/repository.ts";
 import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
-import { MusicRepository } from "src/repository/music/repository.ts";
-import { newMediaStorage } from "src/infrastructure/s3/mediaStorage.ts";
+import type { MusicRepository } from "src/repository/music/repository.ts";
+import { newMediaStorage } from "../container/index.ts";
 import { createPracticeEntity, updatePracticeEntity } from "@piano_supporter/common/domains/practice.ts";
 
 export class CreatePracticeService {
@@ -53,7 +53,7 @@ export class CreatePracticeService {
 				message: "シートミュージックのアップロードに失敗しました",
 			});
 		}
-		const newSheetMusicUrl = putResult.value;
+		const newSheetMusicUrl = newMediaStorage.getCloudFrontUrl(practice.sheetMusicUrl);
 		const updatedPractice = updatePracticeEntity(practice, newSheetMusicUrl);
 		const practiceResult = await this.practiceRepository.create(updatedPractice,relationResult.value.id);
 		if (!practiceResult.ok) {
