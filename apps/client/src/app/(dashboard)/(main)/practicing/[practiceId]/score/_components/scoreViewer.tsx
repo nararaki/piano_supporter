@@ -13,7 +13,10 @@ export default function ScorePage({xmlData}: {xmlData: string}) {
     if (osmdRef.current) return; 
 
     const options = {
-        drawingParameters: "compact", 
+      // drawingParameters: "compact", // ← いったんコメントアウト！
+      autoResize: true,
+      backend: "svg",
+      drawingParameters: "default", // デモサイトと同じ標準設定にする
     };
 
     const osmd = new OpenSheetMusicDisplay(containerRef.current, options);
