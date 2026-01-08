@@ -24,8 +24,16 @@ export const getXmlData = async (practiceId: string): Promise<Result<string>> =>
         }
 
         // CloudFrontのURLからXMLデータを取得
-        const response = await fetch(sheetMusicUrl);
-        
+        const response = await fetch(sheetMusicUrl, {
+            headers: {
+              'Accept': 'application/xml',
+              'Accept-Encoding': 'identity', // ← 圧縮を無効化
+            },
+            cache: 'no-store', // CloudFront キャッシュ回避
+          });
+          
+        console.log("response", response);
+        console.log("sheetMusicUrl", sheetMusicUrl);
         if (!response.ok) {
             if (response.status === 404) {
                 return err({
@@ -40,6 +48,7 @@ export const getXmlData = async (practiceId: string): Promise<Result<string>> =>
         }
 
         const xmlContent = await response.text();
+        console.log("xmlContent", xmlContent);
         return ok(xmlContent);
     } catch (error) {
         console.error(error);

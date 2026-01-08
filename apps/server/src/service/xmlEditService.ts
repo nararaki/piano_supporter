@@ -3,115 +3,122 @@ import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import type { MediaStorage } from "src/infrastructure/s3/mediaStorage.ts";
 
 interface EditXmlData {
-	xmlUrl: string;
-	directionContent: string;
-	outputKey?: string; // S3のキー（省略時は元のURLから推測）
+    xmlUrl: string;
+    directionContent: string;
+    outputKey?: string;
 }
 
 export class XmlEditService {
-	constructor(private mediaStorage: MediaStorage) {}
+    constructor(private mediaStorage: MediaStorage) {}
 
-	private createDirection(content: string) {
-		return {
-			"@_placement": "above",
-			"direction-type": {
-				words: content,
-			},
-		};
-	}
+    // OSMDで表示させるための強力な設定（位置、フォントサイズ指定）
+    private createDirection(content: string, staff: number = 1) {
+        return {
+            "direction": [
+                {
+                    "direction-type": [
+                        {
+                            "words": [
+                                {
+                                    "#text": content,
+                                    ":@": {
+                                        // 変更点: default-x を追加して、少し右へずらす（小節線やコード記号との重なり回避）
+                                        "@_default-x": "15", 
+                                        // 変更点: default-y をさらに大きくして、コード記号の上へ逃がす (30 -> 50)
+                                        "@_default-y": "50",    
+                                        "@_font-size": "12",
+                                        "@_font-weight": "bold"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "staff": [
+                        { "#text": staff.toString() }
+                    ]
+                }
+            ],
+            ":@": {
+                "@_placement": "above"
+            }
+        };
+    }
+    async exec(data: EditXmlData): Promise<Result<string>> {
+        const xmlBufferResult = await this.mediaStorage.get(data.xmlUrl);
+        if (!xmlBufferResult.ok) return err({ type: "NOT_FOUND", message: "Score not found" });
 
-	async exec(data: EditXmlData): Promise<Result<string>> {
-		// XMLデータを取得
-		const xmlBufferResult = await this.mediaStorage.get(data.xmlUrl);
-		if (!xmlBufferResult.ok) {
-			return err({
-				type: "NOT_FOUND",
-				message: "楽譜が見つかりません",
-			});
-		}
+        const xmlString = xmlBufferResult.value.toString("utf-8");
 
-		const xmlString = xmlBufferResult.value.toString("utf-8");
+        // Parserの設定
+        const parser = new XMLParser({
+            ignoreAttributes: false,
+            attributeNamePrefix: "@_", // 属性の頭に @_ をつける設定
+            preserveOrder: true,
+        });
 
-		// XMLをパース
-		const parser = new XMLParser({
-			ignoreAttributes: false,
-			attributeNamePrefix: "@_",
-			preserveOrder: true,
-		});
+        const json = parser.parse(xmlString);
 
-		const json = parser.parse(xmlString);
+        // 1. Find root
+        const rootObj = json.find((i: any) => i["score-partwise"]);
+        if (!rootObj) return err({ type: "UNEXPECTED", message: "Invalid MusicXML" });
 
-		// rootを探す
-		const rootObj = json.find((i: Record<string, unknown>) => i["score-partwise"]);
-		if (!rootObj) {
-			return err({ type: "UNEXPECTED", message: "Invalid MusicXML" });
-		}
+        // 2. Find parts
+        const parts = (rootObj["score-partwise"] as any[]).filter((i) => i.part);
+        const firstPartArray = parts[0]?.part as any[];
 
-		// partを探す
-		const parts = (rootObj["score-partwise"] as Array<Record<string, unknown>>).filter(
-			(i: Record<string, unknown>) => i.part,
-		);
-		const firstPart = (parts[0]?.part as Array<Record<string, unknown>>) || []; // これも配列
+        if (!firstPartArray) return err({ type: "UNEXPECTED", message: "No parts found" });
 
-		// measureを探す (firstPart配列の中から measure を持つものを探す)
-		const firstMeasureObj = firstPart.find((i: Record<string, unknown>) => {
-			if (!i.measure) return false;
-			const measure = Array.isArray(i.measure) ? i.measure[0] : i.measure;
-			const measureWithAttrs = measure as Record<string, unknown>;
-			const attrs = measureWithAttrs[":@"] as Record<string, unknown> | undefined;
-			return attrs?.["@_number"] === "1";
-		}) as Record<string, unknown> | undefined;
+        // 3. Find the correct measure
+        const firstMeasureObj = firstPartArray.find((i) => {
+            return i.measure && i[":@"]?.["@_number"] === "1";
+        });
 
-		if (firstMeasureObj?.measure) {
-			// 順番を崩さず direction を追加
-			// 配列の先頭（または適切な場所）に direction ノードを挿入する
-			const measureArray = Array.isArray(firstMeasureObj.measure)
-				? firstMeasureObj.measure
-				: [firstMeasureObj.measure];
-			measureArray.unshift({
-				direction: [this.createDirection(data.directionContent)],
-			});
-			firstMeasureObj.measure = measureArray;
-		}
+        if (firstMeasureObj) {
+            if (!Array.isArray(firstMeasureObj.measure)) {
+                firstMeasureObj.measure = [];
+            }
+            const measureArray = firstMeasureObj.measure as any[];
 
-		// ビルド
-		const builder = new XMLBuilder({
-			ignoreAttributes: false,
-			preserveOrder: true, // パース時と同じ設定にする
-			format: true,
-			suppressEmptyNode: true,
-		});
+            // 挿入位置の計算（print, attributesの後ろ）
+            let insertIndex = 0;
+            for (let i = 0; i < measureArray.length; i++) {
+                const node = measureArray[i];
+                if (node.print || node.attributes || node.barline) {
+                    insertIndex = i + 1;
+                } else if (node.note || node.harmony || node.direction || node.backup || node.forward) {
+                    break;
+                }
+            }
 
-		let xml = builder.build(json);
-		const declaration = '<?xml version="1.0" encoding="UTF-8"?>\n';
-		const doctype =
-			'<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">\n';
-
-		// build結果に宣言が含まれていない場合は手動で足す
-		if (!xml.startsWith("<?xml")) {
-			xml = declaration + doctype + xml;
-		}
-
-		// S3のキーを決定（outputKeyが指定されていない場合は元のURLから推測）
-		const s3Key = data.outputKey || this.mediaStorage.extractKeyFromUrl(data.xmlUrl);
-        if(!s3Key) {
-            return err({
-                type: "UNEXPECTED",
-                message: "Invalid XML URL",
-            });
+            measureArray.splice(insertIndex, 0, this.createDirection(data.directionContent));
         }
 
-		// S3に保存
-		const xmlBuffer = Buffer.from(xml, "utf-8");
-		const putResult = await this.mediaStorage.put(s3Key, xmlBuffer, "application/xml");
-		if (!putResult.ok) {
-			return err({
-				type: "SERVER_ERROR",
-				message: "XMLの書き込みに失敗しました",
-			});
-		}
+        // 4. Build XML
+        // ここが重要：Parserと同じ attributeNamePrefix を設定する
+        const builder = new XMLBuilder({
+            ignoreAttributes: false,
+            attributeNamePrefix: "@_", // ★これがないと属性が消えることがあります
+            preserveOrder: true,
+            format: true,
+            suppressEmptyNode: true,
+        });
 
-		const cloudFrontUrl = this.mediaStorage.getCloudFrontUrl(s3Key);
-		return ok(cloudFrontUrl);
-	}
+        let xml = builder.build(json);
+        const declaration = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        const doctype = '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">\n';
+
+        if (!xml.startsWith("<?xml")) {
+            xml = declaration + doctype + xml;
+        }
+
+        const s3Key = data.outputKey || this.mediaStorage.extractKeyFromUrl(data.xmlUrl);
+        if (!s3Key) return err({ type: "UNEXPECTED", message: "Invalid XML URL" });
+
+        const putResult = await this.mediaStorage.put(s3Key, Buffer.from(xml, "utf-8"), "application/xml");
+        if (!putResult.ok) return err({ type: "SERVER_ERROR", message: "Failed to write XML" });
+
+        return ok(this.mediaStorage.getCloudFrontUrl(s3Key));
+    }
 }

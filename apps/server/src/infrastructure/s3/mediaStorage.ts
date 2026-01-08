@@ -108,6 +108,7 @@ export class MediaStorage {
 				Key: key,
 				Body: content,
 				ContentType: finalContentType,
+				CacheControl: "no-cache",
 			});
 
 			await this.s3Client.send(command);

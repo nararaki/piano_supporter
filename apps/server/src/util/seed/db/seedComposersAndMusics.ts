@@ -54,7 +54,7 @@ export const seedComposersAndMusics = async () => {
             {
                 id: uuidv7(),
                 title: "ピアノソナタ第14番 ハ短調 k545-1",
-                composerId: composerData[3].id, // Chopin
+                composerId: composerData[1].id, // Mozart
                 arrangerId: arrangerData[0].id,
                 sheetMusicUrl: "https://www.sheetmusic.com",
             },
