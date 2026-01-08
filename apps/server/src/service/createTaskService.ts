@@ -33,6 +33,8 @@ export class CreateTaskService{
         // 楽譜を更新してS3に保存
         const xmlEditResult = await this.xmlEditService.exec({
             xmlUrl: practice.sheetMusicUrl,
+            sectionNumber: annotation.sectionNumber,
+            timePosition: annotation.timePosition,
             directionContent: annotation.content,
         });
         if (!xmlEditResult.ok) {

@@ -5,6 +5,8 @@ import type { MediaStorage } from "src/infrastructure/s3/mediaStorage.ts";
 interface EditXmlData {
     xmlUrl: string;
     directionContent: string;
+    sectionNumber: number;
+    timePosition: number;
     outputKey?: string;
 }
 
@@ -72,7 +74,7 @@ export class XmlEditService {
 
         // 3. Find the correct measure
         const firstMeasureObj = firstPartArray.find((i) => {
-            return i.measure && i[":@"]?.["@_number"] === "1";
+            return i.measure && i[":@"]?.["@_number"] === data.sectionNumber.toString();
         });
 
         if (firstMeasureObj) {
