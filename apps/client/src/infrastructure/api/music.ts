@@ -6,13 +6,13 @@ import type { Result } from "@piano_supporter/common/lib/error.ts";
 /**
  * 作曲家IDに基づいて楽曲一覧を取得
  */
-export const getMusicsByComposerId = async (
-	composerId: string,
+export const getMusicsByComposerName = async (
+	composerName: string,
 ): Promise<Result<Music[]>> => {
 	const result = await callApi<Music[]>(() =>
-		client["musics"][":composerId"].$get({
+		client["musics"][":composerName"].$get({
 			param: {
-				composerId,
+				composerName,
 			},
 		})
 	);

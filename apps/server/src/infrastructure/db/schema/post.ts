@@ -10,8 +10,8 @@ import { school } from './school.ts';
 export const post = mysqlTable('post', {
   id: varchar('id', { length: 255 }).primaryKey(),
   accountId: varchar('account_id', { length: 255 }).notNull().references(() => account.id),
-    schoolId: varchar('school_id', { length: 255 }).notNull().references(() => school.id),
-    title: varchar('title', { length: 255 }),
+  schoolId: varchar('school_id', { length: 255 }).notNull().references(() => school.id),
+  title: varchar('title', { length: 255 }),
   content: text('content'),
   ...baseTimestampColumns,
 });

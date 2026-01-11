@@ -7,8 +7,8 @@ export class GetMusicsService {
 		private musicRepository: MusicRepository,
 	) {}
 
-	async exec(composerId: string): Promise<Result<Music[]>> {
-		const result = await this.musicRepository.findByComposerId(composerId);
+	async exec(composerName: string): Promise<Result<Music[]>> {
+		const result = await this.musicRepository.findByComposer(composerName);
 		if (!result.ok) {
 			return result;
 		}

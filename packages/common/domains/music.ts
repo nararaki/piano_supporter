@@ -1,7 +1,7 @@
 import type { Composer } from "./composer";
 
+//value object
 export interface Music {
-    id: string;
     title: string;
     composer: Composer;
     sheetMusicUrl: string;

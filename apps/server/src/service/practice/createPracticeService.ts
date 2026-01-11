@@ -29,7 +29,8 @@ export class CreatePracticeService {
 			});
 		}
 
-		const musicResult = await this.musicRepository.findByMusicId(data.musicId);
+		// musicIdは実際にはmusicTitleとして送られている
+		const musicResult = await this.musicRepository.findByName(data.musicId);
 		if (!musicResult.ok) {
 			return err({
 				type: "NOT_FOUND",
@@ -37,6 +38,17 @@ export class CreatePracticeService {
 			});
 		}
 		const music = musicResult.value;
+		
+		// DBに保存するために、titleからIDを取得
+		const musicIdResult = await this.musicRepository.findMusicIdByTitle(data.musicId);
+		if (!musicIdResult.ok) {
+			return err({
+				type: "NOT_FOUND",
+				message: "楽曲IDが見つかりません",
+			});
+		}
+		const musicId = musicIdResult.value;
+		
 		const sheetMusicUrl = music.sheetMusicUrl;
 		const sheetMusic = await newMediaStorage.get(sheetMusicUrl);
 		if (!sheetMusic.ok) {
@@ -55,7 +67,7 @@ export class CreatePracticeService {
 		}
 		const newSheetMusicUrl = newMediaStorage.getCloudFrontUrl(practice.sheetMusicUrl);
 		const updatedPractice = updatePracticeEntity(practice, newSheetMusicUrl);
-		const practiceResult = await this.practiceRepository.create(updatedPractice,relationResult.value.id);
+		const practiceResult = await this.practiceRepository.create(updatedPractice, relationResult.value.id, musicId);
 		if (!practiceResult.ok) {
 			return practiceResult;
 		}

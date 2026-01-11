@@ -27,10 +27,8 @@ class PracticeRepositoryClient implements PracticeRepository {
 			const practiceData: Practice = {
 				id: result.practice.id,
 				music: {
-					id: result.music.id,
 					title: result.music.title,
 					composer: {
-						id: result.composer.id,
 						name: result.composer.name,
 					},
 					sheetMusicUrl: result.music.sheetMusicUrl || "",
@@ -67,19 +65,13 @@ class PracticeRepositoryClient implements PracticeRepository {
 			const result: Practice[] = practices.map((row) => ({
 				id: row.practice.id,
 				music: {
-					id: row.music.id,
 					title: row.music.title,
 					composer: {
-						id: row.composer.id,
 						name: row.composer.name,
 					},
 					sheetMusicUrl: row.music.sheetMusicUrl || "",
 				},
-				composer: {
-					id: row.composer.id,
-					name: row.composer.name,
-				},
-				sheetMusicUrl: row.music.sheetMusicUrl || "",
+				sheetMusicUrl: row.practice.sheetMusicUrl || "",
 				createdAt: row.practice.createdAt,
 				updatedAt: row.practice.updatedAt,
 			}));
@@ -94,12 +86,12 @@ class PracticeRepositoryClient implements PracticeRepository {
 		}
 	}
 
-	async create(data: Practice,relationId: string): Promise<Result<Practice>> {
+	async create(data: Practice, relationId: string, musicId: string): Promise<Result<Practice>> {
 		try {
 			await db.insert(practice).values({
 				id: data.id,
 				accountSchoolRelationId: relationId,
-				musicId: data.music.id,
+				musicId: musicId,
 				sheetMusicUrl: data.sheetMusicUrl,
 				createdAt: data.createdAt,
 				updatedAt: data.updatedAt,
