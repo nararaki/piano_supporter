@@ -29,8 +29,7 @@ export class CreatePracticeService {
 			});
 		}
 
-		// musicIdは実際にはmusicTitleとして送られている
-		const musicResult = await this.musicRepository.findByName(data.musicId);
+		const musicResult = await this.musicRepository.findByTitle(data.musicTitle);
 		if (!musicResult.ok) {
 			return err({
 				type: "NOT_FOUND",
@@ -40,7 +39,7 @@ export class CreatePracticeService {
 		const music = musicResult.value;
 		
 		// DBに保存するために、titleからIDを取得
-		const musicIdResult = await this.musicRepository.findMusicIdByTitle(data.musicId);
+		const musicIdResult = await this.musicRepository.findMusicIdByTitle(data.musicTitle);
 		if (!musicIdResult.ok) {
 			return err({
 				type: "NOT_FOUND",

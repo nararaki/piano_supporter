@@ -37,7 +37,7 @@ class MusicRepositoryClient implements MusicRepository {
 		}
 	}
 
-	async findByName(musicName: string): Promise<Result<Music>> {
+	async findByTitle(musicTitle: string): Promise<Result<Music>> {
 		try {
 			const data = await db
 				.select({
@@ -46,7 +46,7 @@ class MusicRepositoryClient implements MusicRepository {
 				})
 				.from(music)
 				.innerJoin(composer, eq(music.composerId, composer.id))
-				.where(eq(music.title, musicName))
+				.where(eq(music.title, musicTitle))
 				.execute();
 
 			if (data.length === 0) {

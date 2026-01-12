@@ -98,7 +98,7 @@ export const NewPracticeForm = () => {
 			const result = await createPractice({
 				accountId: userId,
 				schoolId: schoolId,
-				musicId: selectedMusicTitle,
+				musicTitle: selectedMusicTitle,
 			});
 
 			if (!result.ok) {
