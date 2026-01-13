@@ -54,22 +54,19 @@ class PostsRepositoryClient implements PostsRepository {
 		// 未実装
 	}
 
-	async create(data: createPostData & { schoolId: string }): Promise<Result<Post>> {
+	async create(postData: Post): Promise<Result<void>> {
 		try {
-			const postId = uuidv7();
-			const now = new Date();
 			await db.insert(post).values({
-				id: postId,
-				accountId: data.accountId,
-				schoolId: data.schoolId,
-				title: data.title,
-				content: data.content,
+				id: postData.id,
+				accountSchoolRelationId: postData.accountSchoolRelationId,
+				title: postData.title,
+				content: postData.content,
 			});
 			//videoが存在する場合はvideoエンティティを作成
-			if (data.videoUrl) {
+			if (postData.video) {
 				const videoCreateResult = await newVideoRepositoryClient.create({
-					postId: postId,
-					url: data.videoUrl,
+					postId: postData.id,
+					url: postData.video.url,
 					// typeは必要に応じて追加可能
 				});
 				if (!videoCreateResult.ok) {
@@ -78,24 +75,8 @@ class PostsRepositoryClient implements PostsRepository {
 						message: "videoの作成に失敗しました",
 					});
 				}
-				return ok({
-					id: postId,
-					accountId: data.accountId,
-					title: data.title,
-					content: data.content,
-					video: videoCreateResult.value,
-					createdAt: now,
-					updatedAt: null,
-				})
+				return ok(undefined);
 			}
-
-			return ok({
-				id: postId,
-				...data,
-				video: null,
-				createdAt: now,
-				updatedAt: null,
-			});
 		} catch (e) {
 			console.log("投稿の作成に失敗しました", e);
 			return err({
