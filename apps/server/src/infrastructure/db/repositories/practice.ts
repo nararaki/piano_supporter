@@ -6,6 +6,8 @@ import { composer } from "../schema/composer.ts";
 import { eq } from "drizzle-orm";
 import type { PracticeRepository } from "../../../repository/practice/repository.ts";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
+import type { Music } from "@piano_supporter/common/domains/music.ts";
+import type { SchoolAccountRelation } from "@piano_supporter/common/domains/schoolAccountRelation.ts";
 
 class PracticeRepositoryClient implements PracticeRepository {
 	async findById(id: string): Promise<Result<Practice>> {
@@ -86,12 +88,16 @@ class PracticeRepositoryClient implements PracticeRepository {
 		}
 	}
 
-	async create(data: Practice, relationId: string, musicId: string): Promise<Result<Practice>> {
+	async create(data: Practice, relation: SchoolAccountRelation, musicData: Music): Promise<Result<Practice>> {
 		try {
+			const musicId = await this.findMusicId(musicData);
+			if (!musicId.ok) {
+				return musicId;
+			}
 			await db.insert(practice).values({
 				id: data.id,
-				accountSchoolRelationId: relationId,
-				musicId: musicId,
+				accountSchoolRelationId: relation.id,
+				musicId: musicId.value,
 				sheetMusicUrl: data.sheetMusicUrl,
 				createdAt: data.createdAt,
 				updatedAt: data.updatedAt,
@@ -103,6 +109,30 @@ class PracticeRepositoryClient implements PracticeRepository {
 			return err({
 				type: "UNEXPECTED",
 				message: "練習データの作成に失敗しました",
+			});
+		}
+	}
+
+	private async findMusicId(musicData: Music): Promise<Result<number>> {
+		try {
+			const [result] = await db
+				.select({ id: music.id })
+				.from(music)
+				.where(eq(music.title, musicData.title))
+				.limit(1)
+				.execute();
+			if (!result) {
+				return err({
+					type: "NOT_FOUND",
+					message: "楽曲が見つかりません",
+				});
+			}
+			return ok(result.id);
+		} catch (e) {
+			console.log("楽曲IDの取得に失敗しました", e);
+			return err({
+				type: "UNEXPECTED",
+				message: "楽曲IDの取得に失敗しました",
 			});
 		}
 	}

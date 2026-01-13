@@ -11,24 +11,20 @@ export interface Practice {
 
 export const createPracticeEntity = (
     music: Music,
+    sheetMusicUrl?: string,
 ): Practice => {
-    const id = uuidv7();
     return {
-        id: id,
+        id: uuidv7(),
         music: music,
-        sheetMusicUrl: `practice/${id}.xml`,
+        sheetMusicUrl: sheetMusicUrl ?? "",
         createdAt: new Date(),
         updatedAt: new Date(),
     };
 }
 
-export const updatePracticeEntity = (
-    practice: Practice,
-    sheetMusicUrl: string,
-): Practice => {
+export const attachSheetMusicUrl = (practice: Practice, sheetMusicUrl: string): Practice => {
     return {
         ...practice,
         sheetMusicUrl: sheetMusicUrl,
-        updatedAt:new Date(),
     };
 }

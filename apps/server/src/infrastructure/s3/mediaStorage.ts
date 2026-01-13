@@ -1,5 +1,7 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
+import type { Practice } from "@piano_supporter/common/domains/practice.ts";
+import type { Music } from "@piano_supporter/common/domains/music.ts";
 
 export class MediaStorage {
 	private s3Client: S3Client;
@@ -19,12 +21,32 @@ export class MediaStorage {
 		this.cloudFrontDomain = process.env.AWS_CLOUDFRONT_DOMAIN || "";
 	}
 
+	public async createPracticeStorage(music: Music, practice: Practice): Promise<Result<string>> {
+		const sheetMusic = await this.get(music.sheetMusicUrl);
+		if (!sheetMusic.ok) {
+			return err({
+				type: "NOT_FOUND",
+				message: "楽譜元データが見つかりません",
+			});
+		}
+
+		const key = `practice/${practice.id}.xml`;
+		const putResult = await this.put(key, sheetMusic.value, "application/xml");
+		if (!putResult.ok) {
+			return err({	
+				type: "FILE_UPLOAD_ERROR",
+				message: "シートミュージックのアップロードに失敗しました",
+			});
+		}
+		const sheetMusicUrl = this.getCloudFrontUrl(key);
+		return ok(sheetMusicUrl);
+	}
 	/**
 	 * CloudFrontのURLからコンテンツを取得
 	 * @param cloudFrontUrl CloudFrontのURL（例: "https://cloudfront-domain/original/musicId/file.xml"）
 	 * @returns コンテンツのBuffer
 	 */
-	async get(cloudFrontUrl: string): Promise<Result<Buffer>> {
+	private async get(cloudFrontUrl: string): Promise<Result<Buffer>> {
 		try {
 			console.log("cloudFrontUrl", cloudFrontUrl);
 			console.log("this.bucketName", this.bucketName);
@@ -72,7 +94,7 @@ export class MediaStorage {
 	 * @param contentType コンテンツタイプ（例: "application/xml", "text/plain"）
 	 * @returns 成功/失敗の結果
 	 */
-	async put(
+	private async put(
 		key: string,
 		content: Buffer,
 		contentType: string,
@@ -144,7 +166,7 @@ export class MediaStorage {
 	 * @param cloudFrontUrl CloudFrontのURL（例: "https://cloudfront-domain/original/musicId/file.xml"）
 	 * @returns S3キー（例: "original/musicId/file.xml"）、抽出できない場合はnull
 	 */
-	extractKeyFromUrl(cloudFrontUrl: string): string | null {
+	private extractKeyFromUrl(cloudFrontUrl: string): string | null {
 		try {
 			const urlObj = new URL(cloudFrontUrl);
 			// pathnameから先頭のスラッシュを削除
