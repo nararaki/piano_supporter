@@ -48,7 +48,7 @@ export class XmlEditService {
         };
     }
     async exec(data: EditXmlData): Promise<Result<string>> {
-        const xmlBufferResult = await this.mediaStorage.get(data.xmlUrl);
+        const xmlBufferResult = await this.mediaStorage.getXmlData(data.xmlUrl);
         if (!xmlBufferResult.ok) return err({ type: "NOT_FOUND", message: "Score not found" });
 
         const xmlString = xmlBufferResult.value.toString("utf-8");

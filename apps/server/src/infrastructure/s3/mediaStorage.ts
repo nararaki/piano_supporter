@@ -41,6 +41,17 @@ export class MediaStorage {
 		const sheetMusicUrl = this.getCloudFrontUrl(key);
 		return ok(sheetMusicUrl);
 	}
+
+	public async getXmlData(cloudFrontUrl: string): Promise<Result<Buffer>> {
+		const bufferResult = await this.get(cloudFrontUrl);
+		if (!bufferResult.ok) {
+			return err({
+				type: "NOT_FOUND",
+				message: "コンテンツが見つかりません",
+			});
+		}
+		return ok(bufferResult.value);
+	}
 	/**
 	 * CloudFrontのURLからコンテンツを取得
 	 * @param cloudFrontUrl CloudFrontのURL（例: "https://cloudfront-domain/original/musicId/file.xml"）
@@ -166,7 +177,7 @@ export class MediaStorage {
 	 * @param cloudFrontUrl CloudFrontのURL（例: "https://cloudfront-domain/original/musicId/file.xml"）
 	 * @returns S3キー（例: "original/musicId/file.xml"）、抽出できない場合はnull
 	 */
-	private extractKeyFromUrl(cloudFrontUrl: string): string | null {
+	extractKeyFromUrl(cloudFrontUrl: string): string | null {
 		try {
 			const urlObj = new URL(cloudFrontUrl);
 			// pathnameから先頭のスラッシュを削除
