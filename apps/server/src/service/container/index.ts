@@ -26,9 +26,8 @@ import { CreateCommentService } from "../createCommentService.ts";
 import { newCommentRepositoryClient } from "../../infrastructure/db/repositories/comment.ts";
 import { GetPostDetailService } from "../getPostDetailService.ts";
 import { CreateTaskService } from "../createTaskService.ts";
-import { GetTasksService } from "../task/getTasksService.ts";
-import { newTaskRepositoryClient } from "src/infrastructure/db/repositories/task.ts";
-import { newAnnotationRepositoryClient } from "src/infrastructure/db/repositories/annotation.ts";
+import { newTaskRepositoryClient } from "../../infrastructure/db/repositories/task.ts";
+import { newAnnotationRepositoryClient } from "../../infrastructure/db/repositories/annotation.ts";
 import { XmlEditService } from "../xmlEditService.ts";
 import { MediaStorage } from "../../infrastructure/s3/mediaStorage.ts";
 
@@ -46,7 +45,7 @@ export const musicRepositoryClient = newMusicRepositoryClient;
 export const accountRoleRepositoryClient = newAccountRoleRepositoryClient;
 export const taskRepositoryClient = newTaskRepositoryClient;
 export const annotationRepositoryClient = newAnnotationRepositoryClient;
-export const newMediaStorage = new MediaStorage();
+export const mediaStorage = new MediaStorage();
 
 export const uploadVideoService = new UploadVideoService(cloudinaryApiClient);
 
@@ -120,15 +119,11 @@ export const getPostDetailService = new GetPostDetailService(
 	commentRepositoryClient,
 );
 
-export const xmlEditService = new XmlEditService(newMediaStorage);
+export const xmlEditService = new XmlEditService(mediaStorage);
 
 export const createTaskService = new CreateTaskService(
 	taskRepositoryClient,
 	annotationRepositoryClient,
 	practiceRepositoryClient,
 	xmlEditService,
-);
-
-export const getTasksService = new GetTasksService(
-	taskRepositoryClient,
 );

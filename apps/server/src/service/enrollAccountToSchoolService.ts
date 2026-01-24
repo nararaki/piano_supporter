@@ -36,7 +36,6 @@ export class EnrollAccountToSchoolService {
 		if (!studentRoleResult.ok) {
 			return studentRoleResult;
 		}
-		console.log("studentロールを取得しました");
 
 		// アカウントロールを作成
 		const accountRoleResult = await this.accountRoleRepository.create(
