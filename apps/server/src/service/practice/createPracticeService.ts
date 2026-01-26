@@ -5,7 +5,7 @@ import type { AccountSchoolRelationRepository } from "../../repository/accountSc
 import type { PracticeRepository } from "../../repository/practice/repository.ts";
 import type { createPracticeData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import type { MusicRepository } from "src/repository/music/repository.ts";
-import { newMediaStorage } from "../container/index.ts";
+import { mediaStorage } from "../container/index.ts";
 import { attachSheetMusicUrl, createPracticeEntity } from "@piano_supporter/common/domains/practice.ts";
 
 export class CreatePracticeService {
@@ -38,8 +38,8 @@ export class CreatePracticeService {
 		}
 		const music = musicResult.value;
 		const practice = createPracticeEntity(music);
-		
-		const createPracticeStorageResult = await newMediaStorage.createPracticeStorage(music,practice);
+
+		const createPracticeStorageResult = await mediaStorage.createPracticeStorage(music, practice);
 		if (!createPracticeStorageResult.ok) {
 			return createPracticeStorageResult;
 		}

@@ -54,11 +54,11 @@ export const UploadVideoSchema = z.object({
 export const CreatePracticeSchema = z.object({
 	accountId: z.string().min(1, { message: "accountIdがないです" }),
 	schoolId: z.string().min(1, { message: "schoolIdがないです" }),
-	musicId: z.string().min(1, { message: "musicIdがないです" }),
+	musicTitle: z.string().min(1, { message: "musicTitleがないです" }),
 });
 
 export const GetMusicsSchema = z.object({
-	composerId: z.string().min(1, { message: "composerIdがないです" }),
+	composerName: z.string().min(1, { message: "composerNameがないです" }),
 });
 
 export const GetPracticeByIdSchema = z.object({

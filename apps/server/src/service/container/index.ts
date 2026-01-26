@@ -26,6 +26,7 @@ import { CreateCommentService } from "../createCommentService.ts";
 import { newCommentRepositoryClient } from "../../infrastructure/db/repositories/comment.ts";
 import { GetPostDetailService } from "../getPostDetailService.ts";
 import { CreateTaskService } from "../createTaskService.ts";
+import { GetTasksService } from "../task/getTasksService.ts";
 import { newTaskRepositoryClient } from "../../infrastructure/db/repositories/task.ts";
 import { newAnnotationRepositoryClient } from "../../infrastructure/db/repositories/annotation.ts";
 import { XmlEditService } from "../xmlEditService.ts";
@@ -127,3 +128,5 @@ export const createTaskService = new CreateTaskService(
 	practiceRepositoryClient,
 	xmlEditService,
 );
+
+export const getTasksService = new GetTasksService(taskRepositoryClient);
