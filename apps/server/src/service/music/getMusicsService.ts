@@ -1,6 +1,6 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import type { Music } from "@piano_supporter/common/domains/music.ts";
-import type { MusicRepository } from "../repository/music/repository.ts";
+import type { MusicRepository } from "../../repository/music/repository.ts";
 
 export class GetMusicsService {
 	constructor(

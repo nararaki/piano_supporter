@@ -105,7 +105,7 @@ export class MediaStorage {
 	 * @param contentType コンテンツタイプ（例: "application/xml", "text/plain"）
 	 * @returns 成功/失敗の結果
 	 */
-	private async put(
+	async put(
 		key: string,
 		content: Buffer,
 		contentType: string,

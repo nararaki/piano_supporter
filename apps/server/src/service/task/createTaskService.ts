@@ -4,7 +4,7 @@ import type { AnnotationRepository } from "src/repository/annotation/repository.
 import { createAnnotationEntity, createTaskEntity, TaskStatus } from "@piano_supporter/common/domains/task.ts";
 import { ok, err } from "@piano_supporter/common/lib/error.ts";
 import type { PracticeRepository } from "src/repository/practice/repository.ts";
-import type { XmlEditService } from "./xmlEditService.ts";
+import type { XmlEditService } from "../media/xmlEditService.ts";
 
 export class CreateTaskService{
     constructor (

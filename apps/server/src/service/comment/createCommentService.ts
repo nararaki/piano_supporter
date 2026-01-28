@@ -1,5 +1,5 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
-import type { CommentRepository } from "../repository/comment/repository.ts";
+import type { CommentRepository } from "../../repository/comment/repository.ts";
 import type { createCommentData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import { createCommentEntity } from "@piano_supporter/common/domains/comment.ts";
 import type { Comment } from "@piano_supporter/common/domains/comment.ts";

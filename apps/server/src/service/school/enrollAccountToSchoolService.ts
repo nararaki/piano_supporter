@@ -1,11 +1,11 @@
 import { ok, type Result } from "@piano_supporter/common/lib/error.ts";
-import { newSchoolMembershipRepositoryClient } from "../infrastructure/db/repositories/schoolMembership.ts";
-import type { UserContextService } from "./userContextService.ts";
+import { newSchoolMembershipRepositoryClient } from "../../infrastructure/db/repositories/schoolMembership.ts";
+import type { UserContextService } from "../userContextService.ts";
 import type { SchoolMembership } from "@piano_supporter/common/domains/schoolMembership.ts";
 import { type EnrollAccountToSchoolData, createSchoolMembershipEntity } from "@piano_supporter/common/domains/schoolMembership.ts";
 import { ROLE_NAMES } from "@piano_supporter/common/domains/role.js";
-import type { roleRepository } from "../repository/role/repository.ts";
-import type { accountRoleRepository } from "../repository/role/repository.ts";
+import type { roleRepository } from "../../repository/role/repository.ts";
+import type { accountRoleRepository } from "../../repository/role/repository.ts";
 
 export class EnrollAccountToSchoolService {
 	constructor(private userContextService: UserContextService,
