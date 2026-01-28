@@ -1,7 +1,7 @@
 import { newCloudinaryApiClient } from "../../infrastructure/cloudinary/uploadMedia.ts";
 import { newAccountRespositoryClient } from "../../infrastructure/db/repositories/account.ts";
 import { newSchoolRepositoryClient } from "../../infrastructure/db/repositories/school.ts";
-import { newAccountSchoolRelationRepositoryClient } from "../../infrastructure/db/repositories/accountSchoolRelation.ts";
+import { newSchoolMembershipRepositoryClient } from "../../infrastructure/db/repositories/schoolMembership.ts";
 import { newAccountRoleRepositoryClient } from "../../infrastructure/db/repositories/accountRole.ts";
 import { newPostsRepositoryClient } from "../../infrastructure/db/repositories/posts.ts";
 import { newVideoRepositoryClient } from "../../infrastructure/db/repositories/video.ts";
@@ -35,7 +35,7 @@ import { MediaStorage } from "../../infrastructure/s3/mediaStorage.ts";
 export const cloudinaryApiClient = newCloudinaryApiClient;
 export const accountResitoryClient = newAccountRespositoryClient;
 export const schoolRepositoryClient = newSchoolRepositoryClient;
-export const accountSchoolRelationRepositoryClient = newAccountSchoolRelationRepositoryClient;
+export const schoolMembershipRepositoryClient = newSchoolMembershipRepositoryClient;
 export const roleRepositoryClient = newRoleRepositoryClient;
 export const commentRepositoryClient = newCommentRepositoryClient;
 export const postRepositoryClient = newPostsRepositoryClient;
@@ -56,7 +56,7 @@ export const initializeAccountService = new InitializeAccountService(
 
 export const initializeSchoolService = new InitializeSchoolService(
 	schoolRepositoryClient,
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	accountRoleRepositoryClient,
 	roleRepositoryClient,
 );
@@ -73,23 +73,23 @@ export const enrollAccountToSchoolService = new EnrollAccountToSchoolService(
 );
 
 export const getAllPostsService = new GetAllPostsService(
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	postRepositoryClient,
 );
 
 export const createPostService = new CreatePostService(
-	newAccountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	postRepositoryClient,
 	videoRepositoryClient,
 );
 
 export const getSchoolService = new GetSchoolService(
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	schoolRepositoryClient,
 );
 
 export const createPracticeService = new CreatePracticeService(
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	practiceRepositoryClient,
 	musicRepositoryClient,
 );
@@ -104,7 +104,7 @@ export const getMusicsService = new GetMusicsService(
 
 export const getAllPracticeService = new GetAllPracticeService(
 	practiceRepositoryClient,
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 );
 
 export const getPracticeService = new GetPracticeService(

@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import type { PracticeRepository } from "../../../repository/practice/repository.ts";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
 import type { Music } from "@piano_supporter/common/domains/music.ts";
-import type { SchoolAccountRelation } from "@piano_supporter/common/domains/schoolAccountRelation.ts";
+import type { SchoolMembership } from "@piano_supporter/common/domains/schoolMembership.ts";
 
 class PracticeRepositoryClient implements PracticeRepository {
 	async findById(id: string): Promise<Result<Practice>> {
@@ -88,7 +88,7 @@ class PracticeRepositoryClient implements PracticeRepository {
 		}
 	}
 
-	async create(data: Practice, relation: SchoolAccountRelation, musicData: Music): Promise<Result<Practice>> {
+	async create(data: Practice, membership: SchoolMembership, musicData: Music): Promise<Result<Practice>> {
 		try {
 			const musicId = await this.findMusicId(musicData);
 			if (!musicId.ok) {
@@ -96,7 +96,7 @@ class PracticeRepositoryClient implements PracticeRepository {
 			}
 			await db.insert(practice).values({
 				id: data.id,
-				accountSchoolRelationId: relation.id,
+				accountSchoolRelationId: membership.id,
 				musicId: musicId.value,
 				sheetMusicUrl: data.sheetMusicUrl,
 				createdAt: data.createdAt,

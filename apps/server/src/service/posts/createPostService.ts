@@ -1,6 +1,6 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import { err, ok } from "@piano_supporter/common/lib/error.ts";
-import type { AccountSchoolRelationRepository } from "../../repository/accountSchoolRelation/repository.ts";
+import type { SchoolMembershipRepository } from "../../repository/schoolMembership/repository.ts";
 import type { PostsRepository } from "../../repository/posts/repository.ts";
 import type { VideoRepository } from "../../repository/video/repository.ts";
 import type { createPostData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
@@ -8,40 +8,38 @@ import { createPostEntity } from "@piano_supporter/common/domains/post.ts";
 
 export class CreatePostService {
 	constructor(
-		private accountSchoolRelationRepository: AccountSchoolRelationRepository,
+		private schoolMembershipRepository: SchoolMembershipRepository,
 		private postsRepository: PostsRepository,
 		private videoRepository: VideoRepository,
 	) {}
 
 	async exec(data: createPostData): Promise<Result<void>> {
-		// accountIdからAccountSchoolRelationを検索
-		const relationsResult = await this.accountSchoolRelationRepository.findByAccountId(data.accountId);
-		
-		if (!relationsResult.ok) {
+		const membershipsResult = await this.schoolMembershipRepository.findByAccountId(data.accountId);
+
+		if (!membershipsResult.ok) {
 			return err({
 				type: "CANNOT_FIND_SCHOOL",
 				message: "スクールに登録されていません",
 			});
 		}
 
-		const relations = relationsResult.value;
-		
-		// 結果の[0]番目のschoolIdを取得
-		if (relations.length === 0) {
+		const memberships = membershipsResult.value;
+
+		if (memberships.length === 0) {
 			return err({
 				type: "CANNOT_FIND_SCHOOL",
 				message: "教室に所属していません",
 			});
 		}
 
-		const accountSchoolRelationId = relations[0].id;
+		const membershipId = memberships[0].id;
 
 		const post = createPostEntity({
-			accountRelationId: accountSchoolRelationId,
+			accountRelationId: membershipId,
 			title: data.title,
 			content: data.content,
 		});
-		// 投稿を作成
+
 		const createResult = await this.postsRepository.create(post);
 
 		if (!createResult.ok) {
@@ -68,4 +66,3 @@ export class CreatePostService {
 		return ok(undefined);
 	}
 }
-

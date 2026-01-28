@@ -1,6 +1,6 @@
 import { uuidv7 } from "uuidv7";
 
-export interface SchoolAccountRelation {
+export interface SchoolMembership {
 	id: string;
 	accountId: string;
 	schoolId: string;
@@ -13,10 +13,10 @@ export interface EnrollAccountToSchoolData {
 	schoolId: string;
 }
 
-export const createSchoolAccountRelationEntity = (
+export const createSchoolMembershipEntity = (
 	accountId: string,
 	schoolId: string,
-): SchoolAccountRelation => {
+): SchoolMembership => {
 	const now = new Date();
 	return {
 		id: uuidv7(),

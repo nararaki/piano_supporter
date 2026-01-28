@@ -1,7 +1,8 @@
 import { ok } from "@piano_supporter/common/lib/error.ts";
 import { createSchoolEntity } from "@piano_supporter/common/domains/school.ts";
+import { createSchoolMembershipEntity } from "@piano_supporter/common/domains/schoolMembership.ts";
 import type { schoolRepository } from "../repository/school/repository.ts";
-import type { AccountSchoolRelationRepository } from "../repository/accountSchoolRelation/repository.ts";
+import type { SchoolMembershipRepository } from "../repository/schoolMembership/repository.ts";
 import type { schoolCreateData } from "@piano_supporter/common/commonResponseType/honoRequest.ts";
 import type { accountRoleRepository } from "../repository/role/repository.ts";
 import type { roleRepository } from "../repository/role/repository.ts";
@@ -10,7 +11,7 @@ import { ROLE_NAMES } from "@piano_supporter/common/domains/role.ts";
 export class InitializeSchoolService {
 	constructor(
 		private schoolRepository: schoolRepository,
-		private accountSchoolRelationRepository: AccountSchoolRelationRepository,
+		private schoolMembershipRepository: SchoolMembershipRepository,
 		private accountRoleRepository: accountRoleRepository,
 		private roleRepository: roleRepository,
 	) {}
@@ -27,12 +28,10 @@ export class InitializeSchoolService {
 			return createSchoolResult;
 		}
 
-		const createRelationResult = await this.accountSchoolRelationRepository.create(
-			data.userId,
-			school.id,
-		);
-		if (!createRelationResult.ok) {
-			return createRelationResult;
+		const membership = createSchoolMembershipEntity(data.userId, school.id);
+		const createMembershipResult = await this.schoolMembershipRepository.create(membership);
+		if (!createMembershipResult.ok) {
+			return createMembershipResult;
 		}
 
 		const adminRoleResult = await this.roleRepository.findByName(ROLE_NAMES.ADMIN);
@@ -41,7 +40,7 @@ export class InitializeSchoolService {
 		}
 
 		const accountRoleResult = await this.accountRoleRepository.create(
-			createRelationResult.value.id,
+			createMembershipResult.value.id,
 			adminRoleResult.value.id,
 		);
 		if (!accountRoleResult.ok) {
