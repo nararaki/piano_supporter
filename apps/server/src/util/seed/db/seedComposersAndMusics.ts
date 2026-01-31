@@ -9,34 +9,35 @@ import path from "node:path";
 export const seedComposersAndMusics = async () => {
     try {
         const now = new Date();
-        
-        // Composersのシードデータ
-        const composerData = [
-            { id: uuidv7(), name: "Johann Sebastian Bach" },
-            { id: uuidv7(), name: "Wolfgang Amadeus Mozart" },
-            { id: uuidv7(), name: "Ludwig van Beethoven" },
-            { id: uuidv7(), name: "Frédéric Chopin" },
-            { id: uuidv7(), name: "Johannes Brahms" },
-            { id: uuidv7(), name: "Pyotr Ilyich Tchaikovsky" },
-            { id: uuidv7(), name: "Antonín Dvořák" },
-            { id: uuidv7(), name: "Sergei Rachmaninoff" },
-            { id: uuidv7(), name: "Sergei Prokofiev" },
-            { id: uuidv7(), name: "Dmitri Shostakovich" },
-            { id: uuidv7(), name: "Igor Stravinsky" },
-            { id: uuidv7(), name: "Claude Debussy" },
+
+        // Composersのシードデータ（idはautoincrement）
+        const composerNames = [
+            "Johann Sebastian Bach",
+            "Wolfgang Amadeus Mozart",
+            "Ludwig van Beethoven",
+            "Frédéric Chopin",
+            "Johannes Brahms",
+            "Pyotr Ilyich Tchaikovsky",
+            "Antonín Dvořák",
+            "Sergei Rachmaninoff",
+            "Sergei Prokofiev",
+            "Dmitri Shostakovich",
+            "Igor Stravinsky",
+            "Claude Debussy",
         ];
 
-        // Arrangersのシードデータ（composerと同じ人をarrangerとしても登録）
+        // Arrangersのシードデータ（varchar id）
         const arrangerData = [
             { id: uuidv7(), name: "Default Arranger" },
         ];
 
-        // Composersを挿入
-        for (const composerItem of composerData) {
-            await db.insert(composer).values({
-                ...composerItem,
-                createdAt: now,
-                updatedAt: now,
+        // Composersを挿入してIDを取得
+        const insertedComposers: Array<{ id: number; name: string }> = [];
+        for (const name of composerNames) {
+            const result = await db.insert(composer).values({ name });
+            insertedComposers.push({
+                id: Number(result[0].insertId),
+                name,
             });
         }
 
@@ -48,37 +49,41 @@ export const seedComposersAndMusics = async () => {
                 updatedAt: now,
             });
         }
-        
-        // Musicsのシードデータ（composerIdとarrangerIdを使用）
+
+        // Musicsのシードデータ（composerIdはint、arrangerIdはvarchar）
         const musicData = [
             {
-                id: uuidv7(),
                 title: "ピアノソナタ第14番 ハ短調 k545-1",
-                composerId: composerData[1].id, // Mozart
+                composerId: insertedComposers[1].id, // Mozart
                 arrangerId: arrangerData[0].id,
                 sheetMusicUrl: "https://www.sheetmusic.com",
             },
             {
-                id: uuidv7(),
                 title: "ハ短調の前奏曲",
-                composerId: composerData[2].id, // Beethoven
+                composerId: insertedComposers[2].id, // Beethoven
                 arrangerId: arrangerData[0].id,
                 sheetMusicUrl: "https://www.sheetmusic.com",
             },
             {
-                id: uuidv7(),
                 title: "トッカータとフーガ ニ短調",
-                composerId: composerData[0].id, // Bach
+                composerId: insertedComposers[0].id, // Bach
                 arrangerId: arrangerData[0].id,
                 sheetMusicUrl: "https://www.sheetmusic.com",
             },
         ];
 
-        // Musicsを挿入
+        // Musicsを挿入してIDを取得
+        const insertedMusics: Array<{ id: number; title: string }> = [];
         for (const musicItem of musicData) {
-            await db.insert(music).values({
-                ...musicItem,
-                createdAt: now,
+            const result = await db.insert(music).values({
+                title: musicItem.title,
+                composerId: musicItem.composerId,
+                arrangerId: musicItem.arrangerId,
+                sheetMusicUrl: musicItem.sheetMusicUrl,
+            });
+            insertedMusics.push({
+                id: Number(result[0].insertId),
+                title: musicItem.title,
             });
         }
 
@@ -94,7 +99,7 @@ export const seedComposersAndMusics = async () => {
         }
 
         // 既存のマッピングファイルを読み込む（存在する場合）
-        let existingMappings: Array<{ id: string; title: string; xmlFileName: string }> = [];
+        let existingMappings: Array<{ id: number; title: string; xmlFileName: string }> = [];
         try {
             const existingContent = await fs.readFile(mappingFilePath, "utf-8");
             existingMappings = JSON.parse(existingContent);
@@ -103,7 +108,7 @@ export const seedComposersAndMusics = async () => {
         }
 
         // 新しいmusicデータをマッピングに追加（既に存在するIDは更新しない）
-        const newMappings = musicData.map((item) => {
+        const newMappings = insertedMusics.map((item) => {
             const existing = existingMappings.find((m) => m.id === item.id);
             return {
                 id: item.id,
@@ -114,7 +119,7 @@ export const seedComposersAndMusics = async () => {
 
         // 既存のマッピングと新しいマッピングをマージ（新しいもの優先）
         const allMappings = [
-            ...existingMappings.filter((m) => !musicData.some((item) => item.id === m.id)),
+            ...existingMappings.filter((m) => !insertedMusics.some((item) => item.id === m.id)),
             ...newMappings,
         ];
 

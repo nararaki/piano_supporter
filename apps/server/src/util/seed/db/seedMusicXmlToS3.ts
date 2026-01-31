@@ -19,7 +19,7 @@ export const seedMusicXmlToS3 = async () => {
 		console.log(`[seedMusicXmlToS3] マッピングファイルを確認: ${mappingFilePath}`);
 
 		// マッピングファイルを読み込む
-		let mappings: Array<{ id: string; title: string; xmlFileName: string }>;
+		let mappings: Array<{ id: number; title: string; xmlFileName: string }>;
 		try {
 			const mappingContent = await fs.readFile(mappingFilePath, "utf-8");
 			mappings = JSON.parse(mappingContent);
@@ -68,7 +68,7 @@ export const seedMusicXmlToS3 = async () => {
 			// S3にアップロード
 			const uploadResult = await uploader.uploadXmlFile(
 				filePath,
-				mapping.id,
+				String(mapping.id),
 				xmlFileName,
 			);
 
