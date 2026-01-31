@@ -1,16 +1,16 @@
+import type { Post, Video } from "@piano_supporter/common/domains/post.ts";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
-import { db } from "../initial.ts";
-import { post } from "../schema/post.ts";
 import { eq } from "drizzle-orm";
 import type { PostsRepository } from "../../../repository/posts/repository.ts";
-import type { Post, Video } from "@piano_supporter/common/domains/post.ts";
-import { newVideoRepositoryClient } from "./video.ts";
-import { video } from "../schema/video.ts";
+import { db } from "../initial.ts";
+import { post } from "../schema/post.ts";
 import { accountSchoolRelation } from "../schema/role.ts";
+import { video } from "../schema/video.ts";
+import { newVideoRepositoryClient } from "./video.ts";
 
 class PostsRepositoryClient implements PostsRepository {
 	async findById(postId: string): Promise<Result<Post>> {
-		try{
+		try {
 			const [data] = await db
 				.select()
 				.from(post)
@@ -25,7 +25,7 @@ class PostsRepositoryClient implements PostsRepository {
 				type: data.video.type || "",
 				createdAt: data.video.createdAt,
 				updatedAt: data.video.updatedAt,
-			}
+			};
 			return ok({
 				id: data.post.id,
 				accountSchoolRelationId: data.post.accountSchoolRelationId,
@@ -96,13 +96,18 @@ class PostsRepositoryClient implements PostsRepository {
 					updatedAt: post.updatedAt,
 				})
 				.from(post)
-				.innerJoin(accountSchoolRelation, eq(post.accountSchoolRelationId, accountSchoolRelation.id))
+				.innerJoin(
+					accountSchoolRelation,
+					eq(post.accountSchoolRelationId, accountSchoolRelation.id),
+				)
 				.where(eq(accountSchoolRelation.schoolId, schoolId))
 				.execute();
 
 			const posts: Post[] = await Promise.all(
 				data.map(async (row) => {
-					const videoResult = await newVideoRepositoryClient.findByPostId(row.id);
+					const videoResult = await newVideoRepositoryClient.findByPostId(
+						row.id,
+					);
 					const video = videoResult.ok ? videoResult.value : null;
 
 					return {
@@ -114,7 +119,7 @@ class PostsRepositoryClient implements PostsRepository {
 						createdAt: row.createdAt,
 						updatedAt: row.updatedAt,
 					};
-				})
+				}),
 			);
 
 			return ok(posts);
@@ -129,4 +134,3 @@ class PostsRepositoryClient implements PostsRepository {
 }
 
 export const newPostsRepositoryClient = new PostsRepositoryClient();
-

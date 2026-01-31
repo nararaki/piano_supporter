@@ -1,13 +1,13 @@
+import type { Music } from "@piano_supporter/common/domains/music.ts";
+import type { Practice } from "@piano_supporter/common/domains/practice.ts";
+import type { SchoolMembership } from "@piano_supporter/common/domains/schoolMembership.ts";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
-import { db } from "../initial.ts";
-import { practice } from "../schema/practice.ts";
-import { music } from "../schema/music.ts";
-import { composer } from "../schema/composer.ts";
 import { eq } from "drizzle-orm";
 import type { PracticeRepository } from "../../../repository/practice/repository.ts";
-import type { Practice } from "@piano_supporter/common/domains/practice.ts";
-import type { Music } from "@piano_supporter/common/domains/music.ts";
-import type { SchoolMembership } from "@piano_supporter/common/domains/schoolMembership.ts";
+import { db } from "../initial.ts";
+import { composer } from "../schema/composer.ts";
+import { music } from "../schema/music.ts";
+import { practice } from "../schema/practice.ts";
 
 class PracticeRepositoryClient implements PracticeRepository {
 	async findById(id: string): Promise<Result<Practice>> {
@@ -40,7 +40,6 @@ class PracticeRepositoryClient implements PracticeRepository {
 				updatedAt: result.practice.updatedAt,
 			};
 			return ok(practiceData);
-		
 		} catch (e) {
 			console.log("練習データの取得に失敗しました", e);
 			return err({
@@ -63,7 +62,7 @@ class PracticeRepositoryClient implements PracticeRepository {
 				.innerJoin(composer, eq(music.composerId, composer.id))
 				.where(eq(practice.accountSchoolRelationId, relationId))
 				.execute();
-				
+
 			const result: Practice[] = practices.map((row) => ({
 				id: row.practice.id,
 				music: {
@@ -88,7 +87,11 @@ class PracticeRepositoryClient implements PracticeRepository {
 		}
 	}
 
-	async create(data: Practice, membership: SchoolMembership, musicData: Music): Promise<Result<Practice>> {
+	async create(
+		data: Practice,
+		membership: SchoolMembership,
+		musicData: Music,
+	): Promise<Result<Practice>> {
 		try {
 			const musicId = await this.findMusicId(musicData);
 			if (!musicId.ok) {
@@ -139,4 +142,3 @@ class PracticeRepositoryClient implements PracticeRepository {
 }
 
 export const newPracticeRepositoryClient = new PracticeRepositoryClient();
-

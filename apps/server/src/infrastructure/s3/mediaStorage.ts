@@ -1,7 +1,7 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
-import type { Practice } from "@piano_supporter/common/domains/practice.ts";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import type { Music } from "@piano_supporter/common/domains/music.ts";
+import type { Practice } from "@piano_supporter/common/domains/practice.ts";
+import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import type { IMediaStorage } from "../../repository/media/IMediaStorage.ts";
 
 export class MediaStorage implements IMediaStorage {
@@ -22,7 +22,10 @@ export class MediaStorage implements IMediaStorage {
 		this.cloudFrontDomain = process.env.AWS_CLOUDFRONT_DOMAIN || "";
 	}
 
-	public async createPracticeStorage(music: Music, practice: Practice): Promise<Result<string>> {
+	public async createPracticeStorage(
+		music: Music,
+		practice: Practice,
+	): Promise<Result<string>> {
 		const sheetMusic = await this.get(music.sheetMusicUrl);
 		if (!sheetMusic.ok) {
 			return err({
@@ -34,7 +37,7 @@ export class MediaStorage implements IMediaStorage {
 		const key = `practice/${practice.id}.xml`;
 		const putResult = await this.put(key, sheetMusic.value, "application/xml");
 		if (!putResult.ok) {
-			return err({	
+			return err({
 				type: "FILE_UPLOAD_ERROR",
 				message: "シートミュージックのアップロードに失敗しました",
 			});
@@ -82,7 +85,9 @@ export class MediaStorage implements IMediaStorage {
 			const arrayBuffer = await response.arrayBuffer();
 			const buffer = Buffer.from(arrayBuffer);
 
-			console.log(`[get] コンテンツ取得成功: ${cloudFrontUrl} (${buffer.length} bytes)`);
+			console.log(
+				`[get] コンテンツ取得成功: ${cloudFrontUrl} (${buffer.length} bytes)`,
+			);
 
 			return ok(buffer);
 		} catch (error) {
@@ -182,7 +187,9 @@ export class MediaStorage implements IMediaStorage {
 		try {
 			const urlObj = new URL(cloudFrontUrl);
 			// pathnameから先頭のスラッシュを削除
-			const key = urlObj.pathname.startsWith("/") ? urlObj.pathname.slice(1) : urlObj.pathname;
+			const key = urlObj.pathname.startsWith("/")
+				? urlObj.pathname.slice(1)
+				: urlObj.pathname;
 			return key || null;
 		} catch (error) {
 			console.error("[extractKeyFromUrl] URL解析エラー", {
@@ -193,4 +200,3 @@ export class MediaStorage implements IMediaStorage {
 		}
 	}
 }
-

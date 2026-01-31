@@ -1,12 +1,14 @@
+import type { SchoolMembership } from "@piano_supporter/common/domains/schoolMembership.ts";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
+import { and, eq } from "drizzle-orm";
+import type { SchoolMembershipRepository } from "../../../repository/schoolMembership/repository.ts";
 import { db } from "../initial.ts";
 import { accountSchoolRelation } from "../schema/role.ts";
-import { and, eq } from "drizzle-orm";
-import type { SchoolMembership } from "@piano_supporter/common/domains/schoolMembership.ts";
-import type { SchoolMembershipRepository } from "../../../repository/schoolMembership/repository.ts";
 
 class SchoolMembershipRepositoryClient implements SchoolMembershipRepository {
-	async create(membership: SchoolMembership): Promise<Result<SchoolMembership>> {
+	async create(
+		membership: SchoolMembership,
+	): Promise<Result<SchoolMembership>> {
 		try {
 			await db.insert(accountSchoolRelation).values({
 				id: membership.id,
@@ -23,7 +25,9 @@ class SchoolMembershipRepositoryClient implements SchoolMembershipRepository {
 		}
 	}
 
-	async findByAccountId(accountId: string): Promise<Result<SchoolMembership[]>> {
+	async findByAccountId(
+		accountId: string,
+	): Promise<Result<SchoolMembership[]>> {
 		try {
 			const data = await db
 				.select()
@@ -49,7 +53,10 @@ class SchoolMembershipRepositoryClient implements SchoolMembershipRepository {
 		}
 	}
 
-	async findByAccountIdAndSchoolId(accountId: string, schoolId: string): Promise<Result<SchoolMembership>> {
+	async findByAccountIdAndSchoolId(
+		accountId: string,
+		schoolId: string,
+	): Promise<Result<SchoolMembership>> {
 		try {
 			const [data] = await db
 				.select()
@@ -57,8 +64,8 @@ class SchoolMembershipRepositoryClient implements SchoolMembershipRepository {
 				.where(
 					and(
 						eq(accountSchoolRelation.accountId, accountId),
-						eq(accountSchoolRelation.schoolId, schoolId)
-					)
+						eq(accountSchoolRelation.schoolId, schoolId),
+					),
 				)
 				.limit(1)
 				.execute();
@@ -81,4 +88,5 @@ class SchoolMembershipRepositoryClient implements SchoolMembershipRepository {
 	}
 }
 
-export const newSchoolMembershipRepositoryClient = new SchoolMembershipRepositoryClient();
+export const newSchoolMembershipRepositoryClient =
+	new SchoolMembershipRepositoryClient();

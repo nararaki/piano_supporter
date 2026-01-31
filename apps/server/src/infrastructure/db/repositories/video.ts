@@ -1,10 +1,10 @@
+import type { Video } from "@piano_supporter/common/domains/post.ts";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
-import { db } from "../initial.ts";
-import { video } from "../schema/video.ts";
 import { eq } from "drizzle-orm";
 import { uuidv7 } from "uuidv7";
 import type { VideoRepository } from "../../../repository/video/repository.ts";
-import type { Video } from "@piano_supporter/common/domains/post.ts";
+import { db } from "../initial.ts";
+import { video } from "../schema/video.ts";
 
 class VideoRepositoryClient implements VideoRepository {
 	async findById(id: string): Promise<Result<Video>> {
@@ -58,7 +58,11 @@ class VideoRepositoryClient implements VideoRepository {
 		}
 	}
 
-	async create(data: { postId: string; url: string; type?: string }): Promise<Result<Video>> {
+	async create(data: {
+		postId: string;
+		url: string;
+		type?: string;
+	}): Promise<Result<Video>> {
 		try {
 			const videoId = uuidv7();
 			const now = new Date();
@@ -89,4 +93,3 @@ class VideoRepositoryClient implements VideoRepository {
 }
 
 export const newVideoRepositoryClient = new VideoRepositoryClient();
-
