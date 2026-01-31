@@ -1,7 +1,7 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import type { PresignedUrlResponse } from "@piano_supporter/common/domains/post.ts";
+import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { uuidv7 } from "uuidv7";
 
 export class S3PresignedUrlGenerator {
@@ -38,8 +38,6 @@ export class S3PresignedUrlGenerator {
 				hasCloudFrontDomain: process.env.AWS_CLOUDFRONT_DOMAIN,
 			});
 
-
-
 			// 環境変数の検証
 			if (!this.bucketName) {
 				console.error("[generatePresignedUrl] バケット名が設定されていません");
@@ -50,7 +48,9 @@ export class S3PresignedUrlGenerator {
 			}
 
 			if (!this.cloudFrontDomain) {
-				console.error("[generatePresignedUrl] CloudFrontドメインが設定されていません");
+				console.error(
+					"[generatePresignedUrl] CloudFrontドメインが設定されていません",
+				);
 				return err({
 					type: "FILE_UPLOAD_ERROR",
 					message: "AWS_CLOUDFRONT_DOMAINが設定されていません",
@@ -95,7 +95,8 @@ export class S3PresignedUrlGenerator {
 		} catch (error) {
 			console.error("[generatePresignedUrl] エラー発生", {
 				error,
-				errorType: error instanceof Error ? error.constructor.name : typeof error,
+				errorType:
+					error instanceof Error ? error.constructor.name : typeof error,
 				errorMessage: error instanceof Error ? error.message : String(error),
 				errorStack: error instanceof Error ? error.stack : undefined,
 				fileName,
@@ -117,4 +118,3 @@ export class S3PresignedUrlGenerator {
 }
 
 export const newS3PresignedUrlGenerator = new S3PresignedUrlGenerator();
-

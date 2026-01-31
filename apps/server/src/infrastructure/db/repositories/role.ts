@@ -1,9 +1,9 @@
+import type { Role } from "@piano_supporter/common/domains/role.ts";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { eq } from "drizzle-orm";
-import type { roleRepository} from "../../../repository/role/repository.ts";
+import type { roleRepository } from "../../../repository/role/repository.ts";
 import { db } from "../initial.ts";
 import { roles } from "../schema/role.ts";
-import type { Role } from "@piano_supporter/common/domains/role.ts";
 
 class RoleRepositoryClient implements roleRepository {
 	async findByName(name: string): Promise<Result<Role>> {

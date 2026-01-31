@@ -14,11 +14,9 @@ export class AccountRespositoryClient implements AccountRepository {
 	): Promise<Result<createServerAccount>> {
 		try {
 			console.log("dbにinsert開始します...");
-			await db
-				.insert(account)
-				.values({
-					...accountData,
-				});
+			await db.insert(account).values({
+				...accountData,
+			});
 			return ok(accountData);
 		} catch (e) {
 			console.log("データベースエラー", e);
@@ -37,7 +35,7 @@ export class AccountRespositoryClient implements AccountRepository {
 				.where(eq(account.id, id))
 				.limit(1)
 				.execute();
-			if(result){
+			if (result) {
 				const accountData = result as Account;
 				return ok(accountData);
 			}

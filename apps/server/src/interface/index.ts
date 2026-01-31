@@ -1,12 +1,23 @@
 //🦄🌈this is a pinanosupporter's hooks!!🌈🦄
 
 import dotenv from "dotenv";
+
 dotenv.config();
 
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { accountRoute, enrollSchoolRoute, schoolRoute, postsRoute, practiceRoute, composersRoute, musicsRoute, commentsRoute, taskRoute } from "./router.ts";
+import {
+	accountRoute,
+	commentsRoute,
+	composersRoute,
+	enrollSchoolRoute,
+	musicsRoute,
+	postsRoute,
+	practiceRoute,
+	schoolRoute,
+	taskRoute,
+} from "./router.ts";
 
 export const apiRoutes = new Hono()
 	.route("/account-init", accountRoute)
