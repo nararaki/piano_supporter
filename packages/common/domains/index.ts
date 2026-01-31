@@ -8,7 +8,7 @@ export * from "./school";
 export * from "./userContext";
 
 // Membership関連
-export * from "./schoolAccountRelation";
+export * from "./schoolMembership";
 
 // Post関連
 export * from "./post";
