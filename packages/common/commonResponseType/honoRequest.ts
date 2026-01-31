@@ -54,11 +54,11 @@ export const UploadVideoSchema = z.object({
 export const CreatePracticeSchema = z.object({
 	accountId: z.string().min(1, { message: "accountIdがないです" }),
 	schoolId: z.string().min(1, { message: "schoolIdがないです" }),
-	musicId: z.string().min(1, { message: "musicIdがないです" }),
+	musicTitle: z.string().min(1, { message: "musicTitleがないです" }),
 });
 
 export const GetMusicsSchema = z.object({
-	composerId: z.string().min(1, { message: "composerIdがないです" }),
+	composerName: z.string().min(1, { message: "composerNameがないです" }),
 });
 
 export const GetPracticeByIdSchema = z.object({
@@ -80,9 +80,9 @@ export const CreateTaskSchema = z.object({
     title: z.string().min(1,{message: "titleがないです"}),
     content: z.string().min(1,{message: "コメントする内容を書いてください"}),
     practiceId: z.string().min(1,{message:"practiceIdがないです"}),
-	sectionNumber: z.number().min(1,{message:"sectionNumberがないです"}),
-	timePosition: z.number().min(1,{message:"timePositionがないです"}),
-});
+	sectionNumber: z.number().min(1,{message:"小節番号がないです"}),
+	timePosition: z.number().min(0,{message:"時間位置がないです"}),
+})
 
 export type accountCreateData = z.infer<typeof AccountCreateSchema>;
 export type schoolCreateData = z.infer<typeof SchoolCreateSchema>;

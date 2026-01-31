@@ -7,5 +7,5 @@ export interface PostsRepository {
 	findByUserId(userId: string): Promise<Post[] | []>;
 	savePost(post: Post): Promise<void>;
 	findBySchoolId(schoolId: string): Promise<Result<Post[]>>;
-	create(data: createPostData & { schoolId: string }): Promise<Result<Post>>;
+	create(post: Post): Promise<Result<void>>;
 }

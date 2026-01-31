@@ -1,8 +1,8 @@
-import type { AccountRole } from "@piano_supporter/common/domains/account.ts";
+import type { RoleName } from "@piano_supporter/common/domains/role.ts";
 import { type Permission, permissionsByRole } from "./permission.ts";
 export class AccountPolicy {
 	private permissions: Permission[];
-	constructor(public role: AccountRole) {
+	constructor(public role: RoleName) {
 		this.permissions = permissionsByRole[role] || [];
 	}
 

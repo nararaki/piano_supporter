@@ -1,6 +1,6 @@
 import type { Result } from "@piano_supporter/common/lib/error.ts";
 import type { Composer } from "@piano_supporter/common/domains/composer.ts";
-import type { ComposerRepository } from "../repository/composer/repository.ts";
+import type { ComposerRepository } from "../../repository/composer/repository.ts";
 
 export class GetComposersService {
 	constructor(

@@ -1,33 +1,26 @@
-import type {
-	createSchoolDatabase,
-	createServerSchool,
-	School,
-} from "@piano_supporter/common/domains/school.ts";
+import type { School } from "@piano_supporter/common/domains/school.ts";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import { eq } from "drizzle-orm";
 import type { schoolRepository } from "../../../repository/school/repository.ts";
 import { db } from "../initial.ts";
 import { school } from "../schema/school.ts";
-import { accountSchoolRelation } from "../schema/index.ts";
 
 class SchoolRepositoryClient implements schoolRepository {
-	async createAccount(
-		schoolData: createSchoolDatabase,
-	): Promise<Result<createServerSchool>> {
+	async create(schoolData: School): Promise<Result<School>> {
 		try {
-			console.log("dbへのinsert開始します...");
-			await db
-				.insert(school)
-				.values(schoolData);
-			console.log("dbへのinsert成功しました");
-			return ok({
-				...schoolData,
+			await db.insert(school).values({
+				id: schoolData.id,
+				name: schoolData.name,
+				email: schoolData.email,
+				location: schoolData.location,
+				shareCode: schoolData.shareCode,
 			});
+			return ok(schoolData);
 		} catch (e) {
-			console.log("sippai", e);
+			console.log("教室の作成に失敗しました", e);
 			return err({
 				type: "CANNOT_CREATE_SCHOOL",
-				message: "データベースエラー教室の作成に失敗しました",
+				message: "教室の作成に失敗しました",
 			});
 		}
 	}
@@ -41,14 +34,14 @@ class SchoolRepositoryClient implements schoolRepository {
 				.limit(1)
 				.execute();
 			if (data) {
-				const result = data as School;
-				return ok(result);
+				return ok(data as School);
 			}
 			return err({
 				type: "CANNOT_FIND_SCHOOL",
 				message: "教室が見つかりません",
 			});
 		} catch (e) {
+			console.log("教室の取得に失敗しました", e);
 			return err({
 				type: "CANNOT_FIND_SCHOOL",
 				message: "教室が見つかりません",
@@ -56,23 +49,23 @@ class SchoolRepositoryClient implements schoolRepository {
 		}
 	}
 
-	async findByShareCode(id: string): Promise<Result<School>> {
+	async findByShareCode(shareCode: string): Promise<Result<School>> {
 		try {
 			const [data] = await db
 				.select()
 				.from(school)
-				.where(eq(school.shareCode, id))
+				.where(eq(school.shareCode, shareCode))
 				.limit(1)
 				.execute();
 			if (data) {
-				const result = data as School;
-				return ok(result);
+				return ok(data as School);
 			}
 			return err({
 				type: "CANNOT_FIND_SCHOOL",
 				message: "教室が見つかりません",
 			});
 		} catch (e) {
+			console.log("教室の取得に失敗しました", e);
 			return err({
 				type: "CANNOT_FIND_SCHOOL",
 				message: "教室が見つかりません",

@@ -270,17 +270,17 @@ export const composersRoute = new Hono()
 
 export const musicsRoute = new Hono()
 	.get(
-		"/:composerId",
+		"/:composerName",
 		zValidator("param", GetMusicsSchema),
 		async (c) => {
-			const composerId = c.req.param("composerId");
-			if (!composerId) {
+			const composerName = c.req.param("composerName");
+			if (!composerName) {
 				return c.json(err({
 					type: "BAD_REQUEST",
-					message: "composerIdが必要です",
+					message: "composerNameが必要です",
 				}), 400);
 			}
-			const result = await getMusicsService.exec(composerId);
+			const result = await getMusicsService.exec(composerName);
 			if (!result.ok) {
 				return c.json(result, 200);
 			}

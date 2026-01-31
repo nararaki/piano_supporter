@@ -6,6 +6,8 @@ import { composer } from "../schema/composer.ts";
 import { eq } from "drizzle-orm";
 import type { PracticeRepository } from "../../../repository/practice/repository.ts";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
+import type { Music } from "@piano_supporter/common/domains/music.ts";
+import type { SchoolMembership } from "@piano_supporter/common/domains/schoolMembership.ts";
 
 class PracticeRepositoryClient implements PracticeRepository {
 	async findById(id: string): Promise<Result<Practice>> {
@@ -27,10 +29,8 @@ class PracticeRepositoryClient implements PracticeRepository {
 			const practiceData: Practice = {
 				id: result.practice.id,
 				music: {
-					id: result.music.id,
 					title: result.music.title,
 					composer: {
-						id: result.composer.id,
 						name: result.composer.name,
 					},
 					sheetMusicUrl: result.music.sheetMusicUrl || "",
@@ -67,19 +67,13 @@ class PracticeRepositoryClient implements PracticeRepository {
 			const result: Practice[] = practices.map((row) => ({
 				id: row.practice.id,
 				music: {
-					id: row.music.id,
 					title: row.music.title,
 					composer: {
-						id: row.composer.id,
 						name: row.composer.name,
 					},
 					sheetMusicUrl: row.music.sheetMusicUrl || "",
 				},
-				composer: {
-					id: row.composer.id,
-					name: row.composer.name,
-				},
-				sheetMusicUrl: row.music.sheetMusicUrl || "",
+				sheetMusicUrl: row.practice.sheetMusicUrl || "",
 				createdAt: row.practice.createdAt,
 				updatedAt: row.practice.updatedAt,
 			}));
@@ -94,12 +88,16 @@ class PracticeRepositoryClient implements PracticeRepository {
 		}
 	}
 
-	async create(data: Practice,relationId: string): Promise<Result<Practice>> {
+	async create(data: Practice, membership: SchoolMembership, musicData: Music): Promise<Result<Practice>> {
 		try {
+			const musicId = await this.findMusicId(musicData);
+			if (!musicId.ok) {
+				return musicId;
+			}
 			await db.insert(practice).values({
 				id: data.id,
-				accountSchoolRelationId: relationId,
-				musicId: data.music.id,
+				accountSchoolRelationId: membership.id,
+				musicId: musicId.value,
 				sheetMusicUrl: data.sheetMusicUrl,
 				createdAt: data.createdAt,
 				updatedAt: data.updatedAt,
@@ -111,6 +109,30 @@ class PracticeRepositoryClient implements PracticeRepository {
 			return err({
 				type: "UNEXPECTED",
 				message: "練習データの作成に失敗しました",
+			});
+		}
+	}
+
+	private async findMusicId(musicData: Music): Promise<Result<number>> {
+		try {
+			const [result] = await db
+				.select({ id: music.id })
+				.from(music)
+				.where(eq(music.title, musicData.title))
+				.limit(1)
+				.execute();
+			if (!result) {
+				return err({
+					type: "NOT_FOUND",
+					message: "楽曲が見つかりません",
+				});
+			}
+			return ok(result.id);
+		} catch (e) {
+			console.log("楽曲IDの取得に失敗しました", e);
+			return err({
+				type: "UNEXPECTED",
+				message: "楽曲IDの取得に失敗しました",
 			});
 		}
 	}

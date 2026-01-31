@@ -23,8 +23,8 @@ import type { Music } from "@piano_supporter/common/domains/music.ts";
 export const NewPracticeForm = () => {
 	const { userId } = useAuth();
 	const router = useRouter();
-	const [selectedComposerId, setSelectedComposerId] = useState<string>("");
-	const [selectedMusicId, setSelectedMusicId] = useState<string>("");
+	const [selectedComposerName, setSelectedComposerName] = useState<string>("");
+	const [selectedMusicTitle, setSelectedMusicTitle] = useState<string>("");
 	const [composers, setComposers] = useState<Composer[]>([]);
 	const [musics, setMusics] = useState<Music[]>([]);
 	const [isLoadingComposers, setIsLoadingComposers] = useState(false);
@@ -34,7 +34,7 @@ export const NewPracticeForm = () => {
 	// 作曲家一覧を取得
 	useEffect(() => {
 		const fetchComposers = async () => {
-			setIsLoadingComposers(true);
+			setIsLoadingComposers(true);	
 			const result = await getComposers();
 			console.log("result", result);
 			if (result.ok) {
@@ -47,15 +47,15 @@ export const NewPracticeForm = () => {
 
 	// 作曲家が選択されたら楽曲一覧を取得
 	useEffect(() => {
-		if (!selectedComposerId) {
+		if (!selectedComposerName) {
 			setMusics([]);
-			setSelectedMusicId("");
+			setSelectedMusicTitle("");
 			return;
 		}
 
 		const fetchMusics = async () => {
 			setIsLoadingMusics(true);
-			const result = await getMusics(selectedComposerId);
+			const result = await getMusics(selectedComposerName);
 			if (result.ok) {
 				setMusics(result.value);
 			}
@@ -63,18 +63,18 @@ export const NewPracticeForm = () => {
 		};
 		fetchMusics();
 		console.log("コンポーザーが選択されたよ")
-	}, [selectedComposerId]);
+	}, [selectedComposerName]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError(null);
 
-		if (!selectedComposerId) {
+		if (!selectedComposerName) {
 			setError("作曲家を選択してください");
 			return;
 		}
 
-		if (!selectedMusicId) {
+		if (!selectedMusicTitle) {
 			setError("楽曲を選択してください");
 			return;
 		}
@@ -98,7 +98,7 @@ export const NewPracticeForm = () => {
 			const result = await createPractice({
 				accountId: userId,
 				schoolId: schoolId,
-				musicId: selectedMusicId,
+				musicTitle: selectedMusicTitle,
 			});
 
 			if (!result.ok) {
@@ -132,10 +132,10 @@ export const NewPracticeForm = () => {
 						<Label htmlFor="composer">作曲家を選択</Label>
 						<select
 							id="composer"
-							value={selectedComposerId}
+							value={selectedComposerName}
 							onChange={(e) => {
-								setSelectedComposerId(e.target.value);
-								setSelectedMusicId("");
+								setSelectedComposerName(e.target.value);
+								setSelectedMusicTitle("");
 							}}
 							className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
 							required
@@ -152,11 +152,11 @@ export const NewPracticeForm = () => {
 								</option>
 							) : (
 								composers.map((composer) => (
-									<option key={composer.id} value={composer.id}>
+									<option key={composer.name} value={composer.name}>
 										{composer.name}
 									</option>
 								))
-							)}
+							)}	
 						</select>
 					</div>
 
@@ -164,26 +164,26 @@ export const NewPracticeForm = () => {
 						<Label htmlFor="music">楽曲を選択</Label>
 						<select
 							id="music"
-							value={selectedMusicId}
-							onChange={(e) => setSelectedMusicId(e.target.value)}
+							value={selectedMusicTitle}
+							onChange={(e) => setSelectedMusicTitle(e.target.value)}
 							className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
 							required
-							disabled={!selectedComposerId || isLoadingMusics}
+							disabled={!selectedComposerName || isLoadingMusics}
 						>
 							<option value="">
-								{!selectedComposerId
+								{!selectedComposerName
 									? "まず作曲家を選択してください"
 									: isLoadingMusics
 									? "読み込み中..."
 									: "楽曲を選択してください"}
 							</option>
-							{musics.length === 0 && selectedComposerId && !isLoadingMusics ? (
+							{musics.length === 0 && selectedComposerName && !isLoadingMusics ? (
 								<option value="" disabled>
 									楽曲が登録されていません
 								</option>
 							) : (
 								musics.map((music) => (
-									<option key={music.id} value={music.id}>
+									<option key={music.title} value={music.title}>
 										{music.title}
 									</option>
 								))
@@ -208,7 +208,7 @@ export const NewPracticeForm = () => {
 						</Button>
 						<Button
 							type="submit"
-							disabled={isLoading || !selectedComposerId || !selectedMusicId}
+							disabled={isLoading || !selectedComposerName || !selectedMusicTitle}
 						>
 							{isLoading ? (
 								<>

@@ -1,41 +1,41 @@
 import { newCloudinaryApiClient } from "../../infrastructure/cloudinary/uploadMedia.ts";
 import { newAccountRespositoryClient } from "../../infrastructure/db/repositories/account.ts";
 import { newSchoolRepositoryClient } from "../../infrastructure/db/repositories/school.ts";
-import { newAccountSchoolRelationRepositoryClient } from "../../infrastructure/db/repositories/accountSchoolRelation.ts";
+import { newSchoolMembershipRepositoryClient } from "../../infrastructure/db/repositories/schoolMembership.ts";
 import { newAccountRoleRepositoryClient } from "../../infrastructure/db/repositories/accountRole.ts";
 import { newPostsRepositoryClient } from "../../infrastructure/db/repositories/posts.ts";
 import { newVideoRepositoryClient } from "../../infrastructure/db/repositories/video.ts";
-import { InitializeAccountService } from "../initializeAccountService.ts";
-import { InitializeSchoolService } from "../initializeSchoolService.ts";
-import { UploadVideoService } from "../uploadVideoService.ts";
-import { EnrollAccountToSchoolService } from "../enrollAccountToSchoolService.ts";
+import { InitializeAccountService } from "../account/initializeAccountService.ts";
+import { InitializeSchoolService } from "../school/initializeSchoolService.ts";
+import { UploadVideoService } from "../media/uploadVideoService.ts";
+import { EnrollAccountToSchoolService } from "../school/enrollAccountToSchoolService.ts";
 import { UserContextService } from "../userContextService.ts";
 import { GetAllPostsService } from "../posts/getAllPostsService.ts";
 import { CreatePostService } from "../posts/createPostService.ts";
 import { GetAllPracticeService } from "../practice/getAllPracticeService.ts";
 import { CreatePracticeService } from "../practice/createPracticeService.ts";
-import { GetComposersService } from "../getComposersService.ts";
-import { GetMusicsService } from "../getMusicsService.ts";
+import { GetComposersService } from "../music/getComposersService.ts";
+import { GetMusicsService } from "../music/getMusicsService.ts";
 import { newRoleRepositoryClient } from "../../infrastructure/db/repositories/role.ts";
 import { newPracticeRepositoryClient } from "../../infrastructure/db/repositories/practice.ts";
 import { newComposerRepositoryClient } from "../../infrastructure/db/repositories/composer.ts";
 import { newMusicRepositoryClient } from "../../infrastructure/db/repositories/music.ts";
-import { GetSchoolService } from "../getSchoolService.ts";
+import { GetSchoolService } from "../school/getSchoolService.ts";
 import { GetPracticeService } from "../practice/getPracticeService.ts";
-import { CreateCommentService } from "../createCommentService.ts";
+import { CreateCommentService } from "../comment/createCommentService.ts";
 import { newCommentRepositoryClient } from "../../infrastructure/db/repositories/comment.ts";
-import { GetPostDetailService } from "../getPostDetailService.ts";
-import { CreateTaskService } from "../createTaskService.ts";
+import { GetPostDetailService } from "../posts/getPostDetailService.ts";
+import { CreateTaskService } from "../task/createTaskService.ts";
 import { GetTasksService } from "../task/getTasksService.ts";
-import { newTaskRepositoryClient } from "src/infrastructure/db/repositories/task.ts";
-import { newAnnotationRepositoryClient } from "src/infrastructure/db/repositories/annotation.ts";
-import { XmlEditService } from "../xmlEditService.ts";
+import { newTaskRepositoryClient } from "../../infrastructure/db/repositories/task.ts";
+import { newAnnotationRepositoryClient } from "../../infrastructure/db/repositories/annotation.ts";
+import { XmlEditService } from "../media/xmlEditService.ts";
 import { MediaStorage } from "../../infrastructure/s3/mediaStorage.ts";
 
 export const cloudinaryApiClient = newCloudinaryApiClient;
 export const accountResitoryClient = newAccountRespositoryClient;
 export const schoolRepositoryClient = newSchoolRepositoryClient;
-export const accountSchoolRelationRepositoryClient = newAccountSchoolRelationRepositoryClient;
+export const schoolMembershipRepositoryClient = newSchoolMembershipRepositoryClient;
 export const roleRepositoryClient = newRoleRepositoryClient;
 export const commentRepositoryClient = newCommentRepositoryClient;
 export const postRepositoryClient = newPostsRepositoryClient;
@@ -46,7 +46,7 @@ export const musicRepositoryClient = newMusicRepositoryClient;
 export const accountRoleRepositoryClient = newAccountRoleRepositoryClient;
 export const taskRepositoryClient = newTaskRepositoryClient;
 export const annotationRepositoryClient = newAnnotationRepositoryClient;
-export const newMediaStorage = new MediaStorage();
+export const mediaStorage = new MediaStorage();
 
 export const uploadVideoService = new UploadVideoService(cloudinaryApiClient);
 
@@ -56,7 +56,7 @@ export const initializeAccountService = new InitializeAccountService(
 
 export const initializeSchoolService = new InitializeSchoolService(
 	schoolRepositoryClient,
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	accountRoleRepositoryClient,
 	roleRepositoryClient,
 );
@@ -73,23 +73,23 @@ export const enrollAccountToSchoolService = new EnrollAccountToSchoolService(
 );
 
 export const getAllPostsService = new GetAllPostsService(
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	postRepositoryClient,
 );
 
 export const createPostService = new CreatePostService(
-	newAccountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	postRepositoryClient,
 	videoRepositoryClient,
 );
 
 export const getSchoolService = new GetSchoolService(
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	schoolRepositoryClient,
 );
 
 export const createPracticeService = new CreatePracticeService(
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 	practiceRepositoryClient,
 	musicRepositoryClient,
 );
@@ -104,7 +104,7 @@ export const getMusicsService = new GetMusicsService(
 
 export const getAllPracticeService = new GetAllPracticeService(
 	practiceRepositoryClient,
-	accountSchoolRelationRepositoryClient,
+	schoolMembershipRepositoryClient,
 );
 
 export const getPracticeService = new GetPracticeService(
@@ -120,7 +120,7 @@ export const getPostDetailService = new GetPostDetailService(
 	commentRepositoryClient,
 );
 
-export const xmlEditService = new XmlEditService(newMediaStorage);
+export const xmlEditService = new XmlEditService(mediaStorage);
 
 export const createTaskService = new CreateTaskService(
 	taskRepositoryClient,
@@ -129,6 +129,4 @@ export const createTaskService = new CreateTaskService(
 	xmlEditService,
 );
 
-export const getTasksService = new GetTasksService(
-	taskRepositoryClient,
-);
+export const getTasksService = new GetTasksService(taskRepositoryClient);

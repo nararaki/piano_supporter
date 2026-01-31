@@ -8,7 +8,7 @@ import type { Music } from "@piano_supporter/common/domains/music.ts";
 import type { Composer } from "@piano_supporter/common/domains/composer.ts";
 
 class MusicRepositoryClient implements MusicRepository {
-	async findByComposerId(composerId: string): Promise<Result<Music[]>> {
+	async findByComposer(composerName: string): Promise<Result<Music[]>> {
 		try {
 			const data = await db
 				.select({
@@ -16,15 +16,12 @@ class MusicRepositoryClient implements MusicRepository {
 					composer: composer,
 				})
 				.from(music)
-				.innerJoin(composer, eq(music.composerId, composer.id))
-				.where(eq(music.composerId, composerId))
+				.innerJoin(composer, eq(composer.id, music.composerId))
+				.where(eq(composer.name, composerName))
 				.execute();
-
 			const musics: Music[] = data.map((row) => ({
-				id: row.music.id,
 				title: row.music.title,
 				composer: {
-					id: row.composer.id,
 					name: row.composer.name,
 				} as Composer,
 				sheetMusicUrl: row.music.sheetMusicUrl || "",
@@ -40,7 +37,7 @@ class MusicRepositoryClient implements MusicRepository {
 		}
 	}
 
-	async findByMusicId(musicId: string): Promise<Result<Music>> {
+	async findByTitle(musicTitle: string): Promise<Result<Music>> {
 		try {
 			const data = await db
 				.select({
@@ -49,7 +46,7 @@ class MusicRepositoryClient implements MusicRepository {
 				})
 				.from(music)
 				.innerJoin(composer, eq(music.composerId, composer.id))
-				.where(eq(music.id, musicId))
+				.where(eq(music.title, musicTitle))
 				.execute();
 
 			if (data.length === 0) {
@@ -61,12 +58,10 @@ class MusicRepositoryClient implements MusicRepository {
 
 			const row = data[0];
 			const musicData: Music = {
-				id: row.music.id,
 				title: row.music.title,
 				composer: {
-					id: row.composer.id,
 					name: row.composer.name,
-				} as Composer,
+				},
 				sheetMusicUrl: row.music.sheetMusicUrl || "",
 			};
 
@@ -76,6 +71,79 @@ class MusicRepositoryClient implements MusicRepository {
 			return err({
 				type: "UNEXPECTED",
 				message: "楽曲データの取得に失敗しました",
+			});
+		}
+	}
+
+	async findByMusicId(musicId: string): Promise<Result<Music>> {
+		try {
+			const musicIdNum = parseInt(musicId, 10);
+			if (Number.isNaN(musicIdNum)) {
+				return err({
+					type: "BAD_REQUEST",
+					message: "無効なmusicIdです",
+				});
+			}
+
+			const data = await db
+				.select({
+					music: music,
+					composer: composer,
+				})
+				.from(music)
+				.innerJoin(composer, eq(music.composerId, composer.id))
+				.where(eq(music.id, musicIdNum))
+				.limit(1)
+				.execute();
+
+			if (data.length === 0) {
+				return err({
+					type: "NOT_FOUND",
+					message: "楽曲データが見つかりません",
+				});
+			}
+
+			const row = data[0];
+			const musicData: Music = {
+				title: row.music.title,
+				composer: {
+					name: row.composer.name,
+				},
+				sheetMusicUrl: row.music.sheetMusicUrl || "",
+			};
+
+			return ok(musicData);
+		} catch (e) {
+			console.log("楽曲データの取得に失敗しました", e);
+			return err({
+				type: "UNEXPECTED",
+				message: "楽曲データの取得に失敗しました",
+			});
+		}
+	}
+
+	async findMusicIdByTitle(title: string): Promise<Result<string>> {
+		try {
+			const [result] = await db
+				.select({ id: music.id })
+				.from(music)
+				.where(eq(music.title, title))
+				.limit(1)
+				.execute();
+
+			if (!result) {
+				return err({
+					type: "NOT_FOUND",
+					message: "楽曲データが見つかりません",
+				});
+			}
+
+			return ok(result.id.toString());
+		} catch (e) {
+			console.log("楽曲IDの取得に失敗しました", e);
+			return err({
+				type: "UNEXPECTED",
+				message: "楽曲IDの取得に失敗しました",
 			});
 		}
 	}

@@ -1,4 +1,4 @@
-import type { AccountRole } from "@piano_supporter/common/domains/account.ts";
+import type { RoleName } from "@piano_supporter/common/domains/role.ts";
 
 export enum Permission {
 	canDoComment = "canDoComment",
@@ -17,7 +17,7 @@ export const adminPermissions: Permission[] = [
 
 export const studentPermissions: Permission[] = [Permission.canDoPost];
 
-export const permissionsByRole: Record<AccountRole, Permission[]> = {
+export const permissionsByRole: Record<RoleName, Permission[]> = {
 	admin: adminPermissions,
 	teacher: teacherPermission,
 	student: studentPermissions,

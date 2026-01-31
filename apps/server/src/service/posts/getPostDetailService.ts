@@ -1,6 +1,6 @@
-import { err, ok, Result } from "@piano_supporter/common/lib/error.js";
-import type { PostsRepository } from "../repository/posts/repository.ts";
-import { CommentRepository } from "src/repository/comment/repository.ts";
+import { err, ok, type Result } from "@piano_supporter/common/lib/error.js";
+import type { PostsRepository } from "../../repository/posts/repository.ts";
+import type { CommentRepository } from "src/repository/comment/repository.ts";
 import type { Comment, CommentNode } from "@piano_supporter/common/domains/comment.ts";
 import type { getPostDetailResponse } from "@piano_supporter/common/commonResponseType/honoResponse.js";
 
