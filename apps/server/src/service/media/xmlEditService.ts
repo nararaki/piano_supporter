@@ -1,6 +1,6 @@
 import { XMLParser, XMLBuilder } from "fast-xml-parser";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
-import type { MediaStorage } from "src/infrastructure/s3/mediaStorage.ts";
+import type { IMediaStorage } from "../../repository/media/IMediaStorage.ts";
 
 interface EditXmlData {
     xmlUrl: string;
@@ -11,7 +11,7 @@ interface EditXmlData {
 }
 
 export class XmlEditService {
-    constructor(private mediaStorage: MediaStorage) {}
+    constructor(private mediaStorage: IMediaStorage) {}
 
     // OSMDで表示させるための強力な設定（位置、フォントサイズ指定）
     private createDirection(content: string, staff: number = 1) {

@@ -2,8 +2,9 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { err, ok, type Result } from "@piano_supporter/common/lib/error.ts";
 import type { Practice } from "@piano_supporter/common/domains/practice.ts";
 import type { Music } from "@piano_supporter/common/domains/music.ts";
+import type { IMediaStorage } from "../../repository/media/IMediaStorage.ts";
 
-export class MediaStorage {
+export class MediaStorage implements IMediaStorage {
 	private s3Client: S3Client;
 	private bucketName: string;
 	private cloudFrontDomain: string;
@@ -105,7 +106,7 @@ export class MediaStorage {
 	 * @param contentType コンテンツタイプ（例: "application/xml", "text/plain"）
 	 * @returns 成功/失敗の結果
 	 */
-	async put(
+	public async put(
 		key: string,
 		content: Buffer,
 		contentType: string,
@@ -168,7 +169,7 @@ export class MediaStorage {
 	 * @param key S3オブジェクトのキー（例: "original/musicId/file.xml"）
 	 * @returns CloudFrontのURL
 	 */
-	getCloudFrontUrl(key: string): string {
+	public getCloudFrontUrl(key: string): string {
 		return `https://${this.cloudFrontDomain}/${key}`;
 	}
 
@@ -177,7 +178,7 @@ export class MediaStorage {
 	 * @param cloudFrontUrl CloudFrontのURL（例: "https://cloudfront-domain/original/musicId/file.xml"）
 	 * @returns S3キー（例: "original/musicId/file.xml"）、抽出できない場合はnull
 	 */
-	extractKeyFromUrl(cloudFrontUrl: string): string | null {
+	public extractKeyFromUrl(cloudFrontUrl: string): string | null {
 		try {
 			const urlObj = new URL(cloudFrontUrl);
 			// pathnameから先頭のスラッシュを削除
